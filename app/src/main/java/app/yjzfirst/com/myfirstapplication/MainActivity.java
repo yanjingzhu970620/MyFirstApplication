@@ -16,6 +16,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 public class MainActivity extends AppCompatActivity {
@@ -35,13 +36,21 @@ public class MainActivity extends AppCompatActivity {
      */
     private ViewPager mViewPager;
 
+//    private LinearLayout entry;
+//    private LinearLayout entry;
+//    private LinearLayout entry;
+//
+//
+//    private TextView entrytext;
+//    private TextView entrytext;
+//    private TextView entrytext;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
         // Create the adapter that will return a fragment for each of the three
         // primary sections of the activity.
         mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
