@@ -39,6 +39,7 @@
     <color name="c_c0bbb4">#c0bbb4</color>
     <color name="nav_title">@color/white</color>
     <color name="nav_bg">@color/green</color>
+    <color name="transport_int">#9632C832</color>
     <color name="nav_side">@color/white</color>
     <color name="nav_side_pressed">#089e3c</color>
     <color name="nav_side_text_color">@color/white</color>

@@ -1,104 +1,98 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main_content"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fitsSystemWindows="true"
+    android:orientation="vertical"
     tools:context="app.yjzfirst.com.myfirstapplication.MainActivity">
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical" >
+        android:layout_height="@dimen/activity_topbar_height"
+        android:background="@color/transport_int"
+        android:orientation="vertical">
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="50dip"
-            android:background="@color/colorbarbackground"
-            android:orientation="horizontal">
+            android:layout_height="@dimen/activity_topbar_height"
+            android:background="@color/transport_int"
+            android:gravity="center">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:textSize="@dimen/activity_bar_title"
+                android:text="@string/app_title" />
+        </LinearLayout>
+
+    </LinearLayout>
+    <include layout="@layout/include_line" />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/activity_button_height"
+        android:layout_marginRight="@dimen/button_margin_left"
+        android:layout_marginLeft="@dimen/button_margin_left"
+        android:orientation="vertical" >
+
             <!--android:background="#f3f7f6"-->
 
             <!--android:orientation="horizontal">-->
 
-            <LinearLayout
+            <TextView
                 android:id="@+id/entry_main"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:background="@color/colorwhite"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:layout_marginTop="@dimen/fab_margin"
+                android:background="@color/colorbarbackground"
                 android:layout_weight="1"
                 android:clickable="true"
                 android:onClick="onClick"
-                android:orientation="vertical" >
+                android:text="@string/entry"
+                android:textColor="@color/colorwhite"
+                android:textSize="@dimen/activity_bar_title" >
 
+            </TextView>
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/appbar_padding_top"
-                    android:layout_gravity="center_horizontal"
-                    android:text="@string/entry"
-                    android:textColor="@color/colorbarbackground"
-                    android:textSize="19sp" />
-            </LinearLayout>
-
-            <LinearLayout
+            <TextView
                 android:id="@+id/delivery_main"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
                 android:layout_weight="1"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:layout_marginTop="@dimen/fab_margin"
                 android:clickable="true"
                 android:onClick="onClick"
-                android:orientation="vertical" >
+                android:background="@color/colorbarbackground"
+                android:text="@string/delivery"
+                android:textColor="@color/colorwhite"
+                android:textSize="@dimen/activity_bar_title" >
 
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/appbar_padding_top"
-                    android:layout_gravity="center_horizontal"
-                    android:text="@string/delivery"
-                    android:textColor="@color/colorwhite"
-                    android:textSize="19sp" />
-            </LinearLayout>
+            </TextView>
 
-            <LinearLayout
+            <TextView
                 android:id="@+id/Check_main"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
                 android:layout_weight="1"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:layout_marginTop="@dimen/fab_margin"
                 android:clickable="true"
                 android:onClick="onClick"
-                android:orientation="vertical" >
+                android:background="@color/colorbarbackground"
+                android:text="@string/check_main"
+                android:textColor="@color/colorwhite"
+                android:textSize="@dimen/activity_bar_title">
 
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/appbar_padding_top"
-                    android:layout_gravity="center_horizontal"
-                    android:text="@string/check_main"
-                    android:textColor="@color/colorwhite"
-                    android:textSize="19sp" />
-            </LinearLayout>
-        </LinearLayout>
 
-        <include layout="@layout/include_line" />
-
-
-    <android.support.v4.view.ViewPager
-        android:id="@+id/container"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior" />
-
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/fab"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="end|bottom"
-        android:layout_margin="@dimen/fab_margin"
-        app:srcCompat="@android:drawable/ic_dialog_email" />
+            </TextView>
 </LinearLayout>
-</android.support.design.widget.CoordinatorLayout>
+</LinearLayout>

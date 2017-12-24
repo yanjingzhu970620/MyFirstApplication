@@ -25,4 +25,7 @@
     <string name="section_format">Hello World from section: %1$d</string>
     <string name="title_activity_settings">SettingsActivity</string>
     <string name="app_title">Shanghai xxx guanlixitong</string>
+    <string name="title_activity_delivery">DeliveryActivity</string>
+    <string name="title_activity_entry">EntryActivity</string>
+    <string name="title_activity_check">CheckActivity</string>
 </resources>

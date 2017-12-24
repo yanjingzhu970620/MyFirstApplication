@@ -30,6 +30,18 @@
         <activity
             android:name=".SettingsActivity"
             android:label="@string/title_activity_settings"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".DeliveryActivity"
+            android:label="@string/title_activity_delivery"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".EntryActivity"
+            android:label="@string/title_activity_entry"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".CheckActivity"
+            android:label="@string/title_activity_check"
             android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 

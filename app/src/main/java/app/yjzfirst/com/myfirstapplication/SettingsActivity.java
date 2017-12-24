@@ -15,4 +15,10 @@ public class SettingsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_settings);
     }
 
+    public void onClick(View view) {
+        if (view.getId() == R.id.settings_back) {
+            finish();
+        }
+    }
+
 }
