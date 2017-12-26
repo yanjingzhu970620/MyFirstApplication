@@ -19,12 +19,12 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
-                android:text="@string/action_settings"
+                android:text="@string/check_main"
                 android:textColor="#4f92ed"
                 android:textSize="20sp" />
 
             <LinearLayout
-                android:id="@+id/settings_back"
+                android:id="@+id/check_back"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
@@ -67,21 +67,23 @@
                 android:orientation="vertical">
 
                 <LinearLayout
-                    android:id="@+id/check_id_form"
+                    android:id="@+id/check_batch_number_form"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal">
 
                     <TextView
-                        android:layout_width="wrap_content"
+                        android:layout_width="0dp"
                         android:layout_height="match_parent"
-                        android:text="批号"/>
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:text="@string/product_batch_number"/>
 
                         <EditText
-                            android:id="@+id/ip"
-                            android:layout_width="match_parent"
+                            android:id="@+id/check_batch_number"
+                            android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:hint="@string/prompt_ip"
+                            android:layout_weight="3"
                             android:maxLines="1"
                             android:singleLine="true"
                             android:textColor="@color/black" />
@@ -89,34 +91,105 @@
                 </LinearLayout>
 
                 <LinearLayout
-                    android:id="@+id/ipsettings_form"
+                    android:id="@+id/check_Bar_code_form"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal">
                     <TextView
-                        android:layout_width="wrap_content"
+                        android:layout_width="0dp"
                         android:layout_height="match_parent"
-                        android:text="条码"/>
+                        android:gravity="center"
+                        android:layout_weight="1"
+                        android:text="@string/Bar_code"/>
 
                         <EditText
-                            android:id="@+id/port"
-                            android:layout_width="match_parent"
+                            android:id="@+id/check_bar_code"
+                            android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:hint="@string/prompt_port"
                             android:maxLines="1"
+                            android:layout_weight="3"
                             android:singleLine="true"
                             android:textColor="@color/black" />
 
                 </LinearLayout>
 
+                <LinearLayout
+                    android:id="@+id/check_Library_number_form"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:gravity="center"
+                        android:layout_weight="1"
+                        android:text="@string/Library_number"/>
+
+                    <EditText
+                        android:id="@+id/check_library_number"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:maxLines="1"
+                        android:layout_weight="3"
+                        android:singleLine="true"
+                        android:textColor="@color/black" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/check_Number_per_box_form"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:gravity="center"
+                        android:layout_weight="1"
+                        android:text="@string/Number_per_box"/>
+
+                    <EditText
+                        android:id="@+id/check_Number_per_box"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:maxLines="1"
+                        android:layout_weight="3"
+                        android:singleLine="true"
+                        android:textColor="@color/black" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/check_num_boxes_form"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:gravity="center"
+                        android:layout_weight="1"
+                        android:text="@string/Number_of_boxes"/>
+
+                    <EditText
+                        android:id="@+id/check_num_boxes"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:maxLines="1"
+                        android:layout_weight="3"
+                        android:singleLine="true"
+                        android:textColor="@color/black" />
+
+                </LinearLayout>
+
                 <Button
-                    android:id="@+id/set_ipport_button"
+                    android:id="@+id/check_submit_button"
                     style="?android:textAppearanceSmall"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="16dp"
                     android:layout_weight="1"
-                    android:text="@string/action_sign_in"
+                    android:text="@string/action_submit"
                     android:textStyle="bold" />
             </LinearLayout>
         </ScrollView>
