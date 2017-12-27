@@ -17,7 +17,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="@dimen/activity_topbar_height"
-            android:background="@color/transport_int"
+            android:background="@mipmap/erplogo"
             android:gravity="center">
 
             <TextView

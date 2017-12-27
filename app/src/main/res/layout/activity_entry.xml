@@ -77,7 +77,7 @@
                         android:layout_height="match_parent"
                         android:layout_weight="1"
                         android:gravity="center"
-                        android:text="@string/product_batch_number"/>
+                        android:text="@string/product_batch_number" />
 
                     <EditText
                         android:id="@+id/entry_batch_number"
@@ -95,19 +95,20 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal">
+
                     <TextView
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
-                        android:gravity="center"
                         android:layout_weight="1"
-                        android:text="@string/Bar_code"/>
+                        android:gravity="center"
+                        android:text="@string/Bar_code" />
 
                     <EditText
                         android:id="@+id/entry_bar_code"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:maxLines="1"
                         android:layout_weight="3"
+                        android:maxLines="1"
                         android:singleLine="true"
                         android:textColor="@color/black" />
 
@@ -118,19 +119,20 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal">
+
                     <TextView
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
-                        android:gravity="center"
                         android:layout_weight="1"
-                        android:text="@string/Library_number"/>
+                        android:gravity="center"
+                        android:text="@string/Library_number" />
 
                     <EditText
                         android:id="@+id/entry_library_number"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:maxLines="1"
                         android:layout_weight="3"
+                        android:maxLines="1"
                         android:singleLine="true"
                         android:textColor="@color/black" />
 
@@ -141,19 +143,22 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal">
+
                     <TextView
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
-                        android:gravity="center"
                         android:layout_weight="1"
-                        android:text="@string/Thousand_weight"/>
+                        android:gravity="center"
+                        android:text="@string/Thousand_weight" />
 
                     <EditText
                         android:id="@+id/entry_weight_thousands"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:maxLines="1"
+                        android:digits="1234567890"
+                        android:inputType="phone|number"
                         android:layout_weight="3"
+                        android:maxLines="1"
                         android:singleLine="true"
                         android:textColor="@color/black" />
 
@@ -164,19 +169,22 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal">
+
                     <TextView
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
-                        android:gravity="center"
                         android:layout_weight="1"
-                        android:text="@string/Number_per_box"/>
+                        android:gravity="center"
+                        android:text="@string/Number_per_box" />
 
                     <EditText
                         android:id="@+id/entry_Number_per_box"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:maxLines="1"
                         android:layout_weight="3"
+                        android:digits="1234567890"
+                        android:inputType="phone|number"
+                        android:maxLines="1"
                         android:singleLine="true"
                         android:textColor="@color/black" />
 
@@ -187,19 +195,22 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal">
+
                     <TextView
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
-                        android:gravity="center"
                         android:layout_weight="1"
-                        android:text="@string/Number_of_boxes"/>
+                        android:gravity="center"
+                        android:text="@string/Number_of_boxes" />
 
                     <EditText
                         android:id="@+id/entry_num_boxes"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:maxLines="1"
                         android:layout_weight="3"
+                        android:digits="1234567890"
+                        android:inputType="phone|number"
+                        android:maxLines="1"
                         android:singleLine="true"
                         android:textColor="@color/black" />
 
