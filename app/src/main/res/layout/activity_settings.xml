@@ -71,7 +71,7 @@
                     android:layout_height="wrap_content">
 
                     <EditText
-                        android:id="@+id/ip"
+                        android:id="@+id/ip_edit"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:hint="@string/prompt_ip"
@@ -86,7 +86,7 @@
                     android:layout_height="wrap_content">
 
                     <EditText
-                        android:id="@+id/port"
+                        android:id="@+id/port_edit"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:hint="@string/prompt_port"
@@ -99,6 +99,7 @@
                     <Button
                         android:id="@+id/set_ipport_button"
                         style="?android:textAppearanceSmall"
+                        android:background="@color/colorbarbackground"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="16dp"
