@@ -62,6 +62,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     private EditText mPasswordView;
     private View mProgressView;
     private View mLoginFormView;
+    private View mtopbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -102,6 +103,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             }
         });
         mLoginFormView = findViewById(R.id.login_form);
+        mtopbar = findViewById(R.id.login_topbar);
         mProgressView = findViewById(R.id.login_progress);
     }
 
@@ -231,6 +233,15 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                 @Override
                 public void onAnimationEnd(Animator animation) {
                     mLoginFormView.setVisibility(show ? View.GONE : View.VISIBLE);
+                }
+            });
+
+            mtopbar.setVisibility(show ? View.GONE : View.VISIBLE);
+            mtopbar.animate().setDuration(shortAnimTime).alpha(
+                    show ? 0 : 1).setListener(new AnimatorListenerAdapter() {
+                @Override
+                public void onAnimationEnd(Animator animation) {
+                    mtopbar.setVisibility(show ? View.GONE : View.VISIBLE);
                 }
             });
 

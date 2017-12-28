@@ -17,6 +17,7 @@
         android:visibility="gone" />
 
     <LinearLayout
+        android:id="@+id/login_topbar"
         android:layout_width="match_parent"
         android:layout_height="@dimen/activity_topbar_height"
         android:background="@color/colorbarbackground"
@@ -101,6 +102,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="16dp"
+                    android:layout_marginRight="16dp"
                     android:layout_weight="1"
                     android:text="@string/action_settings"
                     android:textStyle="bold" />
@@ -112,6 +114,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="16dp"
+                    android:layout_marginLeft="16dp"
                     android:layout_weight="1"
                     android:text="@string/action_sign_in"
                     android:textStyle="bold" />
