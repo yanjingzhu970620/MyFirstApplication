@@ -100,11 +100,12 @@
                         android:id="@+id/set_ipport_button"
                         style="?android:textAppearanceSmall"
                         android:background="@color/colorbarbackground"
+                        android:onClick="onClick"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="16dp"
                         android:layout_weight="1"
-                        android:text="@string/action_sign_in"
+                        android:text="@string/action_submit"
                         android:textStyle="bold" />
             </LinearLayout>
         </ScrollView>
