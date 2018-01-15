@@ -6,5 +6,5 @@ package com.yjzfirst.util;
 
 public class IndexConstants {
 
-    public static final String LOGINURL="/resusers/checklogin";
+    public static final String LOGINURL="/api/resusers/checklogin";
 }

@@ -33,6 +33,7 @@ import com.yjzfirst.util.PreferencesUtils;
 
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -350,12 +351,12 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                 Map<String,String> mparams=new HashMap<String,String>();
                 mparams.put("password",mPassword);
                 mparams.put("login",mEmail);
-                String postparams = "json="+new Gson().toJson(mparams);
-
+                String postparams = new Gson().toJson(mparams);
+//                postparams=URLEncoder.encode(postparams,"utf-8");
 
 //                String postparams ="{"+"login:",mEmail,"Password:",mPassword}//"login:"+mEmail+"&password:"+mPassword;
                 byte[] data = postparams.getBytes();
-                System.err.println("postparams postparams:::"+postparams);
+                System.err.println("postparams postparams:::"+postparams+data.length);
                 URL posturl = new URL(url);
                 HttpURLConnection conn = (HttpURLConnection) posturl.openConnection();
                 conn.setConnectTimeout(10000);
@@ -365,10 +366,11 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                 conn.setUseCaches(false);               //使用Post方式不能使用缓存
                 //设置请求体的类型是文本类型
                 conn.setRequestProperty("Content-Type", "application/json");
-                conn.setRequestProperty("Content-Length", data.length + ""); // 注意是字节长度, 不是字符长度
+                conn.setRequestProperty("Content-Length", String.valueOf(data.length)); // 注意是字节长度, 不是字符长度
 
 //                conn.setDoOutput(true); // 准备写出
                 conn.getOutputStream().write(data);
+
                 responsecode=conn.getResponseCode();
 //                InputStream ins=conn.getInputStream();
 //                String s=ins.toString();
