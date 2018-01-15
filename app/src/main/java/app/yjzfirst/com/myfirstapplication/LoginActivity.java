@@ -27,12 +27,19 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.google.gson.Gson;
+import com.yjzfirst.util.IndexConstants;
 import com.yjzfirst.util.PreferencesUtils;
 
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static android.Manifest.permission.READ_CONTACTS;
+import static app.yjzfirst.com.myfirstapplication.R.id.login;
 
 /**
  * A login screen that offers login via email/password.
@@ -78,7 +85,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         mPasswordView.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView textView, int id, KeyEvent keyEvent) {
-                if (id == R.id.login || id == EditorInfo.IME_NULL) {
+                if (id == login || id == EditorInfo.IME_NULL) {
                     attemptLogin();
                     return true;
                 }
@@ -319,11 +326,13 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
      * Represents an asynchronous login/registration task used to authenticate
      * the user.
      */
+    public String ip_key="ip";
+    public String port_key="port";
     public class UserLoginTask extends AsyncTask<Void, Void, Boolean> {
 
         private final String mEmail;
         private final String mPassword;
-
+        int responsecode=0;
         UserLoginTask(String email, String password) {
             mEmail = email;
             mPassword = password;
@@ -334,10 +343,41 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             // TODO: attempt authentication against a network service.
 
             try {
-                // Simulate network access.
-                Thread.sleep(2000);
-            } catch (InterruptedException e) {
-                return false;
+                String url="http://"+PreferencesUtils.getString(LoginActivity.this,ip_key,"101.132.164.169")
+                        +":"+PreferencesUtils.getString(LoginActivity.this,port_key,"8090")+ IndexConstants.LOGINURL;
+//                "login:","登录帐号","Password":"密码"
+                System.err.println("url:::"+url);
+                Map<String,String> mparams=new HashMap<String,String>();
+                mparams.put("password",mPassword);
+                mparams.put("login",mEmail);
+                String postparams = "json="+new Gson().toJson(mparams);
+
+
+//                String postparams ="{"+"login:",mEmail,"Password:",mPassword}//"login:"+mEmail+"&password:"+mPassword;
+                byte[] data = postparams.getBytes();
+                System.err.println("postparams postparams:::"+postparams);
+                URL posturl = new URL(url);
+                HttpURLConnection conn = (HttpURLConnection) posturl.openConnection();
+                conn.setConnectTimeout(10000);
+                conn.setDoInput(true);                  //打开输入流，以便从服务器获取数据
+                conn.setDoOutput(true);                 //打开输出流，以便向服务器提交数据
+                conn.setRequestMethod("POST");     //设置以Post方式提交数据
+                conn.setUseCaches(false);               //使用Post方式不能使用缓存
+                //设置请求体的类型是文本类型
+                conn.setRequestProperty("Content-Type", "application/json");
+                conn.setRequestProperty("Content-Length", data.length + ""); // 注意是字节长度, 不是字符长度
+
+//                conn.setDoOutput(true); // 准备写出
+                conn.getOutputStream().write(data);
+                responsecode=conn.getResponseCode();
+//                InputStream ins=conn.getInputStream();
+//                String s=ins.toString();
+                System.err.println("login return:::"+responsecode);
+//                ins.close();
+            } catch (Exception e) {
+                // TODO: handle exception
+                System.err.println("未能获取网络数据");
+                e.printStackTrace();
             }
 
 //            for (String credential : DUMMY_CREDENTIALS) {
@@ -374,6 +414,22 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             mAuthTask = null;
             showProgress(false);
         }
+    }
+
+//    List<HeartBeatBean> photoResultBeans=new ArrayList<HeartBeatBean>();
+//    private void parseReXMLnew(InputStream inStream) throws Exception {
+//        DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+//        DocumentBuilder builder = factory.newDocumentBuilder();
+//        Document document = builder.parse(inStream);
+//        Element root = document.getDocumentElement();
+//        photoResultBeans.clear();
+//        if (root.getNodeName().compareTo("result") == 0) {
+////            photoResultBeans.add(XmlParseUtility.parse(root, HeartBeatBean.class));
+//        }
+//    }
+    String TAG="LoginActivity::";
+    public void Print(String s){
+        System.out.println(TAG+s);
     }
 }
 

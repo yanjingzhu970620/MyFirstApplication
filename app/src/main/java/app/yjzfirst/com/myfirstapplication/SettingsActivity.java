@@ -1,10 +1,7 @@
 package app.yjzfirst.com.myfirstapplication;
 
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.EditText;
 
@@ -20,9 +17,9 @@ public class SettingsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
         eip = (EditText) findViewById(R.id.ip_edit);
-        eip.setText(PreferencesUtils.getString(SettingsActivity.this,ip_key,"1.1.1.1"));
+        eip.setText(PreferencesUtils.getString(SettingsActivity.this,ip_key,"101.132.164.169"));
         eport = (EditText) findViewById(R.id.port_edit);
-        eport.setText(PreferencesUtils.getString(SettingsActivity.this,port_key,"1111"));
+        eport.setText(PreferencesUtils.getString(SettingsActivity.this,port_key,"8090"));
     }
 
     public void onClick(View view) {
