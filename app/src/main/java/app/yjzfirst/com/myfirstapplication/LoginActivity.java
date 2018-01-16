@@ -30,7 +30,13 @@ import android.widget.TextView;
 import com.google.gson.Gson;
 import com.yjzfirst.util.IndexConstants;
 import com.yjzfirst.util.PreferencesUtils;
+import com.yjzfirst.util.Util;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+
+import java.io.ByteArrayOutputStream;
+import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
@@ -333,6 +339,8 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
         private final String mEmail;
         private final String mPassword;
+        String success="";
+        String msg="";
         int responsecode=0;
         UserLoginTask(String email, String password) {
             mEmail = email;
@@ -347,7 +355,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                 String url="http://"+PreferencesUtils.getString(LoginActivity.this,ip_key,"101.132.164.169")
                         +":"+PreferencesUtils.getString(LoginActivity.this,port_key,"8090")+ IndexConstants.LOGINURL;
 //                "login:","登录帐号","Password":"密码"
-                System.err.println("url:::"+url);
+                Print("url:::"+url);
                 Map<String,String> mparams=new HashMap<String,String>();
                 mparams.put("password",mPassword);
                 mparams.put("login",mEmail);
@@ -356,7 +364,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
 //                String postparams ="{"+"login:",mEmail,"Password:",mPassword}//"login:"+mEmail+"&password:"+mPassword;
                 byte[] data = postparams.getBytes();
-                System.err.println("postparams postparams:::"+postparams+data.length);
+//                System.err.println("postparams postparams:::"+postparams+data.length);
                 URL posturl = new URL(url);
                 HttpURLConnection conn = (HttpURLConnection) posturl.openConnection();
                 conn.setConnectTimeout(10000);
@@ -372,9 +380,17 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                 conn.getOutputStream().write(data);
 
                 responsecode=conn.getResponseCode();
-//                InputStream ins=conn.getInputStream();
-//                String s=ins.toString();
-                System.err.println("login return:::"+responsecode);
+                if(responsecode==200) {
+                    InputStream ins = conn.getInputStream();
+                    JSONObject jsonObject= parseJson(ins);
+                    if(jsonObject!=null) {
+                        msg = jsonObject.getString("message");
+                        success = jsonObject.getString("success");
+                    }
+//                    String s = ins.toString();
+//                    System.err.println("sssssssss:::"+s);
+                }
+                Print("login return:::"+responsecode);
 //                ins.close();
             } catch (Exception e) {
                 // TODO: handle exception
@@ -391,14 +407,14 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 //            }
 
             // TODO: register the new account here.
-            return true;
+            return success.equals("1");
         }
 
         @Override
         protected void onPostExecute(final Boolean success) {
             mAuthTask = null;
             showProgress(false);
-
+            Util.showShortToastMessage(LoginActivity.this,msg);
             if (success) {
                 PreferencesUtils.putString(LoginActivity.this,email_key,mEmail);
                 PreferencesUtils.putString(LoginActivity.this,password_key,mPassword);
@@ -416,6 +432,44 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             mAuthTask = null;
             showProgress(false);
         }
+        private JSONObject parseJson(InputStream ins){
+            byte[] data = new byte[0];   // 把输入流转换成字符数组
+            try {
+                data = readStream(ins);
+
+            String  json = new String(data);        // 把字符数组转换成字符串
+//            JSONArray array = new JSONArray(json);
+//            for(int i = 0 ; i < array.length() ; i++){
+                JSONObject jsonObject = new JSONObject(json);//array.getJSONObject(i);
+//                String msg=jsonObject.getString("message");
+//                String success=jsonObject.getString("success");
+                return jsonObject;
+//                Print("login msgmsg:::"+msg);
+//            }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+        /**
+         182.     * 把输入流转换成字符数组
+         183.     * @param inputStream   输入流
+         184.     * @return  字符数组
+         185.     * @throws Exception
+         186.     */
+           public  byte[] readStream(InputStream inputStream) throws Exception {
+                    ByteArrayOutputStream bout = new ByteArrayOutputStream();
+                    byte[] buffer = new byte[1024];
+                    int len = 0;
+                   while ((len = inputStream.read(buffer)) != -1) {
+                           bout.write(buffer, 0, len);
+                        }
+                   bout.close();
+                   inputStream.close();
+
+                    return bout.toByteArray();
+                }
+
     }
 
 //    List<HeartBeatBean> photoResultBeans=new ArrayList<HeartBeatBean>();
