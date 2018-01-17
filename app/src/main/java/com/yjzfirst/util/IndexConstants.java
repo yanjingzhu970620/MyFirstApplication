@@ -11,4 +11,8 @@ public class IndexConstants {
     public static final String INSTOCKCHECKBARCODE="/api/instock/checkbarcode ";
     public static final String OUTSTOCKCHECKBARCODE="/api/outstock/checkbarcode ";
 
+
+    public static final String TAKINGSTOCK="/api/taking/stock_taking ";
+    public static final String INSTOCK="/api/instock/product_instock  ";
+    public static final String OUTSTOCK="/api/outstock/delivery_outstock ";
 }
