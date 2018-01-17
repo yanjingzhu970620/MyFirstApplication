@@ -215,22 +215,24 @@ public class DeliveryActivity extends AppCompatActivity {
         }
 
     }
-    public class InStockTask extends AsyncTask<Void, Void, Boolean> {
+    public class OutStockTask extends AsyncTask<Void, Void, Boolean> {
         //        String lot_no="";
         String location="";
         String barcode="";
         String min_box="";
         String lot_no="";
         String cn_box="";
+        String so="";
         String success="";
         String msg="";
         int responsecode=0;
-        InStockTask() {
+        OutStockTask() {
             lot_no=mdeliverybatchnumber.getText().toString();
             barcode=mdeliverybarcode.getText().toString();
             location=mdeliverylibrarynumber.getText().toString();
             cn_box=mdeliverynumboxes.getText().toString();
             min_box=mdeliveryNumberperbox.getText().toString();
+            so=mdeliveryOrdernumber.getText().toString();
         }
 
         @Override
@@ -249,7 +251,7 @@ public class DeliveryActivity extends AppCompatActivity {
                 mparams.put("location",location);
                 mparams.put("min_box",min_box);
                 mparams.put("cn_box",cn_box);
-
+                mparams.put("so",so);
                 String postparams = new Gson().toJson(mparams);
 //                postparams=URLEncoder.encode(postparams,"utf-8");
 
