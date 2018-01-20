@@ -1,13 +1,8 @@
 package app.yjzfirst.com.myfirstapplication;
 
-import android.content.Intent;
 import android.os.AsyncTask;
-import android.os.Build;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
@@ -26,7 +21,6 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.Executors;
 
 public class CheckActivity extends AppCompatActivity {
     EditText mcheckbatchnumber;
@@ -182,7 +176,7 @@ public class CheckActivity extends AppCompatActivity {
         protected void onPostExecute(final Boolean success) {
 //            mAuthTask = null;
 //            showProgress(false);
-//            Util.showShortToastMessage(CheckActivity.this,msg);
+            Util.showShortToastMessage(CheckActivity.this,msg);
 //            if (success) {
 //                PreferencesUtils.putString(CheckActivity.this,email_key,mEmail);
 //                PreferencesUtils.putString(CheckActivity.this,password_key,mPassword);
@@ -329,7 +323,7 @@ public class CheckActivity extends AppCompatActivity {
         protected void onPostExecute(final Boolean success) {
 //            mAuthTask = null;
 //            showProgress(false);
-//            Util.showShortToastMessage(CheckActivity.this,msg);
+            Util.showShortToastMessage(CheckActivity.this,msg);
 //            if (success) {
 //                PreferencesUtils.putString(CheckActivity.this,email_key,mEmail);
 //                PreferencesUtils.putString(CheckActivity.this,password_key,mPassword);

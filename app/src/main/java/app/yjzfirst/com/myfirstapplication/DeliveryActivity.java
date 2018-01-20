@@ -1,12 +1,8 @@
 package app.yjzfirst.com.myfirstapplication;
 
-import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.EditText;
 
@@ -158,7 +154,7 @@ public class DeliveryActivity extends AppCompatActivity {
         protected void onPostExecute(final Boolean success) {
 //            mAuthTask = null;
 //            showProgress(false);
-//            Util.showShortToastMessage(DeliveryActivity.this,msg);
+            Util.showShortToastMessage(DeliveryActivity.this,msg);
 //            if (success) {
 //                PreferencesUtils.putString(DeliveryActivity.this,email_key,mEmail);
 //                PreferencesUtils.putString(DeliveryActivity.this,password_key,mPassword);
@@ -307,7 +303,7 @@ public class DeliveryActivity extends AppCompatActivity {
         protected void onPostExecute(final Boolean success) {
 //            mAuthTask = null;
 //            showProgress(false);
-//            Util.showShortToastMessage(DeliveryActivity.this,msg);
+            Util.showShortToastMessage(DeliveryActivity.this,msg);
 //            if (success) {
 //                PreferencesUtils.putString(DeliveryActivity.this,email_key,mEmail);
 //                PreferencesUtils.putString(DeliveryActivity.this,password_key,mPassword);
