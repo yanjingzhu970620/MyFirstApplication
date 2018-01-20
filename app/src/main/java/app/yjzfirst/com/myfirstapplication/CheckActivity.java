@@ -23,6 +23,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class CheckActivity extends AppCompatActivity {
+    private CheckCodeTask mCheckTask = null;
     EditText mcheckbatchnumber;
     EditText mcheckbarcode;
     EditText mchecklibrarynumber;
@@ -84,10 +85,53 @@ public class CheckActivity extends AppCompatActivity {
         if (view.getId() == R.id.check_back) {
             finish();
         }else if (view.getId() == R.id.check_submit_button) {
-
+            attemptCheck();
         }
     }
 
+
+    private void attemptCheck() {
+        if (mCheckTask != null) {
+            return;
+        }
+//
+//        // Reset errors.
+//        mEmailView.setError(null);
+//        mPasswordView.setError(null);
+//
+//        // Store values at the time of the login attempt.
+//        String email = mEmailView.getText().toString();
+//        String password = mPasswordView.getText().toString();
+//
+        String lot_no=mcheckbatchnumber.getText().toString();
+        String barcode=mcheckbarcode.getText().toString();
+        String location=mchecklibrarynumber.getText().toString();
+        String cn_box=mchecknumboxes.getText().toString();
+        String min_box=mcheckNumberperbox.getText().toString();
+        boolean cancel = false;
+//
+        if (lot_no.equals("")||
+                barcode.equals("")||
+                location.equals("")||
+                cn_box.equals("")||
+                min_box.equals("")) {
+            cancel=true;
+        }
+        if (cancel) {
+//            // There was an error; don't attempt login and focus the first
+//            // form field with an error.
+//            focusView.requestFocus();
+            Util.showShortToastMessage(CheckActivity.this,"请先扫描所有条目");
+        } else {
+//            // Show a progress spinner, and kick off a background task to
+//            // perform the user login attempt.
+//        showProgress(true);
+        mCheckTask =new CheckCodeTask();
+        mCheckTask.execute((Void) null);
+        }
+
+
+    }
     public String ip_key="ip";
     public String port_key="port";
     private String email_key = "email";
@@ -174,24 +218,27 @@ public class CheckActivity extends AppCompatActivity {
 
         @Override
         protected void onPostExecute(final Boolean success) {
-//            mAuthTask = null;
+            mCheckTask = null;
 //            showProgress(false);
-            Util.showShortToastMessage(CheckActivity.this,msg);
-//            if (success) {
+
+            if (success) {
 //                PreferencesUtils.putString(CheckActivity.this,email_key,mEmail);
 //                PreferencesUtils.putString(CheckActivity.this,password_key,mPassword);
 //                Intent intent=new Intent(CheckActivity.this,MainActivity.class);
 //                CheckActivity.this.startActivity(intent);
 //                finish();
-//            } else {
+                TakingStockTask tst =new TakingStockTask();
+                tst.execute();
+            } else {
+                Util.showShortToastMessage(CheckActivity.this,msg);
 //                mPasswordView.setError(getString(R.string.error_incorrect_password));
 //                mPasswordView.requestFocus();
-//            }
+            }
         }
 
         @Override
         protected void onCancelled() {
-//            mAuthTask = null;
+            mCheckTask = null;
 //            showProgress(false);
         }
         private JSONObject parseJson(InputStream ins){
@@ -324,16 +371,17 @@ public class CheckActivity extends AppCompatActivity {
 //            mAuthTask = null;
 //            showProgress(false);
             Util.showShortToastMessage(CheckActivity.this,msg);
-//            if (success) {
+            if (success) {
+                mcheckbatchnumber.requestFocus();
 //                PreferencesUtils.putString(CheckActivity.this,email_key,mEmail);
 //                PreferencesUtils.putString(CheckActivity.this,password_key,mPassword);
 //                Intent intent=new Intent(CheckActivity.this,MainActivity.class);
 //                CheckActivity.this.startActivity(intent);
 //                finish();
-//            } else {
+            } else {
 //                mPasswordView.setError(getString(R.string.error_incorrect_password));
 //                mPasswordView.requestFocus();
-//            }
+            }
         }
 
         @Override

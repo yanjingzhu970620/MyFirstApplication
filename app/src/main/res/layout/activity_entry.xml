@@ -219,6 +219,7 @@
                 <Button
                     android:id="@+id/entry_submit_button"
                     style="?android:textAppearanceSmall"
+                    android:onClick="onClick"
                     android:background="@color/colorbarbackground"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"

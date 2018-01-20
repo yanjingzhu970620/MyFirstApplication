@@ -27,6 +27,7 @@ public class EntryActivity extends AppCompatActivity {
     EditText mentryNumberperbox;
     EditText mentrynumboxes;
     EditText entryweightthousands;
+    private CheckCodeTask mentryTask = null;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -49,10 +50,53 @@ public class EntryActivity extends AppCompatActivity {
         if (view.getId() == R.id.entry_back) {
             finish();
         }else if (view.getId() == R.id.entry_submit_button) {
-
+            attemptCheck();
         }
     }
 
+    private void attemptCheck() {
+        if (mentryTask != null) {
+            return;
+        }
+//
+//        // Reset errors.
+//        mEmailView.setError(null);
+//        mPasswordView.setError(null);
+//
+//        // Store values at the time of the login attempt.
+//        String email = mEmailView.getText().toString();
+//        String password = mPasswordView.getText().toString();
+//
+        String lot_no=mentrybatchnumber.getText().toString();
+        String barcode=mentrybarcode.getText().toString();
+        String location=mentrylibrarynumber.getText().toString();
+        String cn_box=mentrynumboxes.getText().toString();
+        String min_box=mentryNumberperbox.getText().toString();
+
+        boolean cancel = false;
+//
+        if (lot_no.equals("")||
+                barcode.equals("")||
+                location.equals("")||
+                cn_box.equals("")||
+                min_box.equals("")) {
+            cancel=true;
+        }
+        if (cancel) {
+//            // There was an error; don't attempt login and focus the first
+//            // form field with an error.
+//            focusView.requestFocus();
+            Util.showShortToastMessage(EntryActivity.this,"请先扫描所有条目");
+        } else {
+//            // Show a progress spinner, and kick off a background task to
+//            // perform the user login attempt.
+//        showProgress(true);
+            mentryTask =new CheckCodeTask();
+            mentryTask.execute((Void) null);
+        }
+
+
+    }
     public String ip_key="ip";
     public String port_key="port";
     private String email_key = "email";
@@ -139,24 +183,27 @@ public class EntryActivity extends AppCompatActivity {
 
         @Override
         protected void onPostExecute(final Boolean success) {
-//            mAuthTask = null;
+            mentryTask = null;
 //            showProgress(false);
-            Util.showShortToastMessage(EntryActivity.this,msg);
-//            if (success) {
+//            Util.showShortToastMessage(EntryActivity.this,msg);
+            if (success) {
 //                PreferencesUtils.putString(EntryActivity.this,email_key,mEmail);
 //                PreferencesUtils.putString(EntryActivity.this,password_key,mPassword);
 //                Intent intent=new Intent(EntryActivity.this,MainActivity.class);
 //                EntryActivity.this.startActivity(intent);
 //                finish();
-//            } else {
+                InStockTask tst =new InStockTask();
+                tst.execute();
+            } else {
+                Util.showShortToastMessage(EntryActivity.this,msg);
 //                mPasswordView.setError(getString(R.string.error_incorrect_password));
 //                mPasswordView.requestFocus();
-//            }
+            }
         }
 
         @Override
         protected void onCancelled() {
-//            mAuthTask = null;
+            mentryTask = null;
 //            showProgress(false);
         }
         private JSONObject parseJson(InputStream ins){
@@ -289,16 +336,17 @@ public class EntryActivity extends AppCompatActivity {
 //            mAuthTask = null;
 //            showProgress(false);
             Util.showShortToastMessage(EntryActivity.this,msg);
-//            if (success) {
+            if (success) {
+                mentrybatchnumber.requestFocus();
 //                PreferencesUtils.putString(EntryActivity.this,email_key,mEmail);
 //                PreferencesUtils.putString(EntryActivity.this,password_key,mPassword);
 //                Intent intent=new Intent(EntryActivity.this,MainActivity.class);
 //                EntryActivity.this.startActivity(intent);
 //                finish();
-//            } else {
+            } else {
 //                mPasswordView.setError(getString(R.string.error_incorrect_password));
 //                mPasswordView.requestFocus();
-//            }
+            }
         }
 
         @Override

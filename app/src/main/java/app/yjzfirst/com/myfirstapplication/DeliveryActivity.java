@@ -27,20 +27,20 @@ public class DeliveryActivity extends AppCompatActivity {
     EditText mdeliveryNumberperbox;
     EditText mdeliverynumboxes;
     EditText mdeliveryOrdernumber;
-
+    private CheckCodeTask mdeliveryTask = null;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_delivery);
 
         mdeliverybatchnumber = (EditText) findViewById(R.id.delivery_batch_number);
-//        mcheckbatchnumber.addTextChangedListener(shipsWatcher);
+//        mdeliverybatchnumber.addTextChangedListener(shipsWatcher);
         mdeliverybarcode = (EditText) findViewById(R.id.delivery_bar_code);
-//        mcheckbarcode.addTextChangedListener(shipsWatcher);
+//        mdeliverybarcode.addTextChangedListener(shipsWatcher);
         mdeliverylibrarynumber = (EditText) findViewById(R.id.delivery_library_number);
-//        mchecklibrarynumber.addTextChangedListener(shipsWatcher);
+//        mdeliverylibrarynumber.addTextChangedListener(shipsWatcher);
         mdeliveryNumberperbox = (EditText) findViewById(R.id.delivery_Number_per_box);
-//        mcheckNumberperbox.addTextChangedListener(shipsWatcher);
+//        mdeliveryNumberperbox.addTextChangedListener(shipsWatcher);
         mdeliverynumboxes = (EditText) findViewById(R.id.delivery_num_boxes);
 //        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         mdeliveryOrdernumber = (EditText) findViewById(R.id.delivery_Order_number);
@@ -61,11 +61,57 @@ public class DeliveryActivity extends AppCompatActivity {
         if (view.getId() == R.id.delivery_back) {
             finish();
         }else if (view.getId() == R.id.delivery_submit_button) {
-
+            Print("delivery_submit_button:::");
+            attemptCheck();
         }
     }
 
-    
+    private void attemptCheck() {
+        if (mdeliveryTask != null) {
+            return;
+        }
+//
+//        // Reset errors.
+//        mEmailView.setError(null);
+//        mPasswordView.setError(null);
+//
+//        // Store values at the time of the login attempt.
+//        String email = mEmailView.getText().toString();
+//        String password = mPasswordView.getText().toString();
+//
+        String lot_no=mdeliverybatchnumber.getText().toString();
+        String barcode=mdeliverybarcode.getText().toString();
+        String location=mdeliverylibrarynumber.getText().toString();
+        String cn_box=mdeliverynumboxes.getText().toString();
+        String min_box=mdeliveryNumberperbox.getText().toString();
+
+        String so=mdeliveryOrdernumber.getText().toString();
+        boolean cancel = false;
+//
+        if (lot_no.equals("")||
+                barcode.equals("")||
+                location.equals("")||
+                cn_box.equals("")||
+                min_box.equals("")||
+                so.equals("")) {
+            cancel=true;
+        }
+        if (cancel) {
+//            // There was an error; don't attempt login and focus the first
+//            // form field with an error.
+//            focusView.requestFocus();
+            Util.showShortToastMessage(DeliveryActivity.this,"请先扫描所有条目");
+        } else {
+//            // Show a progress spinner, and kick off a background task to
+//            // perform the user login attempt.
+//        showProgress(true);
+            mdeliveryTask =new CheckCodeTask();
+            mdeliveryTask.execute((Void) null);
+        }
+
+
+    }
+
     public String ip_key="ip";
     public String port_key="port";
     private String email_key = "email";
@@ -152,19 +198,22 @@ public class DeliveryActivity extends AppCompatActivity {
 
         @Override
         protected void onPostExecute(final Boolean success) {
-//            mAuthTask = null;
+            mdeliveryTask = null;
 //            showProgress(false);
-            Util.showShortToastMessage(DeliveryActivity.this,msg);
-//            if (success) {
-//                PreferencesUtils.putString(DeliveryActivity.this,email_key,mEmail);
-//                PreferencesUtils.putString(DeliveryActivity.this,password_key,mPassword);
-//                Intent intent=new Intent(DeliveryActivity.this,MainActivity.class);
-//                DeliveryActivity.this.startActivity(intent);
+//            Util.showShortToastMessage(EntryActivity.this,msg);
+            if (success) {
+//                PreferencesUtils.putString(EntryActivity.this,email_key,mEmail);
+//                PreferencesUtils.putString(EntryActivity.this,password_key,mPassword);
+//                Intent intent=new Intent(EntryActivity.this,MainActivity.class);
+//                EntryActivity.this.startActivity(intent);
 //                finish();
-//            } else {
+                OutStockTask tst =new OutStockTask();
+                tst.execute();
+            } else {
+                Util.showShortToastMessage(DeliveryActivity.this,msg);
 //                mPasswordView.setError(getString(R.string.error_incorrect_password));
 //                mPasswordView.requestFocus();
-//            }
+            }
         }
 
         @Override
@@ -304,16 +353,17 @@ public class DeliveryActivity extends AppCompatActivity {
 //            mAuthTask = null;
 //            showProgress(false);
             Util.showShortToastMessage(DeliveryActivity.this,msg);
-//            if (success) {
+            if (success) {
+                mdeliverybatchnumber.requestFocus();
 //                PreferencesUtils.putString(DeliveryActivity.this,email_key,mEmail);
 //                PreferencesUtils.putString(DeliveryActivity.this,password_key,mPassword);
 //                Intent intent=new Intent(DeliveryActivity.this,MainActivity.class);
 //                DeliveryActivity.this.startActivity(intent);
 //                finish();
-//            } else {
+            } else {
 //                mPasswordView.setError(getString(R.string.error_incorrect_password));
 //                mPasswordView.requestFocus();
-//            }
+            }
         }
 
         @Override
