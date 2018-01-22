@@ -1,11 +1,15 @@
 package app.yjzfirst.com.myfirstapplication;
 
+import android.graphics.Color;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.EditText;
 
 import com.google.gson.Gson;
@@ -34,6 +38,21 @@ public class CheckActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_check);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+
+            Window window = CheckActivity.this.getWindow();
+
+            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+
+            window.setStatusBarColor(Color.BLACK);
+
+
+
+            //底部导航栏
+
+            //window.setNavigationBarColor(activity.getResources().getColor(colorResId));
+
+        }
         mcheckbatchnumber = (EditText) findViewById(R.id.check_batch_number);
 //        mcheckbatchnumber.addTextChangedListener(shipsWatcher);
         mcheckbarcode = (EditText) findViewById(R.id.check_bar_code);

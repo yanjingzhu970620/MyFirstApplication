@@ -1,9 +1,13 @@
 package app.yjzfirst.com.myfirstapplication;
 
+import android.graphics.Color;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.EditText;
 
 import com.google.gson.Gson;
@@ -32,7 +36,21 @@ public class EntryActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_entry);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
 
+            Window window = EntryActivity.this.getWindow();
+
+            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+
+            window.setStatusBarColor(Color.BLACK);
+
+
+
+            //底部导航栏
+
+            //window.setNavigationBarColor(activity.getResources().getColor(colorResId));
+
+        }
         mentrybatchnumber = (EditText) findViewById(R.id.entry_batch_number);
 //        mentrybatchnumber.addTextChangedListener(shipsWatcher);
         mentrybarcode = (EditText) findViewById(R.id.entry_bar_code);

@@ -1,9 +1,13 @@
 package app.yjzfirst.com.myfirstapplication;
 
+import android.graphics.Color;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.EditText;
 
 import com.google.gson.Gson;
@@ -32,7 +36,21 @@ public class DeliveryActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_delivery);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
 
+            Window window = DeliveryActivity.this.getWindow();
+
+            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+
+            window.setStatusBarColor(Color.BLACK);
+
+
+
+            //底部导航栏
+
+            //window.setNavigationBarColor(activity.getResources().getColor(colorResId));
+
+        }
         mdeliverybatchnumber = (EditText) findViewById(R.id.delivery_batch_number);
 //        mdeliverybatchnumber.addTextChangedListener(shipsWatcher);
         mdeliverybarcode = (EditText) findViewById(R.id.delivery_bar_code);
