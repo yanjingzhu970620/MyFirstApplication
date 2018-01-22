@@ -354,7 +354,14 @@ public class DeliveryActivity extends AppCompatActivity {
 //            showProgress(false);
             Util.showShortToastMessage(DeliveryActivity.this,msg);
             if (success) {
-                mdeliverybatchnumber.requestFocus();
+
+                 mdeliverybatchnumber.setText("");
+                 mdeliverybarcode.setText("");
+                 mdeliverylibrarynumber.setText("");
+                 mdeliveryNumberperbox.setText("");
+                 mdeliverynumboxes.setText("");
+                 mdeliveryOrdernumber.setText("");
+                 mdeliverybatchnumber.requestFocus();
 //                PreferencesUtils.putString(DeliveryActivity.this,email_key,mEmail);
 //                PreferencesUtils.putString(DeliveryActivity.this,password_key,mPassword);
 //                Intent intent=new Intent(DeliveryActivity.this,MainActivity.class);

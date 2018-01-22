@@ -252,6 +252,7 @@ public class EntryActivity extends AppCompatActivity {
         String min_box="";
         String lot_no="";
         String cn_box="";
+        String stock_weight="";
         String success="";
         String msg="";
         int responsecode=0;
@@ -261,6 +262,7 @@ public class EntryActivity extends AppCompatActivity {
             location=mentrylibrarynumber.getText().toString();
             cn_box=mentrynumboxes.getText().toString();
             min_box=mentryNumberperbox.getText().toString();
+            stock_weight=entryweightthousands.getText().toString();
         }
 
         @Override
@@ -279,6 +281,7 @@ public class EntryActivity extends AppCompatActivity {
                 mparams.put("location",location);
                 mparams.put("min_box",min_box);
                 mparams.put("cn_box",cn_box);
+                mparams.put("stock_weight",stock_weight);
 
                 String postparams = new Gson().toJson(mparams);
 //                postparams=URLEncoder.encode(postparams,"utf-8");
@@ -337,6 +340,12 @@ public class EntryActivity extends AppCompatActivity {
 //            showProgress(false);
             Util.showShortToastMessage(EntryActivity.this,msg);
             if (success) {
+                 mentrybatchnumber.setText("");
+                 mentrybarcode.setText("");
+                 mentrylibrarynumber.setText("");
+                 mentryNumberperbox.setText("");
+                 mentrynumboxes.setText("");
+                 entryweightthousands.setText("");
                 mentrybatchnumber.requestFocus();
 //                PreferencesUtils.putString(EntryActivity.this,email_key,mEmail);
 //                PreferencesUtils.putString(EntryActivity.this,password_key,mPassword);

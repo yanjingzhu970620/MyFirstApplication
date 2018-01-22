@@ -372,7 +372,14 @@ public class CheckActivity extends AppCompatActivity {
 //            showProgress(false);
             Util.showShortToastMessage(CheckActivity.this,msg);
             if (success) {
-                mcheckbatchnumber.requestFocus();
+
+                 mcheckbatchnumber.setText("");
+                 mcheckbarcode.setText("");
+                 mchecklibrarynumber.setText("");
+                 mcheckNumberperbox.setText("");
+                 mchecknumboxes.setText("");
+                 mcheckbatchnumber.requestFocus();
+
 //                PreferencesUtils.putString(CheckActivity.this,email_key,mEmail);
 //                PreferencesUtils.putString(CheckActivity.this,password_key,mPassword);
 //                Intent intent=new Intent(CheckActivity.this,MainActivity.class);
