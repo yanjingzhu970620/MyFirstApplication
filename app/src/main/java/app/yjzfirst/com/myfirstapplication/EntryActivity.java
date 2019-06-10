@@ -364,7 +364,7 @@ public class EntryActivity extends AppCompatActivity {
                  mentryNumberperbox.setText("");
                  mentrynumboxes.setText("");
                  entryweightthousands.setText("");
-                mentrybatchnumber.requestFocus();
+                 mentrybatchnumber.requestFocus();
 //                PreferencesUtils.putString(EntryActivity.this,email_key,mEmail);
 //                PreferencesUtils.putString(EntryActivity.this,password_key,mPassword);
 //                Intent intent=new Intent(EntryActivity.this,MainActivity.class);

@@ -304,7 +304,7 @@ public class DeliveryActivity extends AppCompatActivity {
 
             try {
                 String url="http://"+PreferencesUtils.getString(DeliveryActivity.this,ip_key,"101.132.164.169")
-                        +":"+PreferencesUtils.getString(DeliveryActivity.this,port_key,"8090")+ IndexConstants.INSTOCK;
+                        +":"+PreferencesUtils.getString(DeliveryActivity.this,port_key,"8090")+ IndexConstants.OUTSTOCK;
 //                "login:","登录帐号","Password":"密码"
                 Print("url:::"+url);
                 Map<String,String> mparams=new HashMap<String,String>();
