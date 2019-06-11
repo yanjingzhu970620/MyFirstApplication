@@ -227,24 +227,7 @@ public class LoginActivity extends AppCompatActivity {
 
 
     }
-    // 开始扫码
-    private  int REQUEST_CODE_SCAN = 111;
-    private void startQrCode() {
-        // 申请相机权限
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
 
-            return;
-        }
-//        // 申请文件读写权限（部分朋友遇到相册选图需要读写权限的情况，这里一并写一下）
-//        if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-//            // 申请权限
-//            ActivityCompat.requestPermissions(EntryActivity.this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, Constant.REQ_PERM_EXTERNAL_STORAGE);
-//            return;
-//        }
-        // 二维码扫码
-        Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-        startActivityForResult(intent, REQUEST_CODE_SCAN);
-    }
     private boolean isEmailValid(String email) {
         //TODO: Replace this with your own logic
         return email.contains("@");
@@ -440,18 +423,17 @@ public class LoginActivity extends AppCompatActivity {
         protected void onPostExecute(final Boolean success) {
             mAuthTask = null;
             showProgress(false);
-            startQrCode();
             Util.showShortToastMessage(LoginActivity.this,msg);
-            if (success) {
-                PreferencesUtils.putString(LoginActivity.this,email_key,mEmail);
-                PreferencesUtils.putString(LoginActivity.this,password_key,mPassword);
-                Intent intent=new Intent(LoginActivity.this,CaptureActivity.class);
+//            if (success) {
+//                PreferencesUtils.putString(LoginActivity.this,email_key,mEmail);
+//                PreferencesUtils.putString(LoginActivity.this,password_key,mPassword);
+                Intent intent=new Intent(LoginActivity.this,MainActivity.class);
                 LoginActivity.this.startActivity(intent);
                 finish();
-            } else {
-                mPasswordView.setError(getString(R.string.error_incorrect_password));
-                mPasswordView.requestFocus();
-            }
+//            } else {
+//                mPasswordView.setError(getString(R.string.error_incorrect_password));
+//                mPasswordView.requestFocus();
+//            }
         }
 
         @Override

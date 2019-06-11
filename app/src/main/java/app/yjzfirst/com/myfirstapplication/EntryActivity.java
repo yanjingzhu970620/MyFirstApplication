@@ -18,6 +18,7 @@ import com.google.gson.Gson;
 import com.yjzfirst.util.IndexConstants;
 import com.yjzfirst.util.PreferencesUtils;
 import com.yjzfirst.util.Util;
+import com.yzq.zxinglibrary.android.CaptureActivity;
 
 import org.json.JSONObject;
 
@@ -28,6 +29,8 @@ import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 
+import static com.yzq.zxinglibrary.common.Constant.CODED_CONTENT;
+
 public class EntryActivity extends AppCompatActivity {
     EditText mentrybatchnumber;
     EditText mentrybarcode;
@@ -36,8 +39,6 @@ public class EntryActivity extends AppCompatActivity {
     EditText mentrynumboxes;
     EditText entryweightthousands;
     private CheckCodeTask mentryTask = null;
-
-    private  int REQUEST_CODE_SCAN = 111;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,14 +76,16 @@ public class EntryActivity extends AppCompatActivity {
         if (view.getId() == R.id.entry_back) {
             finish();
         }else if (view.getId() == R.id.entry_submit_button) {
-            attemptCheck();
+            startQrCode();
+//            attemptCheck();
         }
     }
     // 开始扫码
+    private  int REQUEST_CODE_SCAN = 111;
     private void startQrCode() {
         // 申请相机权限
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
-
+            Util.showShortToastMessage(EntryActivity.this,"请开启相机权限，用于扫码");
             return;
         }
 //        // 申请文件读写权限（部分朋友遇到相册选图需要读写权限的情况，这里一并写一下）
@@ -92,9 +95,32 @@ public class EntryActivity extends AppCompatActivity {
 //            return;
 //        }
         // 二维码扫码
-        Intent intent = new Intent(EntryActivity.this, MainActivity.class);
+        Intent intent = new Intent(EntryActivity.this, CaptureActivity.class);
         startActivityForResult(intent, REQUEST_CODE_SCAN);
     }
+    @Override
+
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+
+        super.onActivityResult(requestCode, resultCode, data);
+
+
+
+        // 扫描二维码/条码回传
+
+        if (requestCode == REQUEST_CODE_SCAN && resultCode == RESULT_OK) {
+
+            if (data != null) {
+
+                String content = data.getStringExtra(CODED_CONTENT);
+
+                Util.showShortToastMessage(EntryActivity.this,"扫描结果为："+ content);
+            }
+
+        }
+
+    }
+
     private void attemptCheck() {
         if (mentryTask != null) {
             return;
