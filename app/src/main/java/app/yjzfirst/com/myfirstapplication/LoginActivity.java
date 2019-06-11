@@ -1,22 +1,17 @@
 package app.yjzfirst.com.myfirstapplication;
 
+import android.Manifest;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
-import android.app.LoaderManager.LoaderCallbacks;
-import android.content.CursorLoader;
 import android.content.Intent;
-import android.content.Loader;
 import android.content.pm.PackageManager;
-import android.database.Cursor;
 import android.graphics.Color;
-import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
-import android.provider.ContactsContract;
 import android.support.annotation.NonNull;
-import android.support.design.widget.Snackbar;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.view.KeyEvent;
 import android.view.View;
@@ -24,7 +19,6 @@ import android.view.View.OnClickListener;
 import android.view.Window;
 import android.view.WindowManager;
 import android.view.inputmethod.EditorInfo;
-import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
@@ -34,21 +28,17 @@ import com.google.gson.Gson;
 import com.yjzfirst.util.IndexConstants;
 import com.yjzfirst.util.PreferencesUtils;
 import com.yjzfirst.util.Util;
+import com.yzq.zxinglibrary.android.CaptureActivity;
 
-import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.net.URLEncoder;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
-import static android.Manifest.permission.READ_CONTACTS;
 import static app.yjzfirst.com.myfirstapplication.R.id.login;
 
 /**
@@ -237,7 +227,24 @@ public class LoginActivity extends AppCompatActivity {
 
 
     }
+    // 开始扫码
+    private  int REQUEST_CODE_SCAN = 111;
+    private void startQrCode() {
+        // 申请相机权限
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
 
+            return;
+        }
+//        // 申请文件读写权限（部分朋友遇到相册选图需要读写权限的情况，这里一并写一下）
+//        if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+//            // 申请权限
+//            ActivityCompat.requestPermissions(EntryActivity.this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, Constant.REQ_PERM_EXTERNAL_STORAGE);
+//            return;
+//        }
+        // 二维码扫码
+        Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+        startActivityForResult(intent, REQUEST_CODE_SCAN);
+    }
     private boolean isEmailValid(String email) {
         //TODO: Replace this with your own logic
         return email.contains("@");
@@ -371,8 +378,8 @@ public class LoginActivity extends AppCompatActivity {
 
             try {
                 Print("login :::");
-                String url="http://"+PreferencesUtils.getString(LoginActivity.this,ip_key,"101.132.164.169")
-                        +":"+PreferencesUtils.getString(LoginActivity.this,port_key,"8090")+ IndexConstants.LOGINURL;
+                String url="http://"+PreferencesUtils.getString(LoginActivity.this,ip_key,"106.15.187.52")
+                        +":"+PreferencesUtils.getString(LoginActivity.this,port_key,"8060")+ IndexConstants.LOGINURL;
 //                "login:","登录帐号","Password":"密码"
                 Print("url:::"+url);
                 Map<String,String> mparams=new HashMap<String,String>();
@@ -407,7 +414,7 @@ public class LoginActivity extends AppCompatActivity {
                         success = jsonObject.getString("success");
                     }
 //                    String s = ins.toString();
-//                    System.err.println("sssssssss:::"+s);
+                    System.err.println("sssssssss:::"+success);
                 }
                 Print("login return:::"+responsecode);
 //                ins.close();
@@ -433,11 +440,12 @@ public class LoginActivity extends AppCompatActivity {
         protected void onPostExecute(final Boolean success) {
             mAuthTask = null;
             showProgress(false);
+            startQrCode();
             Util.showShortToastMessage(LoginActivity.this,msg);
             if (success) {
                 PreferencesUtils.putString(LoginActivity.this,email_key,mEmail);
                 PreferencesUtils.putString(LoginActivity.this,password_key,mPassword);
-                Intent intent=new Intent(LoginActivity.this,MainActivity.class);
+                Intent intent=new Intent(LoginActivity.this,CaptureActivity.class);
                 LoginActivity.this.startActivity(intent);
                 finish();
             } else {

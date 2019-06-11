@@ -1,9 +1,13 @@
 package app.yjzfirst.com.myfirstapplication;
 
+import android.Manifest;
+import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.Window;
@@ -32,6 +36,9 @@ public class EntryActivity extends AppCompatActivity {
     EditText mentrynumboxes;
     EditText entryweightthousands;
     private CheckCodeTask mentryTask = null;
+
+    private  int REQUEST_CODE_SCAN = 111;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -71,7 +78,23 @@ public class EntryActivity extends AppCompatActivity {
             attemptCheck();
         }
     }
+    // 开始扫码
+    private void startQrCode() {
+        // 申请相机权限
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
 
+            return;
+        }
+//        // 申请文件读写权限（部分朋友遇到相册选图需要读写权限的情况，这里一并写一下）
+//        if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+//            // 申请权限
+//            ActivityCompat.requestPermissions(EntryActivity.this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, Constant.REQ_PERM_EXTERNAL_STORAGE);
+//            return;
+//        }
+        // 二维码扫码
+        Intent intent = new Intent(EntryActivity.this, MainActivity.class);
+        startActivityForResult(intent, REQUEST_CODE_SCAN);
+    }
     private void attemptCheck() {
         if (mentryTask != null) {
             return;
