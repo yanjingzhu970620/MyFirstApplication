@@ -362,18 +362,18 @@ public class LoginActivity extends AppCompatActivity {
             try {
                 Print("login :::");
                 String url="http://"+PreferencesUtils.getString(LoginActivity.this,ip_key,"106.15.187.52")
-                        +":"+PreferencesUtils.getString(LoginActivity.this,port_key,"8060")+ IndexConstants.LOGINURL;
+                        +":"+PreferencesUtils.getString(LoginActivity.this,port_key,"8061")+ IndexConstants.LOGINURL;
 //                "login:","登录帐号","Password":"密码"
                 Print("url:::"+url);
                 Map<String,String> mparams=new HashMap<String,String>();
+                mparams.put("username",mEmail);
                 mparams.put("password",mPassword);
-                mparams.put("login",mEmail);
                 String postparams = new Gson().toJson(mparams);
 //                postparams=URLEncoder.encode(postparams,"utf-8");
 
 //                String postparams ="{"+"login:",mEmail,"Password:",mPassword}//"login:"+mEmail+"&password:"+mPassword;
                 byte[] data = postparams.getBytes();
-//                System.err.println("postparams postparams:::"+postparams+data.length);
+                System.err.println("postparams postparams:::"+postparams+data.length);
                 URL posturl = new URL(url);
                 HttpURLConnection conn = (HttpURLConnection) posturl.openConnection();
                 conn.setConnectTimeout(10000);
@@ -385,7 +385,7 @@ public class LoginActivity extends AppCompatActivity {
                 conn.setRequestProperty("Content-Type", "application/json");
                 conn.setRequestProperty("Content-Length", String.valueOf(data.length)); // 注意是字节长度, 不是字符长度
 
-//                conn.setDoOutput(true); // 准备写出
+                conn.setDoOutput(true); // 准备写出
                 conn.getOutputStream().write(data);
 
                 responsecode=conn.getResponseCode();
@@ -424,16 +424,16 @@ public class LoginActivity extends AppCompatActivity {
             mAuthTask = null;
             showProgress(false);
             Util.showShortToastMessage(LoginActivity.this,msg);
-//            if (success) {
-//                PreferencesUtils.putString(LoginActivity.this,email_key,mEmail);
-//                PreferencesUtils.putString(LoginActivity.this,password_key,mPassword);
+            if (success) {
+                PreferencesUtils.putString(LoginActivity.this,email_key,mEmail);
+                PreferencesUtils.putString(LoginActivity.this,password_key,mPassword);
                 Intent intent=new Intent(LoginActivity.this,MainActivity.class);
                 LoginActivity.this.startActivity(intent);
                 finish();
-//            } else {
-//                mPasswordView.setError(getString(R.string.error_incorrect_password));
-//                mPasswordView.requestFocus();
-//            }
+            } else {
+                mPasswordView.setError(getString(R.string.error_incorrect_password));
+                mPasswordView.requestFocus();
+            }
         }
 
         @Override
@@ -447,9 +447,11 @@ public class LoginActivity extends AppCompatActivity {
                 data = readStream(ins);
 
             String  json = new String(data);        // 把字符数组转换成字符串
+                Print("login msgmsg:::"+json);
 //            JSONArray array = new JSONArray(json);
 //            for(int i = 0 ; i < array.length() ; i++){
                 JSONObject jsonObject = new JSONObject(json);//array.getJSONObject(i);
+                Print("login msgmsg:::"+jsonObject);
 //                String msg=jsonObject.getString("message");
 //                String success=jsonObject.getString("success");
                 return jsonObject;

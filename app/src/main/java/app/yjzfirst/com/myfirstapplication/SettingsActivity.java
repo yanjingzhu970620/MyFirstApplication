@@ -34,9 +34,9 @@ public class SettingsActivity extends AppCompatActivity {
 
         }
         eip = (EditText) findViewById(R.id.ip_edit);
-        eip.setText(PreferencesUtils.getString(SettingsActivity.this, ip_key, "101.132.164.169"));
+        eip.setText(PreferencesUtils.getString(SettingsActivity.this, ip_key, "106.15.187.52"));
         eport = (EditText) findViewById(R.id.port_edit);
-        eport.setText(PreferencesUtils.getString(SettingsActivity.this, port_key, "8090"));
+        eport.setText(PreferencesUtils.getString(SettingsActivity.this, port_key, "8061"));
     }
 
     public void onClick(View view) {

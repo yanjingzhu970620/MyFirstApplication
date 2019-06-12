@@ -6,7 +6,7 @@ package com.yjzfirst.util;
 
 public class IndexConstants {
 
-    public static final String LOGINURL="/api/resusers/checklogin";
+    public static final String LOGINURL="/app/login";
     public static final String TAKINGCHECKBARCODE="/api/taking/checkbarcode";
     public static final String INSTOCKCHECKBARCODE="/api/instock/checkbarcode ";
     public static final String OUTSTOCKCHECKBARCODE="/api/outstock/checkbarcode ";
