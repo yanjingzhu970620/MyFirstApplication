@@ -1,6 +1,5 @@
 package app.yjzfirst.com.myfirstapplication;
 
-import android.Manifest;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
@@ -11,7 +10,6 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.view.KeyEvent;
 import android.view.View;
@@ -24,11 +22,9 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import com.google.gson.Gson;
 import com.yjzfirst.util.IndexConstants;
 import com.yjzfirst.util.PreferencesUtils;
 import com.yjzfirst.util.Util;
-import com.yzq.zxinglibrary.android.CaptureActivity;
 
 import org.json.JSONObject;
 
@@ -36,8 +32,6 @@ import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.HashMap;
-import java.util.Map;
 
 import static app.yjzfirst.com.myfirstapplication.R.id.login;
 
@@ -360,38 +354,43 @@ public class LoginActivity extends AppCompatActivity {
             // TODO: attempt authentication against a network service.
 
             try {
-                Print("login :::");
                 String url="http://"+PreferencesUtils.getString(LoginActivity.this,ip_key,"106.15.187.52")
-                        +":"+PreferencesUtils.getString(LoginActivity.this,port_key,"8061")+ IndexConstants.LOGINURL;
+                        +":"+PreferencesUtils.getString(LoginActivity.this,port_key,"8061")+ IndexConstants.LOGINURL+"/abw_t"
+                        +"/"+mEmail+"/"+mPassword;
 //                "login:","登录帐号","Password":"密码"
                 Print("url:::"+url);
-                Map<String,String> mparams=new HashMap<String,String>();
-                mparams.put("username",mEmail);
-                mparams.put("password",mPassword);
-                String postparams = new Gson().toJson(mparams);
-//                postparams=URLEncoder.encode(postparams,"utf-8");
-
-//                String postparams ="{"+"login:",mEmail,"Password:",mPassword}//"login:"+mEmail+"&password:"+mPassword;
-                byte[] data = postparams.getBytes();
-                System.err.println("postparams postparams:::"+postparams+data.length);
+//                Map<String,String> mparams=new HashMap<String,String>();
+//                mparams.put("username",mEmail);
+//                mparams.put("password",mPassword);
+//                mparams.put("db","abw_t");
+//                String postparams = new Gson().toJson(mparams);
+//////                postparams=URLEncoder.encode(postparams,"utf-8");
+////
+//////                String postparams ="{"+"login:",mEmail,"Password:",mPassword}//"login:"+mEmail+"&password:"+mPassword;
+//                byte[] data = postparams.getBytes();
+//                System.err.println("postparams postparams:::"+postparams+data.length);
                 URL posturl = new URL(url);
                 HttpURLConnection conn = (HttpURLConnection) posturl.openConnection();
                 conn.setConnectTimeout(10000);
-                conn.setDoInput(true);                  //打开输入流，以便从服务器获取数据
-                conn.setDoOutput(true);                 //打开输出流，以便向服务器提交数据
-                conn.setRequestMethod("POST");     //设置以Post方式提交数据
-                conn.setUseCaches(false);               //使用Post方式不能使用缓存
-                //设置请求体的类型是文本类型
-                conn.setRequestProperty("Content-Type", "application/json");
-                conn.setRequestProperty("Content-Length", String.valueOf(data.length)); // 注意是字节长度, 不是字符长度
-
-                conn.setDoOutput(true); // 准备写出
-                conn.getOutputStream().write(data);
+//                conn.setDoInput(true);                  //打开输入流，以便从服务器获取数据
+//                conn.setDoOutput(true);                 //打开输出流，以便向服务器提交数据
+//                conn.setRequestMethod("POST");     //设置以Post方式提交数据
+//                conn.setUseCaches(true);               //使用Post方式不能使用缓存
+//                //设置请求体的类型是文本类型
+//                conn.setRequestProperty("Content-Type", "application/json");
+//                conn.setRequestProperty("Content-Length", String.valueOf(data.length)); // 注意是字节长度, 不是字符长度
+//
+//                conn.setDoOutput(true); // 准备写出
+//                conn.getOutputStream().write(data);
 
                 responsecode=conn.getResponseCode();
                 if(responsecode==200) {
                     InputStream ins = conn.getInputStream();
-                    JSONObject jsonObject= parseJson(ins);
+                    JSONObject rootjsonObject= parseJson(ins);
+                    JSONObject jsonObject= null;
+                    if (rootjsonObject != null) {
+                        jsonObject = rootjsonObject.getJSONArray("results").getJSONObject(0);
+                    }
                     if(jsonObject!=null) {
                         msg = jsonObject.getString("message");
                         success = jsonObject.getString("success");
@@ -416,7 +415,7 @@ public class LoginActivity extends AppCompatActivity {
 //            }
 
             // TODO: register the new account here.
-            return success.equals("1");
+            return success.equals("true");
         }
 
         @Override
