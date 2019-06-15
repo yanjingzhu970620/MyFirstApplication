@@ -20,7 +20,7 @@
     <string name="title_activity_main">MainActivity</string>
     <string name="action_settings">Settings</string>
     <string name="delivery">delivery</string>
-    <string name="check_main">Check</string>
+    <string name="check_main">ReportWork</string>
     <string name="product_batch_number">product batch number</string>
     <string name="Bar_code">Bar code</string>
     <string name="Library_number">Library number</string>

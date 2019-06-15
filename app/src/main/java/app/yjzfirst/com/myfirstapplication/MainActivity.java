@@ -3,26 +3,16 @@ package app.yjzfirst.com.myfirstapplication;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Build;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
-
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
+import android.os.Bundle;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.os.Bundle;
-import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuItem;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
-import android.view.ViewGroup;
-
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.LinearLayout;
-import android.widget.TextView;
+
+import com.yjzfirst.util.PreferencesUtils;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -50,11 +40,14 @@ public class MainActivity extends AppCompatActivity {
 //    private TextView entrytext;
 //    private TextView entrytext;
 
-
+    public String rights_key="rights";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        LinearLayout entry_main=(LinearLayout) findViewById(R.id.entry_main);
+        LinearLayout delivery_main=(LinearLayout) findViewById(R.id.delivery_main);
+        LinearLayout Check_main=(LinearLayout) findViewById(R.id.Check_main);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
 
             Window window = MainActivity.this.getWindow();
@@ -63,14 +56,24 @@ public class MainActivity extends AppCompatActivity {
 
             window.setStatusBarColor(Color.BLACK);
 
-
-
             //底部导航栏
 
             //window.setNavigationBarColor(activity.getResources().getColor(colorResId));
-
         }
-
+        String rights= PreferencesUtils.getString(MainActivity.this,rights_key,"rights");
+        if(!rights.contains("group_app_mrp_finish_in")){
+            entry_main.setVisibility(View.GONE);
+        }
+        if(!rights.contains("group_app_mrp_finish_in_confirm")){
+            entry_main.setVisibility(View.GONE);
+        }
+        if(!rights.contains("group_app_mrp_move")){
+            Check_main.setVisibility(View.GONE);
+        }
+        if(!rights.contains("group_app_sales_delivery")){
+            delivery_main.setVisibility(View.GONE);
+        }
+        //"group_app_mrp_finish_in","group_app_mrp_finish_in_confirm","group_app_mrp_move","group_app_sales_delivery"
     }
 
     public void onClick(View view) {

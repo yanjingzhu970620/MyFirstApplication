@@ -26,6 +26,7 @@ import com.yjzfirst.util.IndexConstants;
 import com.yjzfirst.util.PreferencesUtils;
 import com.yjzfirst.util.Util;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.ByteArrayOutputStream;
@@ -337,6 +338,8 @@ public class LoginActivity extends AppCompatActivity {
      */
     public String ip_key="ip";
     public String port_key="port";
+    public String token_key="token";
+    public String rights_key="rights";
     public class UserLoginTask extends AsyncTask<Void, Void, Boolean> {
 
         private final String mEmail;
@@ -394,9 +397,15 @@ public class LoginActivity extends AppCompatActivity {
                     if(jsonObject!=null) {
                         msg = jsonObject.getString("message");
                         success = jsonObject.getString("success");
+                        JSONObject data =jsonObject.getJSONObject("data");
+                        String token =data.getString("token");
+                        JSONArray rights=data.getJSONArray("rights");//"group_app_mrp_finish_in","group_app_mrp_finish_in_confirm","group_app_mrp_move","group_app_sales_delivery"
+                        PreferencesUtils.putString(LoginActivity.this,token_key,token);
+                        PreferencesUtils.putString(LoginActivity.this,rights_key,rights.toString());
+                        Print("rights:::"+PreferencesUtils.getString(LoginActivity.this,rights_key,"rights"));
                     }
 //                    String s = ins.toString();
-                    System.err.println("sssssssss:::"+success);
+//                    System.err.println("sssssssss:::"+success);
                 }
                 Print("login return:::"+responsecode);
 //                ins.close();

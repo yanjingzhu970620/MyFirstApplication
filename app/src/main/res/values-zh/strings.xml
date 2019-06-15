@@ -4,7 +4,7 @@
     <string name="action_settings">设置</string>
     <string name="action_sign_in">登录/注册</string>
     <string name="action_sign_in_short">登录</string>
-    <string name="check_main">盘点</string>
+    <string name="check_main">报工</string>
     <string name="delivery">出库</string>
     <string name="entry">入库</string>
     <string name="error_field_required">This field is required</string>
