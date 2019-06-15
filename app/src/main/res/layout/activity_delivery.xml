@@ -87,29 +87,15 @@
                         android:maxLines="1"
                         android:singleLine="true"
                         android:textColor="@color/black" />
-
-                </LinearLayout>
-
-                <LinearLayout
-                    android:id="@+id/delivery_Bar_code_form"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal">
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:gravity="center"
-                        android:layout_weight="1"
-                        android:text="@string/Bar_code"/>
-
-                    <EditText
-                        android:id="@+id/delivery_bar_code"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:maxLines="1"
-                        android:layout_weight="3"
-                        android:singleLine="true"
-                        android:textColor="@color/black" />
+                    <ImageView
+                        android:id="@+id/delivery_batch_number_button"
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:clickable="true"
+                        android:onClick="onClick"
+                        android:layout_marginStart="2dp"
+                        android:layout_marginBottom="10dp"
+                        android:background="@mipmap/ercode" />
 
                 </LinearLayout>
 
@@ -133,8 +119,49 @@
                         android:layout_weight="3"
                         android:singleLine="true"
                         android:textColor="@color/black" />
+                    <ImageView
+                        android:id="@+id/delivery_library_number_button"
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:clickable="true"
+                        android:onClick="onClick"
+                        android:layout_marginStart="2dp"
+                        android:layout_marginBottom="10dp"
+                        android:background="@mipmap/ercode" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/delivery_Bar_code_form"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:gravity="center"
+                        android:layout_weight="1"
+                        android:text="@string/Bar_code"/>
+
+                    <EditText
+                        android:id="@+id/delivery_bar_code"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:maxLines="1"
+                        android:layout_weight="3"
+                        android:singleLine="true"
+                        android:textColor="@color/black" />
+                    <ImageView
+                        android:id="@+id/delivery_bar_code_button"
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:clickable="true"
+                        android:onClick="onClick"
+                        android:layout_marginStart="2dp"
+                        android:layout_marginBottom="10dp"
+                        android:background="@mipmap/ercode" />
 
                 </LinearLayout>
+
 
                 <LinearLayout
                     android:id="@+id/delivery_Order_number_form"

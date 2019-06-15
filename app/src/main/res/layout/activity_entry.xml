@@ -87,6 +87,13 @@
                         android:maxLines="1"
                         android:singleLine="true"
                         android:textColor="@color/black" />
+                    <Button
+                        android:id="@+id/entry_batch_number_button"
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:layout_marginStart="2dp"
+                        android:layout_marginBottom="10dp"
+                        android:background="@mipmap/ercode" />
 
                 </LinearLayout>
 
@@ -111,7 +118,13 @@
                         android:maxLines="1"
                         android:singleLine="true"
                         android:textColor="@color/black" />
-
+                    <Button
+                        android:id="@+id/entry_bar_code_button"
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:layout_marginStart="2dp"
+                        android:layout_marginBottom="10dp"
+                        android:background="@mipmap/ercode" />
                 </LinearLayout>
 
                 <LinearLayout

@@ -15,6 +15,7 @@ import android.view.WindowManager;
 import android.widget.EditText;
 
 import com.google.gson.Gson;
+import com.google.gson.annotations.Until;
 import com.yjzfirst.util.IndexConstants;
 import com.yjzfirst.util.PreferencesUtils;
 import com.yjzfirst.util.Util;
@@ -29,6 +30,7 @@ import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 
+import static com.yjzfirst.util.Util.REQUEST_CODE_SCAN;
 import static com.yzq.zxinglibrary.common.Constant.CODED_CONTENT;
 
 public class EntryActivity extends AppCompatActivity {
@@ -76,28 +78,11 @@ public class EntryActivity extends AppCompatActivity {
         if (view.getId() == R.id.entry_back) {
             finish();
         }else if (view.getId() == R.id.entry_submit_button) {
-            startQrCode();
+            Util.startQrCode(EntryActivity.this);
 //            attemptCheck();
         }
     }
-    // 开始扫码
-    private  int REQUEST_CODE_SCAN = 111;
-    private void startQrCode() {
-        // 申请相机权限
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
-            Util.showShortToastMessage(EntryActivity.this,"请开启相机权限，用于扫码");
-            return;
-        }
-//        // 申请文件读写权限（部分朋友遇到相册选图需要读写权限的情况，这里一并写一下）
-//        if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-//            // 申请权限
-//            ActivityCompat.requestPermissions(EntryActivity.this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, Constant.REQ_PERM_EXTERNAL_STORAGE);
-//            return;
-//        }
-        // 二维码扫码
-        Intent intent = new Intent(EntryActivity.this, CaptureActivity.class);
-        startActivityForResult(intent, REQUEST_CODE_SCAN);
-    }
+
     @Override
 
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {

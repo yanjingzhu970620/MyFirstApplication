@@ -1,5 +1,6 @@
 package app.yjzfirst.com.myfirstapplication;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -8,6 +9,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.Button;
 import android.widget.EditText;
 
 import com.google.gson.Gson;
@@ -24,6 +26,9 @@ import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 
+import static com.yjzfirst.util.Util.REQUEST_CODE_SCAN;
+import static com.yzq.zxinglibrary.common.Constant.CODED_CONTENT;
+
 public class DeliveryActivity extends AppCompatActivity {
     EditText mdeliverybatchnumber;
     EditText mdeliverybarcode;
@@ -32,6 +37,10 @@ public class DeliveryActivity extends AppCompatActivity {
     EditText mdeliverynumboxes;
     EditText mdeliveryOrdernumber;
     private CheckCodeTask mdeliveryTask = null;
+    enum qrcodemode  {
+        BATCH_NUMBER, LIBRARY_NUMBER,BAR_CODE
+    };
+    private qrcodemode qrcodetextmode=qrcodemode.BAR_CODE;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -53,7 +62,7 @@ public class DeliveryActivity extends AppCompatActivity {
         }
         mdeliverybatchnumber = (EditText) findViewById(R.id.delivery_batch_number);
 //        mdeliverybatchnumber.addTextChangedListener(shipsWatcher);
-        mdeliverybarcode = (EditText) findViewById(R.id.delivery_bar_code);
+        mdeliverybarcode = (EditText) findViewById(R.id.delivery_bar_code);//产品编号会有多个
 //        mdeliverybarcode.addTextChangedListener(shipsWatcher);
         mdeliverylibrarynumber = (EditText) findViewById(R.id.delivery_library_number);
 //        mdeliverylibrarynumber.addTextChangedListener(shipsWatcher);
@@ -62,7 +71,9 @@ public class DeliveryActivity extends AppCompatActivity {
         mdeliverynumboxes = (EditText) findViewById(R.id.delivery_num_boxes);
 //        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         mdeliveryOrdernumber = (EditText) findViewById(R.id.delivery_Order_number);
-
+//        Button mdeliverybarcodebtn = (Button) findViewById(R.id.delivery_bar_code_button);
+//        Button mdeliverylibrarynumberbtn = (Button) findViewById(R.id.delivery_library_number_button);
+//        Button mdeliverybatchnumberbtn = (Button) findViewById(R.id.delivery_batch_number_button);
 //        setSupportActionBar(toolbar);
 //
 //        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
@@ -81,9 +92,51 @@ public class DeliveryActivity extends AppCompatActivity {
         }else if (view.getId() == R.id.delivery_submit_button) {
             Print("delivery_submit_button:::");
             attemptCheck();
+        }else if (view.getId() == R.id.delivery_bar_code_button) {
+            Print("delivery_bar_code_button:::");
+            qrcodetextmode=qrcodemode.BAR_CODE;
+            Util.startQrCode(DeliveryActivity.this);
+        }
+        else if (view.getId() == R.id.delivery_library_number_button) {
+            Print("delivery_library_number_button:::");
+            qrcodetextmode=qrcodemode.LIBRARY_NUMBER;
+            Util.startQrCode(DeliveryActivity.this);
+        }
+        else if (view.getId() == R.id.delivery_batch_number_button) {
+            Print("delivery_batch_number_button:::");
+            qrcodetextmode=qrcodemode.BATCH_NUMBER;
+            Util.startQrCode(DeliveryActivity.this);
         }
     }
+    @Override
 
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+
+        super.onActivityResult(requestCode, resultCode, data);
+
+
+
+        // 扫描二维码/条码回传
+
+        if (requestCode == REQUEST_CODE_SCAN && resultCode == RESULT_OK) {
+
+            if (data != null) {
+
+                String content = data.getStringExtra(CODED_CONTENT);
+
+                Util.showShortToastMessage(DeliveryActivity.this,"扫描结果为："+ content);
+                if(qrcodetextmode==qrcodemode.BAR_CODE){
+                    mdeliverybarcode.setText(content);
+                }else if(qrcodetextmode==qrcodemode.LIBRARY_NUMBER){
+                    mdeliverylibrarynumber.setText(content);
+                }else if(qrcodetextmode==qrcodemode.BATCH_NUMBER){
+                    mdeliverybatchnumber.setText(content);
+                }
+            }
+
+        }
+
+    }
     private void attemptCheck() {
         if (mdeliveryTask != null) {
             return;

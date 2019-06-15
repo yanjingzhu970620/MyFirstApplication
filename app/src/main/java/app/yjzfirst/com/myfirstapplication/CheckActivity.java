@@ -1,5 +1,6 @@
 package app.yjzfirst.com.myfirstapplication;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -25,6 +26,9 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
+
+import static com.yjzfirst.util.Util.REQUEST_CODE_SCAN;
+import static com.yzq.zxinglibrary.common.Constant.CODED_CONTENT;
 
 public class CheckActivity extends AppCompatActivity {
     private CheckCodeTask mCheckTask = null;
@@ -108,7 +112,28 @@ public class CheckActivity extends AppCompatActivity {
         }
     }
 
+    @Override
 
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+
+        super.onActivityResult(requestCode, resultCode, data);
+
+
+
+        // 扫描二维码/条码回传
+
+        if (requestCode == REQUEST_CODE_SCAN && resultCode == RESULT_OK) {
+
+            if (data != null) {
+
+                String content = data.getStringExtra(CODED_CONTENT);
+
+                Util.showShortToastMessage(CheckActivity.this,"扫描结果为："+ content);
+            }
+
+        }
+
+    }
     private void attemptCheck() {
         if (mCheckTask != null) {
             return;

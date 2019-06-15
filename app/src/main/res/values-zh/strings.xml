@@ -25,7 +25,7 @@
     <string name="Number_per_box">每箱数量</string>
     <string name="Number_of_boxes">箱  数</string>
     <string name="Library_number">库位编号</string>
-    <string name="Bar_code">包装条码</string>
+    <string name="Bar_code">产品编码</string>
     <string name="title_activity_check">CheckActivity</string>
     <string name="title_activity_delivery">DeliveryActivity</string>
     <string name="title_activity_entry">EntryActivity</string>
