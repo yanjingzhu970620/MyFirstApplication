@@ -35,6 +35,10 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 
 import static app.yjzfirst.com.myfirstapplication.R.id.login;
+import static com.yjzfirst.util.IndexConstants.ip_key;
+import static com.yjzfirst.util.IndexConstants.port_key;
+import static com.yjzfirst.util.IndexConstants.rights_key;
+import static com.yjzfirst.util.IndexConstants.token_key;
 
 /**
  * A login screen that offers login via email/password.
@@ -336,10 +340,6 @@ public class LoginActivity extends AppCompatActivity {
      * Represents an asynchronous login/registration task used to authenticate
      * the user.
      */
-    public String ip_key="ip";
-    public String port_key="port";
-    public String token_key="token";
-    public String rights_key="rights";
     public class UserLoginTask extends AsyncTask<Void, Void, Boolean> {
 
         private final String mEmail;

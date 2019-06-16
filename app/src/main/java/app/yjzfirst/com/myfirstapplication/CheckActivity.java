@@ -198,12 +198,12 @@ public class CheckActivity extends AppCompatActivity {
             // TODO: attempt authentication against a network service.
 
             try {
-                String url="http://"+PreferencesUtils.getString(CheckActivity.this,ip_key,"101.132.164.169")
-                        +":"+PreferencesUtils.getString(CheckActivity.this,port_key,"8090")+ IndexConstants.TAKINGCHECKBARCODE;
+                String url="http://"+PreferencesUtils.getString(CheckActivity.this,ip_key,"106.15.187.52")
+                        +":"+PreferencesUtils.getString(CheckActivity.this,port_key,"8061")+ IndexConstants.TAKINGCHECKBARCODE;
 //                "login:","登录帐号","Password":"密码"
                 Print("url:::"+url);
                 Map<String,String> mparams=new HashMap<String,String>();
-                mparams.put("login",PreferencesUtils.getString(CheckActivity.this,email_key,"8090"));
+                mparams.put("login",PreferencesUtils.getString(CheckActivity.this,email_key,"8061"));
                 mparams.put("lot_no",lot_no);
                 mparams.put("barcode",barcode);
                 mparams.put("location",location);
@@ -347,12 +347,12 @@ public class CheckActivity extends AppCompatActivity {
             // TODO: attempt authentication against a network service.
 
             try {
-                String url="http://"+PreferencesUtils.getString(CheckActivity.this,ip_key,"101.132.164.169")
-                        +":"+PreferencesUtils.getString(CheckActivity.this,port_key,"8090")+ IndexConstants.TAKINGSTOCK;
+                String url="http://"+PreferencesUtils.getString(CheckActivity.this,ip_key,"106.15.187.52")
+                        +":"+PreferencesUtils.getString(CheckActivity.this,port_key,"8061")+ IndexConstants.TAKINGSTOCK;
 //                "login:","登录帐号","Password":"密码"
                 Print("url:::"+url);
                 Map<String,String> mparams=new HashMap<String,String>();
-                mparams.put("login",PreferencesUtils.getString(CheckActivity.this,email_key,"8090"));
+                mparams.put("login",PreferencesUtils.getString(CheckActivity.this,email_key,"8061"));
                 mparams.put("lot_no",lot_no);
                 mparams.put("barcode",barcode);
                 mparams.put("location",location);
