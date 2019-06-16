@@ -23,6 +23,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -41,6 +42,8 @@ public class DeliveryActivity extends AppCompatActivity {
         BATCH_NUMBER, LIBRARY_NUMBER,BAR_CODE
     };
     private qrcodemode qrcodetextmode=qrcodemode.BAR_CODE;
+    private int boxnum=0;
+    private ArrayList<Map<String,String>> boxesnum=new ArrayList<Map<String,String>>();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -126,7 +129,16 @@ public class DeliveryActivity extends AppCompatActivity {
 
                 Util.showShortToastMessage(DeliveryActivity.this,"扫描结果为："+ content);
                 if(qrcodetextmode==qrcodemode.BAR_CODE){
-                    mdeliverybarcode.setText(content);
+                    if(mdeliverybarcode.getText().equals(content)){
+                        boxnum++;
+                    }else {
+                        Map<String,String> map=new HashMap<String,String>();
+                        map.put(mdeliverybarcode.getText().toString(),boxnum+"");
+                        boxesnum.add(map);//存起每个产品的数量 提交使用
+
+                        mdeliverybarcode.setText(content);
+                        boxnum=1;
+                    }
                 }else if(qrcodetextmode==qrcodemode.LIBRARY_NUMBER){
                     mdeliverylibrarynumber.setText(content);
                 }else if(qrcodetextmode==qrcodemode.BATCH_NUMBER){
