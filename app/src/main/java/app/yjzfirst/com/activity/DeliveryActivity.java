@@ -285,8 +285,7 @@ public class DeliveryActivity extends AppCompatActivity {
         protected void onPostExecute(final Boolean success) {
             if (success) {
                 Util.showShortToastMessage(DeliveryActivity.this,msg);
-                String batchtext=mdeliverybatchnumber.getText().toString();
-                mdeliverybatchnumber.setText(batchtext+"\r");
+                mdeliverylibrarynumber.requestFocus();
                 mAdapter = new ChooseShipAdapter(DeliveryActivity.this, deliveryBean);
                 mSimpleDetailList.setAdapter(mAdapter);
             } else {
@@ -399,7 +398,7 @@ public class DeliveryActivity extends AppCompatActivity {
         protected void onPostExecute(final Boolean success) {
             if (success) {
                 Util.showShortToastMessage(DeliveryActivity.this,msg);
-                mdeliverylibrarynumber.setText(mdeliverylibrarynumber.getText().toString()+"\r");
+                mdeliverybarcode.requestFocus();
             } else {
                 Util.showShortToastMessage(DeliveryActivity.this,msg);
                 mdeliverylibrarynumber.setError("库位编号有错");
