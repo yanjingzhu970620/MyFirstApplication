@@ -1,4 +1,4 @@
-package app.yjzfirst.com.myfirstapplication;
+package app.yjzfirst.com.activity;
 
 import android.graphics.Color;
 import android.os.Build;
@@ -11,11 +11,12 @@ import android.widget.EditText;
 
 import com.yjzfirst.util.PreferencesUtils;
 
+import static com.yjzfirst.util.IndexConstants.ip_key;
+import static com.yjzfirst.util.IndexConstants.port_key;
+
 public class SettingsActivity extends AppCompatActivity {
     EditText eip;
     EditText eport;
-    public String ip_key = "ip";
-    public String port_key = "port";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

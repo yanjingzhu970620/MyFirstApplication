@@ -10,8 +10,6 @@ import android.widget.Toast;
 
 import com.yzq.zxinglibrary.android.CaptureActivity;
 
-import app.yjzfirst.com.myfirstapplication.EntryActivity;
-
 /**
  * Created by 94012 on 2018/1/17.
  */

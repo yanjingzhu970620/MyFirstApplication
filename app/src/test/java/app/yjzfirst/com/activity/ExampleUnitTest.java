@@ -1,4 +1,4 @@
-package app.yjzfirst.com.myfirstapplication;
+package app.yjzfirst.com.activity;
 
 import org.junit.Test;
 

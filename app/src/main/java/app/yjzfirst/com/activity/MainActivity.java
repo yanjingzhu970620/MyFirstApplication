@@ -1,4 +1,4 @@
-package app.yjzfirst.com.myfirstapplication;
+package app.yjzfirst.com.activity;
 
 import android.content.Intent;
 import android.graphics.Color;

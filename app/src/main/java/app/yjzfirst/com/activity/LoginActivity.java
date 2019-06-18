@@ -1,4 +1,4 @@
-package app.yjzfirst.com.myfirstapplication;
+package app.yjzfirst.com.activity;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
@@ -34,8 +34,10 @@ import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
-import static app.yjzfirst.com.myfirstapplication.R.id.login;
+import static app.yjzfirst.com.activity.R.id.login;
+import static com.yjzfirst.util.IndexConstants.email_key;
 import static com.yjzfirst.util.IndexConstants.ip_key;
+import static com.yjzfirst.util.IndexConstants.password_key;
 import static com.yjzfirst.util.IndexConstants.port_key;
 import static com.yjzfirst.util.IndexConstants.rights_key;
 import static com.yjzfirst.util.IndexConstants.token_key;
@@ -49,8 +51,6 @@ public class LoginActivity extends AppCompatActivity {
      * Id to identity READ_CONTACTS permission request.
      */
     private static final int REQUEST_READ_CONTACTS = 0;
-    private static final String email_key = "email";
-    private static final String password_key = "password";
     /**
      * A dummy authentication store containing known user names and passwords.
      * TODO: remove after connecting to a real authentication system.
@@ -407,7 +407,7 @@ public class LoginActivity extends AppCompatActivity {
 //                    String s = ins.toString();
 //                    System.err.println("sssssssss:::"+success);
                 }
-                Print("login return:::"+responsecode);
+                Print("login return:::"+responsecode+"port:::"+PreferencesUtils.getString(LoginActivity.this,port_key,"8061"));
 //                ins.close();
             } catch (Exception e) {
                 // TODO: handle exception
@@ -431,7 +431,7 @@ public class LoginActivity extends AppCompatActivity {
         protected void onPostExecute(final Boolean success) {
             mAuthTask = null;
             showProgress(false);
-            Util.showShortToastMessage(LoginActivity.this,msg);
+            Util.showShortToastMessage(LoginActivity.this,msg+"port:::"+PreferencesUtils.getString(LoginActivity.this,port_key,"8061"));
             if (success) {
                 PreferencesUtils.putString(LoginActivity.this,email_key,mEmail);
                 PreferencesUtils.putString(LoginActivity.this,password_key,mPassword);

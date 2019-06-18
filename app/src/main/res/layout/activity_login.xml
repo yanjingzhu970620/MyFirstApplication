@@ -5,7 +5,7 @@
     android:gravity="center_horizontal"
     android:orientation="vertical"
 
-    tools:context="app.yjzfirst.com.myfirstapplication.LoginActivity">
+    tools:context="app.yjzfirst.com.activity.LoginActivity">
 
     <!-- Login progress -->
     <ProgressBar

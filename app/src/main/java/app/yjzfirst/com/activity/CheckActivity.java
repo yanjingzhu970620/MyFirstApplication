@@ -1,25 +1,22 @@
-package app.yjzfirst.com.myfirstapplication;
+package app.yjzfirst.com.activity;
 
-import android.Manifest;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.EditText;
 
 import com.google.gson.Gson;
-import com.google.gson.annotations.Until;
 import com.yjzfirst.util.IndexConstants;
 import com.yjzfirst.util.PreferencesUtils;
 import com.yjzfirst.util.Util;
-import com.yzq.zxinglibrary.android.CaptureActivity;
 
 import org.json.JSONObject;
 
@@ -33,22 +30,21 @@ import java.util.Map;
 import static com.yjzfirst.util.Util.REQUEST_CODE_SCAN;
 import static com.yzq.zxinglibrary.common.Constant.CODED_CONTENT;
 
-public class EntryActivity extends AppCompatActivity {
-    EditText mentrybatchnumber;
-    EditText mentrybarcode;
-    EditText mentrylibrarynumber;
-    EditText mentryNumberperbox;
-    EditText mentrynumboxes;
-    EditText entryweightthousands;
-    private CheckCodeTask mentryTask = null;
-
+public class CheckActivity extends AppCompatActivity {
+    private CheckCodeTask mCheckTask = null;
+    EditText mcheckbatchnumber;
+    EditText mcheckbarcode;
+    EditText mchecklibrarynumber;
+    EditText mcheckNumberperbox;
+    EditText mchecknumboxes;
+//    EditText mcheckbatchnumber;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_entry);
+        setContentView(R.layout.activity_check);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
 
-            Window window = EntryActivity.this.getWindow();
+            Window window = CheckActivity.this.getWindow();
 
             window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
 
@@ -61,25 +57,58 @@ public class EntryActivity extends AppCompatActivity {
             //window.setNavigationBarColor(activity.getResources().getColor(colorResId));
 
         }
-        mentrybatchnumber = (EditText) findViewById(R.id.entry_batch_number);
-//        mentrybatchnumber.addTextChangedListener(shipsWatcher);
-        mentrybarcode = (EditText) findViewById(R.id.entry_bar_code);
-//        mentrybarcode.addTextChangedListener(shipsWatcher);
-        mentrylibrarynumber = (EditText) findViewById(R.id.entry_library_number);
-//        mentrylibrarynumber.addTextChangedListener(shipsWatcher);
-        mentryNumberperbox = (EditText) findViewById(R.id.entry_Number_per_box);
-//        mentryNumberperbox.addTextChangedListener(shipsWatcher);
-        mentrynumboxes = (EditText) findViewById(R.id.entry_num_boxes);
+        mcheckbatchnumber = (EditText) findViewById(R.id.check_batch_number);
+//        mcheckbatchnumber.addTextChangedListener(shipsWatcher);
+        mcheckbarcode = (EditText) findViewById(R.id.check_bar_code);
+//        mcheckbarcode.addTextChangedListener(shipsWatcher);
+        mchecklibrarynumber = (EditText) findViewById(R.id.check_library_number);
+//        mchecklibrarynumber.addTextChangedListener(shipsWatcher);
+        mcheckNumberperbox = (EditText) findViewById(R.id.check_Number_per_box);
+//        mcheckNumberperbox.addTextChangedListener(shipsWatcher);
+        mchecknumboxes = (EditText) findViewById(R.id.check_num_boxes);
+//        mchecknumboxes.addTextChangedListener(shipsWatcher);
+
 //        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        entryweightthousands = (EditText) findViewById(R.id.entry_weight_thousands);
+//        setSupportActionBar(toolbar);
+//
+//        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+//        fab.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+//                        .setAction("Action", null).show();
+//            }
+//        });
     }
 
+    private TextWatcher shipsWatcher = new TextWatcher() {
+
+        @Override
+        public void onTextChanged(CharSequence s, int start, int before,
+                                  int count) {
+            // TODO Auto-generated method stub
+
+        }
+
+        @Override
+        public void beforeTextChanged(CharSequence s, int start, int count,
+                                      int after) {
+            // TODO Auto-generated method stub
+
+        }
+
+        @Override
+        public void afterTextChanged(Editable s) {
+            // TODO Auto-generated method stub
+//              if(s.){}
+            System.err.println(s.toString());
+        }
+    };
     public void onClick(View view) {
-        if (view.getId() == R.id.entry_back) {
+        if (view.getId() == R.id.check_back) {
             finish();
-        }else if (view.getId() == R.id.entry_submit_button) {
-            Util.startQrCode(EntryActivity.this);
-//            attemptCheck();
+        }else if (view.getId() == R.id.check_submit_button) {
+            attemptCheck();
         }
     }
 
@@ -99,15 +128,14 @@ public class EntryActivity extends AppCompatActivity {
 
                 String content = data.getStringExtra(CODED_CONTENT);
 
-                Util.showShortToastMessage(EntryActivity.this,"扫描结果为："+ content);
+                Util.showShortToastMessage(CheckActivity.this,"扫描结果为："+ content);
             }
 
         }
 
     }
-
     private void attemptCheck() {
-        if (mentryTask != null) {
+        if (mCheckTask != null) {
             return;
         }
 //
@@ -119,12 +147,11 @@ public class EntryActivity extends AppCompatActivity {
 //        String email = mEmailView.getText().toString();
 //        String password = mPasswordView.getText().toString();
 //
-        String lot_no=mentrybatchnumber.getText().toString();
-        String barcode=mentrybarcode.getText().toString();
-        String location=mentrylibrarynumber.getText().toString();
-        String cn_box=mentrynumboxes.getText().toString();
-        String min_box=mentryNumberperbox.getText().toString();
-
+        String lot_no=mcheckbatchnumber.getText().toString();
+        String barcode=mcheckbarcode.getText().toString();
+        String location=mchecklibrarynumber.getText().toString();
+        String cn_box=mchecknumboxes.getText().toString();
+        String min_box=mcheckNumberperbox.getText().toString();
         boolean cancel = false;
 //
         if (lot_no.equals("")||
@@ -138,13 +165,13 @@ public class EntryActivity extends AppCompatActivity {
 //            // There was an error; don't attempt login and focus the first
 //            // form field with an error.
 //            focusView.requestFocus();
-            Util.showShortToastMessage(EntryActivity.this,"请先扫描所有条目");
+            Util.showShortToastMessage(CheckActivity.this,"请先扫描所有条目");
         } else {
 //            // Show a progress spinner, and kick off a background task to
 //            // perform the user login attempt.
 //        showProgress(true);
-            mentryTask =new CheckCodeTask();
-            mentryTask.execute((Void) null);
+        mCheckTask =new CheckCodeTask();
+        mCheckTask.execute((Void) null);
         }
 
 
@@ -153,7 +180,7 @@ public class EntryActivity extends AppCompatActivity {
     public String port_key="port";
     private String email_key = "email";
     public class CheckCodeTask extends AsyncTask<Void, Void, Boolean> {
-        //        String lot_no="";
+//        String lot_no="";
         String location="";
         String barcode="";
         String lot_no="";
@@ -161,9 +188,9 @@ public class EntryActivity extends AppCompatActivity {
         String msg="";
         int responsecode=0;
         CheckCodeTask() {
-            lot_no=mentrybatchnumber.getText().toString();
-            barcode=mentrybarcode.getText().toString();
-            location=mentrylibrarynumber.getText().toString();
+            lot_no=mcheckbatchnumber.getText().toString();
+            barcode=mcheckbarcode.getText().toString();
+            location=mchecklibrarynumber.getText().toString();
         }
 
         @Override
@@ -171,12 +198,12 @@ public class EntryActivity extends AppCompatActivity {
             // TODO: attempt authentication against a network service.
 
             try {
-                String url="http://"+PreferencesUtils.getString(EntryActivity.this,ip_key,"106.15.187.52")
-                        +":"+PreferencesUtils.getString(EntryActivity.this,port_key,"8061")+ IndexConstants.TAKINGCHECKBARCODE;
+                String url="http://"+PreferencesUtils.getString(CheckActivity.this,ip_key,"106.15.187.52")
+                        +":"+PreferencesUtils.getString(CheckActivity.this,port_key,"8061")+ IndexConstants.TAKINGCHECKBARCODE;
 //                "login:","登录帐号","Password":"密码"
                 Print("url:::"+url);
                 Map<String,String> mparams=new HashMap<String,String>();
-                mparams.put("login",PreferencesUtils.getString(EntryActivity.this,email_key,"8061"));
+                mparams.put("login",PreferencesUtils.getString(CheckActivity.this,email_key,"8061"));
                 mparams.put("lot_no",lot_no);
                 mparams.put("barcode",barcode);
                 mparams.put("location",location);
@@ -235,19 +262,19 @@ public class EntryActivity extends AppCompatActivity {
 
         @Override
         protected void onPostExecute(final Boolean success) {
-            mentryTask = null;
+            mCheckTask = null;
 //            showProgress(false);
-//            Util.showShortToastMessage(EntryActivity.this,msg);
+
             if (success) {
-//                PreferencesUtils.putString(EntryActivity.this,email_key,mEmail);
-//                PreferencesUtils.putString(EntryActivity.this,password_key,mPassword);
-//                Intent intent=new Intent(EntryActivity.this,MainActivity.class);
-//                EntryActivity.this.startActivity(intent);
+//                PreferencesUtils.putString(CheckActivity.this,email_key,mEmail);
+//                PreferencesUtils.putString(CheckActivity.this,password_key,mPassword);
+//                Intent intent=new Intent(CheckActivity.this,MainActivity.class);
+//                CheckActivity.this.startActivity(intent);
 //                finish();
-                InStockTask tst =new InStockTask();
+                TakingStockTask tst =new TakingStockTask();
                 tst.execute();
             } else {
-                Util.showShortToastMessage(EntryActivity.this,msg);
+                Util.showShortToastMessage(CheckActivity.this,msg);
 //                mPasswordView.setError(getString(R.string.error_incorrect_password));
 //                mPasswordView.requestFocus();
             }
@@ -255,7 +282,7 @@ public class EntryActivity extends AppCompatActivity {
 
         @Override
         protected void onCancelled() {
-            mentryTask = null;
+            mCheckTask = null;
 //            showProgress(false);
         }
         private JSONObject parseJson(InputStream ins){
@@ -297,24 +324,22 @@ public class EntryActivity extends AppCompatActivity {
         }
 
     }
-    public class InStockTask extends AsyncTask<Void, Void, Boolean> {
+    public class TakingStockTask extends AsyncTask<Void, Void, Boolean> {
         //        String lot_no="";
         String location="";
         String barcode="";
         String min_box="";
         String lot_no="";
         String cn_box="";
-        String stock_weight="";
         String success="";
         String msg="";
         int responsecode=0;
-        InStockTask() {
-            lot_no=mentrybatchnumber.getText().toString();
-            barcode=mentrybarcode.getText().toString();
-            location=mentrylibrarynumber.getText().toString();
-            cn_box=mentrynumboxes.getText().toString();
-            min_box=mentryNumberperbox.getText().toString();
-            stock_weight=entryweightthousands.getText().toString();
+        TakingStockTask() {
+            lot_no=mcheckbatchnumber.getText().toString();
+            barcode=mcheckbarcode.getText().toString();
+            location=mchecklibrarynumber.getText().toString();
+            cn_box=mchecknumboxes.getText().toString();
+            min_box=mcheckNumberperbox.getText().toString();
         }
 
         @Override
@@ -322,18 +347,17 @@ public class EntryActivity extends AppCompatActivity {
             // TODO: attempt authentication against a network service.
 
             try {
-                String url="http://"+PreferencesUtils.getString(EntryActivity.this,ip_key,"106.15.187.52")
-                        +":"+PreferencesUtils.getString(EntryActivity.this,port_key,"8061")+ IndexConstants.INSTOCK;
+                String url="http://"+PreferencesUtils.getString(CheckActivity.this,ip_key,"106.15.187.52")
+                        +":"+PreferencesUtils.getString(CheckActivity.this,port_key,"8061")+ IndexConstants.TAKINGSTOCK;
 //                "login:","登录帐号","Password":"密码"
                 Print("url:::"+url);
                 Map<String,String> mparams=new HashMap<String,String>();
-                mparams.put("login",PreferencesUtils.getString(EntryActivity.this,email_key,"8061"));
+                mparams.put("login",PreferencesUtils.getString(CheckActivity.this,email_key,"8061"));
                 mparams.put("lot_no",lot_no);
                 mparams.put("barcode",barcode);
                 mparams.put("location",location);
                 mparams.put("min_box",min_box);
                 mparams.put("cn_box",cn_box);
-                mparams.put("stock_weight",stock_weight);
 
                 String postparams = new Gson().toJson(mparams);
 //                postparams=URLEncoder.encode(postparams,"utf-8");
@@ -390,19 +414,20 @@ public class EntryActivity extends AppCompatActivity {
         protected void onPostExecute(final Boolean success) {
 //            mAuthTask = null;
 //            showProgress(false);
-            Util.showShortToastMessage(EntryActivity.this,msg);
+            Util.showShortToastMessage(CheckActivity.this,msg);
             if (success) {
-                 mentrybatchnumber.setText("");
-                 mentrybarcode.setText("");
-                 mentrylibrarynumber.setText("");
-                 mentryNumberperbox.setText("");
-                 mentrynumboxes.setText("");
-                 entryweightthousands.setText("");
-                 mentrybatchnumber.requestFocus();
-//                PreferencesUtils.putString(EntryActivity.this,email_key,mEmail);
-//                PreferencesUtils.putString(EntryActivity.this,password_key,mPassword);
-//                Intent intent=new Intent(EntryActivity.this,MainActivity.class);
-//                EntryActivity.this.startActivity(intent);
+
+                 mcheckbatchnumber.setText("");
+                 mcheckbarcode.setText("");
+                 mchecklibrarynumber.setText("");
+                 mcheckNumberperbox.setText("");
+                 mchecknumboxes.setText("");
+                 mcheckbatchnumber.requestFocus();
+
+//                PreferencesUtils.putString(CheckActivity.this,email_key,mEmail);
+//                PreferencesUtils.putString(CheckActivity.this,password_key,mPassword);
+//                Intent intent=new Intent(CheckActivity.this,MainActivity.class);
+//                CheckActivity.this.startActivity(intent);
 //                finish();
             } else {
 //                mPasswordView.setError(getString(R.string.error_incorrect_password));
@@ -454,7 +479,7 @@ public class EntryActivity extends AppCompatActivity {
         }
 
     }
-    String TAG="Entryactivity::";
+    String TAG="Checkctivity::";
     public void Print(String s){
         System.out.println(TAG+s);
     }

@@ -1,4 +1,4 @@
-package app.yjzfirst.com.myfirstapplication;
+package app.yjzfirst.com.activity;
 
 import android.content.Intent;
 import android.graphics.Color;
@@ -9,14 +9,17 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
-import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ListView;
 
 import com.google.gson.Gson;
+import com.yjzfirst.adapter.ChooseShipAdapter;
+import com.yjzfirst.bean.DeliveryBean;
 import com.yjzfirst.util.IndexConstants;
 import com.yjzfirst.util.PreferencesUtils;
 import com.yjzfirst.util.Util;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.ByteArrayOutputStream;
@@ -25,10 +28,12 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import static com.yjzfirst.util.IndexConstants.ip_key;
 import static com.yjzfirst.util.IndexConstants.port_key;
+import static com.yjzfirst.util.IndexConstants.token_key;
 import static com.yjzfirst.util.Util.REQUEST_CODE_SCAN;
 import static com.yzq.zxinglibrary.common.Constant.CODED_CONTENT;
 
@@ -38,7 +43,11 @@ public class DeliveryActivity extends AppCompatActivity {
     EditText mdeliverylibrarynumber;
     EditText mdeliveryNumberperbox;
     EditText mdeliverynumboxes;
+    EditText mdeliverystocknumboxes;
     EditText mdeliveryOrdernumber;
+    ListView mSimpleDetailList;
+    ChooseShipAdapter mAdapter;
+    List<DeliveryBean> deliveryBean= new ArrayList<DeliveryBean>();
     private CheckCodeTask mdeliveryTask = null;
     enum qrcodemode  {
         BATCH_NUMBER, LIBRARY_NUMBER,BAR_CODE
@@ -74,8 +83,14 @@ public class DeliveryActivity extends AppCompatActivity {
         mdeliveryNumberperbox = (EditText) findViewById(R.id.delivery_Number_per_box);
 //        mdeliveryNumberperbox.addTextChangedListener(shipsWatcher);
         mdeliverynumboxes = (EditText) findViewById(R.id.delivery_num_boxes);
+        mdeliverystocknumboxes= (EditText) findViewById(R.id.delivery_stocknum_boxes);
+
 //        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         mdeliveryOrdernumber = (EditText) findViewById(R.id.delivery_Order_number);
+
+        mSimpleDetailList = (ListView) findViewById(R.id.delivery_infolist);
+        mAdapter = new ChooseShipAdapter(this, deliveryBean);
+        mSimpleDetailList.setAdapter(mAdapter);
 //        Button mdeliverybarcodebtn = (Button) findViewById(R.id.delivery_bar_code_button);
 //        Button mdeliverylibrarynumberbtn = (Button) findViewById(R.id.delivery_library_number_button);
 //        Button mdeliverybatchnumberbtn = (Button) findViewById(R.id.delivery_batch_number_button);
@@ -131,20 +146,20 @@ public class DeliveryActivity extends AppCompatActivity {
 
                 Util.showShortToastMessage(DeliveryActivity.this,"扫描结果为："+ content);
                 if(qrcodetextmode==qrcodemode.BAR_CODE){
-                    if(mdeliverybarcode.getText().equals(content)){
-                        boxnum++;
-                    }else {
-                        Map<String,String> map=new HashMap<String,String>();
-                        map.put(mdeliverybarcode.getText().toString(),boxnum+"");
-                        boxesnum.add(map);//存起每个产品的数量 提交使用
 
-                        mdeliverybarcode.setText(content);
-                        boxnum=1;
-                    }
+//                    CheckproductinfoTask checkproductinfoTask=new CheckproductinfoTask(content);
+                    CheckproductinfoTask checkproductinfoTask=new CheckproductinfoTask("123");
+                    checkproductinfoTask.execute();
                 }else if(qrcodetextmode==qrcodemode.LIBRARY_NUMBER){
-                    mdeliverylibrarynumber.setText(content);
+//                    mdeliverylibrarynumber.setText(content);
+                    mdeliverylibrarynumber.setText("YF10102");
+                    CheckLibrarynumTask checklibrarynumTask=new CheckLibrarynumTask();
+                    checklibrarynumTask.execute();
                 }else if(qrcodetextmode==qrcodemode.BATCH_NUMBER){
-                    mdeliverybatchnumber.setText(content);
+//                    mdeliverybatchnumber.setText(content);//
+                    mdeliverybatchnumber.setText("SD20190416-01");//测试数据
+                    GetforminfoTask getforminfotask=new GetforminfoTask();
+                    getforminfotask.execute((Void) null);
                 }
             }
 
@@ -201,13 +216,13 @@ public class DeliveryActivity extends AppCompatActivity {
     private String email_key = "email";
     public class GetforminfoTask extends AsyncTask<Void, Void, Boolean> {
         String token="";
-        String barcode="";
+        String batch_num="";
         String success="";
         String msg="";
         int responsecode=0;
         GetforminfoTask() {
-            barcode=mdeliverybarcode.getText().toString();
-            token=PreferencesUtils.getString(DeliveryActivity.this,port_key,"8061");
+            batch_num=mdeliverybatchnumber.getText().toString();
+            token=PreferencesUtils.getString(DeliveryActivity.this,token_key,"");
         }
 
         @Override
@@ -216,84 +231,178 @@ public class DeliveryActivity extends AppCompatActivity {
 
             try {
                 String url="http://"+PreferencesUtils.getString(DeliveryActivity.this,ip_key,"106.15.187.52")
-                        +":"+PreferencesUtils.getString(DeliveryActivity.this,port_key,"8061")+ IndexConstants.TAKINGCHECKBARCODE;
-//                "login:","登录帐号","Password":"密码"
+                        +":"+PreferencesUtils.getString(DeliveryActivity.this,port_key,"8061")+
+                        IndexConstants.CHECKDELIVERYFORM+"?name="+batch_num+"&token="+token;
                 Print("url:::"+url);
-                Map<String,String> mparams=new HashMap<String,String>();
-                mparams.put("login",PreferencesUtils.getString(DeliveryActivity.this,email_key,"8061"));
-//                mparams.put("lot_no",lot_no);
-//                mparams.put("barcode",barcode);
-//                mparams.put("location",location);
-
-
-                String postparams = new Gson().toJson(mparams);
-//                postparams=URLEncoder.encode(postparams,"utf-8");
-
-//                String postparams ="{"+"login:",mEmail,"Password:",mPassword}//"login:"+mEmail+"&password:"+mPassword;
-                byte[] data = postparams.getBytes();
-//                System.err.println("postparams postparams:::"+postparams+data.length);
                 URL posturl = new URL(url);
                 HttpURLConnection conn = (HttpURLConnection) posturl.openConnection();
                 conn.setConnectTimeout(10000);
-                conn.setDoInput(true);                  //打开输入流，以便从服务器获取数据
-                conn.setDoOutput(true);                 //打开输出流，以便向服务器提交数据
-                conn.setRequestMethod("POST");     //设置以Post方式提交数据
-                conn.setUseCaches(false);               //使用Post方式不能使用缓存
-                //设置请求体的类型是文本类型
-                conn.setRequestProperty("Content-Type", "application/json");
-                conn.setRequestProperty("Content-Length", String.valueOf(data.length)); // 注意是字节长度, 不是字符长度
-
-//                conn.setDoOutput(true); // 准备写出
-                conn.getOutputStream().write(data);
+                            //使用Post方式不能使用缓存
 
                 responsecode=conn.getResponseCode();
                 if(responsecode==200) {
                     InputStream ins = conn.getInputStream();
-                    JSONObject jsonObject= parseJson(ins);
+                    JSONObject rootjsonObject= parseJson(ins);
+                    JSONObject jsonObject= null;
+                    if (rootjsonObject != null) {
+                        jsonObject = rootjsonObject.getJSONArray("results").getJSONObject(0);
+                    }
                     if(jsonObject!=null) {
                         msg = jsonObject.getString("message");
                         success = jsonObject.getString("success");
+                        if(success.equals("true")) {
+                            JSONArray data = jsonObject.getJSONArray("data");
+                            for(int d=0;d<data.length();d++) {
+//                        String token =data.getString("line_data");
+                                JSONArray line_data = data.getJSONObject(d).getJSONArray("line_data");
+                                for (int i = 0; i < line_data.length(); i++) {
+                                    DeliveryBean deliver = new DeliveryBean();
+                                    deliver.bar_code = line_data.getJSONObject(i).getString("product_code");
+                                    deliver.product_specification = line_data.getJSONObject(i).getString("product_name");
+                                    deliver.number_applications = line_data.getJSONObject(i).getString("qty");
+                                    deliver.number_boxes = line_data.getJSONObject(i).getString("box_qty");
+                                    deliver.numbers = line_data.getJSONObject(i).getString("product_qty");
+                                    deliveryBean.add(deliver);
+                                }
+                            }
+                        }
                     }
-//                    String s = ins.toString();
-//                    System.err.println("sssssssss:::"+s);
                 }
                 Print(" return:::"+responsecode);
-//                ins.close();
+
             } catch (Exception e) {
                 // TODO: handle exception
                 System.err.println("未能获取网络数据");
                 e.printStackTrace();
             }
 
-//            for (String credential : DUMMY_CREDENTIALS) {
-//                String[] pieces = credential.split(":");
-//                if (pieces[0].equals(mEmail)) {
-//                    // Account exists, return true if the password matches.
-//                    return pieces[1].equals(mPassword);
-//                }
-//            }
 
             // TODO: register the new account here.
-            return success.equals("1");
+            return success.equals("true");
         }
 
         @Override
         protected void onPostExecute(final Boolean success) {
-            mdeliveryTask = null;
-//            showProgress(false);
-//            Util.showShortToastMessage(EntryActivity.this,msg);
             if (success) {
-//                PreferencesUtils.putString(EntryActivity.this,email_key,mEmail);
-//                PreferencesUtils.putString(EntryActivity.this,password_key,mPassword);
-//                Intent intent=new Intent(EntryActivity.this,MainActivity.class);
-//                EntryActivity.this.startActivity(intent);
-//                finish();
-                OutStockTask tst =new OutStockTask();
-                tst.execute();
+                Util.showShortToastMessage(DeliveryActivity.this,msg);
+                String batchtext=mdeliverybatchnumber.getText().toString();
+                mdeliverybatchnumber.setText(batchtext+"\r");
+                mAdapter = new ChooseShipAdapter(DeliveryActivity.this, deliveryBean);
+                mSimpleDetailList.setAdapter(mAdapter);
             } else {
                 Util.showShortToastMessage(DeliveryActivity.this,msg);
-//                mPasswordView.setError(getString(R.string.error_incorrect_password));
-//                mPasswordView.requestFocus();
+                mdeliverybatchnumber.setError("出货单号有错");
+            }
+        }
+
+        @Override
+        protected void onCancelled() {
+//            mAuthTask = null;
+//            showProgress(false);
+        }
+        private JSONObject parseJson(InputStream ins){
+            byte[] data = new byte[0];   // 把输入流转换成字符数组
+            try {
+                data = readStream(ins);
+
+                String  json = new String(data);        // 把字符数组转换成字符串
+                Print("check forminfo msgmsg:::"+json);
+//            JSONArray array = new JSONArray(json);
+//            for(int i = 0 ; i < array.length() ; i++){
+                JSONObject jsonObject = new JSONObject(json);//array.getJSONObject(i);
+//                String msg=jsonObject.getString("message");
+//                String success=jsonObject.getString("success");
+                return jsonObject;
+//            }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+        /**
+         182.     * 把输入流转换成字符数组
+         183.     * @param inputStream   输入流
+         184.     * @return  字符数组
+         185.     * @throws Exception
+         186.     */
+        public  byte[] readStream(InputStream inputStream) throws Exception {
+            ByteArrayOutputStream bout = new ByteArrayOutputStream();
+            byte[] buffer = new byte[1024];
+            int len = 0;
+            while ((len = inputStream.read(buffer)) != -1) {
+                bout.write(buffer, 0, len);
+            }
+            bout.close();
+            inputStream.close();
+
+            return bout.toByteArray();
+        }
+
+    }
+    public class CheckLibrarynumTask extends AsyncTask<Void, Void, Boolean> {
+        String token="";
+        String library_num="";
+        String success="";
+        String msg="";
+        int responsecode=0;
+        CheckLibrarynumTask() {
+            library_num=mdeliverylibrarynumber.getText().toString();
+            token=PreferencesUtils.getString(DeliveryActivity.this,token_key,"");
+        }
+
+        @Override
+        protected Boolean doInBackground(Void... params) {
+            // TODO: attempt authentication against a network service.
+
+            try {
+                String url="http://"+PreferencesUtils.getString(DeliveryActivity.this,ip_key,"106.15.187.52")
+                        +":"+PreferencesUtils.getString(DeliveryActivity.this,port_key,"8061")+
+                        IndexConstants.CHECKLIBRARY+"?location_barcode="+library_num+"&token="+token;
+//                "login:","登录帐号","Password":"密码"
+                Print("url:::"+url);
+                URL posturl = new URL(url);
+                HttpURLConnection conn = (HttpURLConnection) posturl.openConnection();
+                conn.setConnectTimeout(10000);
+                //使用Post方式不能使用缓存
+
+                responsecode=conn.getResponseCode();
+                if(responsecode==200) {
+                    InputStream ins = conn.getInputStream();
+                    JSONObject rootjsonObject= parseJson(ins);
+                    JSONObject jsonObject= null;
+                    if (rootjsonObject != null) {
+                        jsonObject = rootjsonObject.getJSONArray("results").getJSONObject(0);
+                    }
+                    if(jsonObject!=null) {
+                        msg = jsonObject.getString("message");
+                        success = jsonObject.getString("success");
+                        JSONObject data =jsonObject.getJSONObject("data");
+//                        String token =data.getString("token");
+//                        JSONArray rights=data.getJSONArray("rights");//"group_app_mrp_finish_in","group_app_mrp_finish_in_confirm","group_app_mrp_move","group_app_sales_delivery"
+
+                    }
+//                    ins.close();
+                }
+                Print(" return:::"+responsecode);
+
+            } catch (Exception e) {
+                // TODO: handle exception
+                System.err.println("未能获取网络数据");
+                e.printStackTrace();
+            }
+
+            // TODO: register the new account here.
+            return success.equals("true");
+        }
+
+        @Override
+        protected void onPostExecute(final Boolean success) {
+            if (success) {
+                Util.showShortToastMessage(DeliveryActivity.this,msg);
+                mdeliverylibrarynumber.setText(mdeliverylibrarynumber.getText().toString()+"\r");
+            } else {
+                Util.showShortToastMessage(DeliveryActivity.this,msg);
+                mdeliverylibrarynumber.setError("库位编号有错");
             }
         }
 
@@ -314,7 +423,137 @@ public class DeliveryActivity extends AppCompatActivity {
 //                String msg=jsonObject.getString("message");
 //                String success=jsonObject.getString("success");
                 return jsonObject;
-//                Print("login msgmsg:::"+msg);
+//            }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+        /**
+         182.     * 把输入流转换成字符数组
+         183.     * @param inputStream   输入流
+         184.     * @return  字符数组
+         185.     * @throws Exception
+         186.     */
+        public  byte[] readStream(InputStream inputStream) throws Exception {
+            ByteArrayOutputStream bout = new ByteArrayOutputStream();
+            byte[] buffer = new byte[1024];
+            int len = 0;
+            while ((len = inputStream.read(buffer)) != -1) {
+                bout.write(buffer, 0, len);
+            }
+            bout.close();
+            inputStream.close();
+
+            return bout.toByteArray();
+        }
+
+    }
+    public class CheckproductinfoTask extends AsyncTask<Void, Void, Boolean> {
+        String token="";
+        String batch_num="";
+        String product_code="";
+        String success="";
+        String msg="";
+        int responsecode=0;
+        CheckproductinfoTask(String content) {
+            product_code=content;
+            batch_num=mdeliverybatchnumber.getText().toString();
+            token=PreferencesUtils.getString(DeliveryActivity.this,token_key,"");
+        }
+
+        @Override
+        protected Boolean doInBackground(Void... params) {
+            // TODO: attempt authentication against a network service.
+
+            try {
+                String url="http://"+PreferencesUtils.getString(DeliveryActivity.this,ip_key,"106.15.187.52")
+                        +":"+PreferencesUtils.getString(DeliveryActivity.this,port_key,"8061")+
+                        IndexConstants.CHECKDELIVERYPRODUCT+"?product_code="+product_code+"&name="+batch_num+"&token="+token;
+//                "login:","登录帐号","Password":"密码"
+                Print("url:::"+url);
+                URL posturl = new URL(url);
+                HttpURLConnection conn = (HttpURLConnection) posturl.openConnection();
+                conn.setConnectTimeout(10000);
+                //使用Post方式不能使用缓存
+
+                responsecode=conn.getResponseCode();
+                if(responsecode==200) {
+                    InputStream ins = conn.getInputStream();
+                    JSONObject rootjsonObject= parseJson(ins);
+                    JSONObject jsonObject= null;
+                    if (rootjsonObject != null) {
+                        jsonObject = rootjsonObject.getJSONArray("results").getJSONObject(0);
+                    }
+                    if(jsonObject!=null) {
+                        msg = jsonObject.getString("message");
+                        success = jsonObject.getString("success");
+//                        JSONObject data =jsonObject.getJSONObject("data");
+//                        String token =data.getString("token");
+//                        JSONArray rights=data.getJSONArray("rights");//"group_app_mrp_finish_in","group_app_mrp_finish_in_confirm","group_app_mrp_move","group_app_sales_delivery"
+
+                    }
+//                    ins.close();
+                }
+                Print(" return:::"+responsecode);
+
+            } catch (Exception e) {
+                // TODO: handle exception
+                System.err.println("未能获取网络数据");
+                e.printStackTrace();
+            }
+
+//            for (String credential : DUMMY_CREDENTIALS) {
+//                String[] pieces = credential.split(":");
+//                if (pieces[0].equals(mEmail)) {
+//                    // Account exists, return true if the password matches.
+//                    return pieces[1].equals(mPassword);
+//                }
+//            }
+
+            // TODO: register the new account here.
+            return success.equals("true");
+        }
+
+        @Override
+        protected void onPostExecute(final Boolean success) {
+            if (success) {
+                Util.showShortToastMessage(DeliveryActivity.this,msg);
+                if(mdeliverybarcode.getText().toString().equals(product_code)){
+                    boxnum++;
+                }else {
+                    Map<String,String> map=new HashMap<String,String>();
+                    map.put(mdeliverybarcode.getText().toString(),boxnum+"");
+                    boxesnum.add(map);//存起每个产品的数量 提交使用
+
+                    mdeliverybarcode.setText(product_code);
+                    boxnum=1;
+                }
+                mdeliverynumboxes.setText(boxnum+"");
+            } else {
+                Util.showShortToastMessage(DeliveryActivity.this,msg);
+                mdeliverybarcode.setError("产品编号有错");
+            }
+        }
+
+        @Override
+        protected void onCancelled() {
+//            mAuthTask = null;
+//            showProgress(false);
+        }
+        private JSONObject parseJson(InputStream ins){
+            byte[] data = new byte[0];   // 把输入流转换成字符数组
+            try {
+                data = readStream(ins);
+
+                String  json = new String(data);        // 把字符数组转换成字符串
+                Print("check forminfo msgmsg:::"+json);
+//            JSONArray array = new JSONArray(json);
+//            for(int i = 0 ; i < array.length() ; i++){
+                JSONObject jsonObject = new JSONObject(json);//array.getJSONObject(i);
+//                String msg=jsonObject.getString("message");
+//                String success=jsonObject.getString("success");
+                return jsonObject;
 //            }
             } catch (Exception e) {
                 e.printStackTrace();
