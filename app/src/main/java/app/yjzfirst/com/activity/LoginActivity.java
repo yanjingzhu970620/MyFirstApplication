@@ -41,6 +41,7 @@ import static com.yjzfirst.util.IndexConstants.password_key;
 import static com.yjzfirst.util.IndexConstants.port_key;
 import static com.yjzfirst.util.IndexConstants.rights_key;
 import static com.yjzfirst.util.IndexConstants.token_key;
+import static com.yjzfirst.util.Util.readStream;
 
 /**
  * A login screen that offers login via email/password.
@@ -344,9 +345,10 @@ public class LoginActivity extends AppCompatActivity {
 
         private final String mEmail;
         private final String mPassword;
-        String success="";
-        String msg="";
-        int responsecode=0;
+        String success = "";
+        String msg = "";
+        int responsecode = 0;
+
         UserLoginTask(String email, String password) {
             mEmail = email;
             mPassword = password;
@@ -357,11 +359,11 @@ public class LoginActivity extends AppCompatActivity {
             // TODO: attempt authentication against a network service.
 
             try {
-                String url="http://"+PreferencesUtils.getString(LoginActivity.this,ip_key,"106.15.187.52")
-                        +":"+PreferencesUtils.getString(LoginActivity.this,port_key,"8061")+ IndexConstants.LOGINURL+"/abw_t"
-                        +"/"+mEmail+"/"+mPassword;
+                String url = "http://" + PreferencesUtils.getString(LoginActivity.this, ip_key, "106.15.187.52")
+                        + ":" + PreferencesUtils.getString(LoginActivity.this, port_key, "8061") + IndexConstants.LOGINURL + "/abw_t"
+                        + "/" + mEmail + "/" + mPassword;
 //                "login:","登录帐号","Password":"密码"
-                Print("url:::"+url);
+                Print("url:::" + url);
 //                Map<String,String> mparams=new HashMap<String,String>();
 //                mparams.put("username",mEmail);
 //                mparams.put("password",mPassword);
@@ -386,28 +388,28 @@ public class LoginActivity extends AppCompatActivity {
 //                conn.setDoOutput(true); // 准备写出
 //                conn.getOutputStream().write(data);
 
-                responsecode=conn.getResponseCode();
-                if(responsecode==200) {
+                responsecode = conn.getResponseCode();
+                if (responsecode == 200) {
                     InputStream ins = conn.getInputStream();
-                    JSONObject rootjsonObject= parseJson(ins);
-                    JSONObject jsonObject= null;
+                    JSONObject rootjsonObject = parseJson(ins);
+                    JSONObject jsonObject = null;
                     if (rootjsonObject != null) {
                         jsonObject = rootjsonObject.getJSONArray("results").getJSONObject(0);
                     }
-                    if(jsonObject!=null) {
+                    if (jsonObject != null) {
                         msg = jsonObject.getString("message");
                         success = jsonObject.getString("success");
-                        JSONObject data =jsonObject.getJSONObject("data");
-                        String token =data.getString("token");
-                        JSONArray rights=data.getJSONArray("rights");//"group_app_mrp_finish_in","group_app_mrp_finish_in_confirm","group_app_mrp_move","group_app_sales_delivery"
-                        PreferencesUtils.putString(LoginActivity.this,token_key,token);
-                        PreferencesUtils.putString(LoginActivity.this,rights_key,rights.toString());
-                        Print("rights:::"+PreferencesUtils.getString(LoginActivity.this,rights_key,"rights"));
+                        JSONObject data = jsonObject.getJSONObject("data");
+                        String token = data.getString("token");
+                        JSONArray rights = data.getJSONArray("rights");//"group_app_mrp_finish_in","group_app_mrp_finish_in_confirm","group_app_mrp_move","group_app_sales_delivery"
+                        PreferencesUtils.putString(LoginActivity.this, token_key, token);
+                        PreferencesUtils.putString(LoginActivity.this, rights_key, rights.toString());
+                        Print("rights:::" + PreferencesUtils.getString(LoginActivity.this, rights_key, "rights"));
                     }
 //                    String s = ins.toString();
 //                    System.err.println("sssssssss:::"+success);
                 }
-                Print("login return:::"+responsecode+"port:::"+PreferencesUtils.getString(LoginActivity.this,port_key,"8061"));
+                Print("login return:::" + responsecode + "port:::" + PreferencesUtils.getString(LoginActivity.this, port_key, "8061"));
 //                ins.close();
             } catch (Exception e) {
                 // TODO: handle exception
@@ -431,11 +433,11 @@ public class LoginActivity extends AppCompatActivity {
         protected void onPostExecute(final Boolean success) {
             mAuthTask = null;
             showProgress(false);
-            Util.showShortToastMessage(LoginActivity.this,msg+"port:::"+PreferencesUtils.getString(LoginActivity.this,port_key,"8061"));
+            Util.showShortToastMessage(LoginActivity.this, msg + "port:::" + PreferencesUtils.getString(LoginActivity.this, port_key, "8061"));
             if (success) {
-                PreferencesUtils.putString(LoginActivity.this,email_key,mEmail);
-                PreferencesUtils.putString(LoginActivity.this,password_key,mPassword);
-                Intent intent=new Intent(LoginActivity.this,MainActivity.class);
+                PreferencesUtils.putString(LoginActivity.this, email_key, mEmail);
+                PreferencesUtils.putString(LoginActivity.this, password_key, mPassword);
+                Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                 LoginActivity.this.startActivity(intent);
                 finish();
             } else {
@@ -449,17 +451,18 @@ public class LoginActivity extends AppCompatActivity {
             mAuthTask = null;
             showProgress(false);
         }
-        private JSONObject parseJson(InputStream ins){
+
+        private JSONObject parseJson(InputStream ins) {
             byte[] data = new byte[0];   // 把输入流转换成字符数组
             try {
                 data = readStream(ins);
 
-            String  json = new String(data);        // 把字符数组转换成字符串
-                Print("login msgmsg:::"+json);
+                String json = new String(data);        // 把字符数组转换成字符串
+                Print("login msgmsg:::" + json);
 //            JSONArray array = new JSONArray(json);
 //            for(int i = 0 ; i < array.length() ; i++){
                 JSONObject jsonObject = new JSONObject(json);//array.getJSONObject(i);
-                Print("login msgmsg:::"+jsonObject);
+                Print("login msgmsg:::" + jsonObject);
 //                String msg=jsonObject.getString("message");
 //                String success=jsonObject.getString("success");
                 return jsonObject;
@@ -470,27 +473,8 @@ public class LoginActivity extends AppCompatActivity {
             }
             return null;
         }
-        /**
-         182.     * 把输入流转换成字符数组
-         183.     * @param inputStream   输入流
-         184.     * @return  字符数组
-         185.     * @throws Exception
-         186.     */
-           public  byte[] readStream(InputStream inputStream) throws Exception {
-                    ByteArrayOutputStream bout = new ByteArrayOutputStream();
-                    byte[] buffer = new byte[1024];
-                    int len = 0;
-                   while ((len = inputStream.read(buffer)) != -1) {
-                           bout.write(buffer, 0, len);
-                        }
-                   bout.close();
-                   inputStream.close();
-
-                    return bout.toByteArray();
-                }
 
     }
-
 //    List<HeartBeatBean> photoResultBeans=new ArrayList<HeartBeatBean>();
 //    private void parseReXMLnew(InputStream inStream) throws Exception {
 //        DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();

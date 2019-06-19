@@ -35,6 +35,7 @@ import static com.yjzfirst.util.IndexConstants.ip_key;
 import static com.yjzfirst.util.IndexConstants.port_key;
 import static com.yjzfirst.util.IndexConstants.token_key;
 import static com.yjzfirst.util.Util.REQUEST_CODE_SCAN;
+import static com.yjzfirst.util.Util.readStream;
 import static com.yzq.zxinglibrary.common.Constant.CODED_CONTENT;
 
 public class DeliveryActivity extends AppCompatActivity {
@@ -48,7 +49,7 @@ public class DeliveryActivity extends AppCompatActivity {
     ListView mSimpleDetailList;
     ChooseShipAdapter mAdapter;
     List<DeliveryBean> deliveryBean= new ArrayList<DeliveryBean>();
-    private CheckCodeTask mdeliveryTask = null;
+    private OutStockTask mdeliveryTask = null;
     enum qrcodemode  {
         BATCH_NUMBER, LIBRARY_NUMBER,BAR_CODE
     };
@@ -152,7 +153,7 @@ public class DeliveryActivity extends AppCompatActivity {
                     checkproductinfoTask.execute();
                 }else if(qrcodetextmode==qrcodemode.LIBRARY_NUMBER){
 //                    mdeliverylibrarynumber.setText(content);
-                    mdeliverylibrarynumber.setText("YF10102");
+                    mdeliverylibrarynumber.setText("9995-YF10102");
                     CheckLibrarynumTask checklibrarynumTask=new CheckLibrarynumTask();
                     checklibrarynumTask.execute();
                 }else if(qrcodetextmode==qrcodemode.BATCH_NUMBER){
@@ -205,7 +206,7 @@ public class DeliveryActivity extends AppCompatActivity {
 //            // Show a progress spinner, and kick off a background task to
 //            // perform the user login attempt.
 //        showProgress(true);
-            mdeliveryTask =new CheckCodeTask();
+            mdeliveryTask =new OutStockTask();
             mdeliveryTask.execute((Void) null);
         }
 
@@ -318,24 +319,7 @@ public class DeliveryActivity extends AppCompatActivity {
             }
             return null;
         }
-        /**
-         182.     * 把输入流转换成字符数组
-         183.     * @param inputStream   输入流
-         184.     * @return  字符数组
-         185.     * @throws Exception
-         186.     */
-        public  byte[] readStream(InputStream inputStream) throws Exception {
-            ByteArrayOutputStream bout = new ByteArrayOutputStream();
-            byte[] buffer = new byte[1024];
-            int len = 0;
-            while ((len = inputStream.read(buffer)) != -1) {
-                bout.write(buffer, 0, len);
-            }
-            bout.close();
-            inputStream.close();
 
-            return bout.toByteArray();
-        }
 
     }
     public class CheckLibrarynumTask extends AsyncTask<Void, Void, Boolean> {
@@ -428,24 +412,7 @@ public class DeliveryActivity extends AppCompatActivity {
             }
             return null;
         }
-        /**
-         182.     * 把输入流转换成字符数组
-         183.     * @param inputStream   输入流
-         184.     * @return  字符数组
-         185.     * @throws Exception
-         186.     */
-        public  byte[] readStream(InputStream inputStream) throws Exception {
-            ByteArrayOutputStream bout = new ByteArrayOutputStream();
-            byte[] buffer = new byte[1024];
-            int len = 0;
-            while ((len = inputStream.read(buffer)) != -1) {
-                bout.write(buffer, 0, len);
-            }
-            bout.close();
-            inputStream.close();
 
-            return bout.toByteArray();
-        }
 
     }
     public class CheckproductinfoTask extends AsyncTask<Void, Void, Boolean> {
@@ -521,9 +488,7 @@ public class DeliveryActivity extends AppCompatActivity {
                 if(mdeliverybarcode.getText().toString().equals(product_code)){
                     boxnum++;
                 }else {
-                    Map<String,String> map=new HashMap<String,String>();
-                    map.put(mdeliverybarcode.getText().toString(),boxnum+"");
-                    boxesnum.add(map);//存起每个产品的数量 提交使用
+                    saveBoxNum();
 
                     mdeliverybarcode.setText(product_code);
                     boxnum=1;
@@ -559,24 +524,13 @@ public class DeliveryActivity extends AppCompatActivity {
             }
             return null;
         }
-        /**
-         182.     * 把输入流转换成字符数组
-         183.     * @param inputStream   输入流
-         184.     * @return  字符数组
-         185.     * @throws Exception
-         186.     */
-        public  byte[] readStream(InputStream inputStream) throws Exception {
-            ByteArrayOutputStream bout = new ByteArrayOutputStream();
-            byte[] buffer = new byte[1024];
-            int len = 0;
-            while ((len = inputStream.read(buffer)) != -1) {
-                bout.write(buffer, 0, len);
-            }
-            bout.close();
-            inputStream.close();
 
-            return bout.toByteArray();
-        }
+
+    }
+    private void saveBoxNum(){
+        Map<String,String> map=new HashMap<String,String>();
+        map.put(mdeliverybarcode.getText().toString(),boxnum+"");
+        boxesnum.add(map);//存起每个产品的数量 提交使用
 
     }
     public class CheckCodeTask extends AsyncTask<Void, Void, Boolean> {
@@ -704,44 +658,36 @@ public class DeliveryActivity extends AppCompatActivity {
             }
             return null;
         }
-        /**
-         182.     * 把输入流转换成字符数组
-         183.     * @param inputStream   输入流
-         184.     * @return  字符数组
-         185.     * @throws Exception
-         186.     */
-        public  byte[] readStream(InputStream inputStream) throws Exception {
-            ByteArrayOutputStream bout = new ByteArrayOutputStream();
-            byte[] buffer = new byte[1024];
-            int len = 0;
-            while ((len = inputStream.read(buffer)) != -1) {
-                bout.write(buffer, 0, len);
-            }
-            bout.close();
-            inputStream.close();
 
-            return bout.toByteArray();
-        }
 
     }
     public class OutStockTask extends AsyncTask<Void, Void, Boolean> {
         //        String lot_no="";
-        String location="";
+//        String location="";
         String barcode="";
-        String min_box="";
-        String lot_no="";
-        String cn_box="";
-        String so="";
+//        String min_box="";
+//        String lot_no="";
+//        String cn_box= "";
+//        String so="";
         String success="";
         String msg="";
+        String warehouse_id="";
+        String location_id="";
+        String batch_num="";
+        String lot_id="";//批号
+        String qty="";//数量
+        String box_qty="";//箱数
+        String token="";//token
         int responsecode=0;
         OutStockTask() {
-            lot_no=mdeliverybatchnumber.getText().toString();
+            saveBoxNum();
+            batch_num=mdeliverybatchnumber.getText().toString();
             barcode=mdeliverybarcode.getText().toString();
-            location=mdeliverylibrarynumber.getText().toString();
-            cn_box=mdeliverynumboxes.getText().toString();
-            min_box=mdeliveryNumberperbox.getText().toString();
-            so=mdeliveryOrdernumber.getText().toString();
+            location_id=mdeliverylibrarynumber.getText().toString();
+            box_qty=mdeliverynumboxes.getText().toString();
+//            min_box=mdeliveryNumberperbox.getText().toString();
+            lot_id=mdeliveryOrdernumber.getText().toString();
+            token=PreferencesUtils.getString(DeliveryActivity.this,token_key,"");
         }
 
         @Override
@@ -753,14 +699,21 @@ public class DeliveryActivity extends AppCompatActivity {
                         +":"+PreferencesUtils.getString(DeliveryActivity.this,port_key,"8061")+ IndexConstants.OUTSTOCK;
 //                "login:","登录帐号","Password":"密码"
                 Print("url:::"+url);
-                Map<String,String> mparams=new HashMap<String,String>();
-                mparams.put("login",PreferencesUtils.getString(DeliveryActivity.this,email_key,"8061"));
-                mparams.put("lot_no",lot_no);
-                mparams.put("barcode",barcode);
-                mparams.put("location",location);
-                mparams.put("min_box",min_box);
-                mparams.put("cn_box",cn_box);
-                mparams.put("so",so);
+                Map<String,HashMap<String,String>> mparams=new HashMap<String,HashMap<String,String>>();
+//                mparams.put("login",PreferencesUtils.getString(DeliveryActivity.this,email_key,"8061"));
+
+                for(int i=0;i<=boxesnum.size();i++){
+                    for(String productkey : boxesnum.get(i).keySet()){
+                        String key="("+productkey+","+warehouse_id+","
+                                +location_id+","+lot_id+","+""+","+""+")";
+                        String boxnum=boxesnum.get(i).get(productkey);
+                        HashMap<String,String> nums=new HashMap<String,String>();
+                        nums.put("qty",boxnum);
+                        nums.put("box_qty",boxnum);
+                        mparams.put(key,nums);
+                    }
+                }
+
                 String postparams = new Gson().toJson(mparams);
 //                postparams=URLEncoder.encode(postparams,"utf-8");
 
@@ -861,24 +814,7 @@ public class DeliveryActivity extends AppCompatActivity {
             }
             return null;
         }
-        /**
-         182.     * 把输入流转换成字符数组
-         183.     * @param inputStream   输入流
-         184.     * @return  字符数组
-         185.     * @throws Exception
-         186.     */
-        public  byte[] readStream(InputStream inputStream) throws Exception {
-            ByteArrayOutputStream bout = new ByteArrayOutputStream();
-            byte[] buffer = new byte[1024];
-            int len = 0;
-            while ((len = inputStream.read(buffer)) != -1) {
-                bout.write(buffer, 0, len);
-            }
-            bout.close();
-            inputStream.close();
 
-            return bout.toByteArray();
-        }
 
     }
     String TAG="Deliveryactivity::";

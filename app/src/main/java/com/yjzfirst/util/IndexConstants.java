@@ -25,5 +25,5 @@ public class IndexConstants {
 
     public static final String TAKINGSTOCK="/api/taking/stock_taking ";
     public static final String INSTOCK="/api/instock/product_instock  ";
-    public static final String OUTSTOCK="/api/outstock/delivery_outstock ";
+    public static final String OUTSTOCK="/app/sale_delivery_post";
 }

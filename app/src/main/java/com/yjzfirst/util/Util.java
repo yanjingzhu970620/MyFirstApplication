@@ -10,6 +10,9 @@ import android.widget.Toast;
 
 import com.yzq.zxinglibrary.android.CaptureActivity;
 
+import java.io.ByteArrayOutputStream;
+import java.io.InputStream;
+
 /**
  * Created by 94012 on 2018/1/17.
  */
@@ -40,5 +43,24 @@ public class Util {
         // 二维码扫码
         Intent intent = new Intent(context, CaptureActivity.class);
         context.startActivityForResult(intent, REQUEST_CODE_SCAN);
+    }
+
+    /**
+     182.     * 把输入流转换成字符数组
+     183.     * @param inputStream   输入流
+     184.     * @return  字符数组
+     185.     * @throws Exception
+     186.     */
+    public static byte[] readStream(InputStream inputStream) throws Exception {
+        ByteArrayOutputStream bout = new ByteArrayOutputStream();
+        byte[] buffer = new byte[1024];
+        int len = 0;
+        while ((len = inputStream.read(buffer)) != -1) {
+            bout.write(buffer, 0, len);
+        }
+        bout.close();
+        inputStream.close();
+
+        return bout.toByteArray();
     }
 }

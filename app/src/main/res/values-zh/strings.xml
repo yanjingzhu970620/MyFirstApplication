@@ -35,5 +35,5 @@
     <string name="title_activity_entry">EntryActivity</string>
     <string name="action_submit">提  交</string>
     <string name="Thousand_weight">千件重量</string>
-    <string name="Order_number">订单编号</string>
+    <string name="Order_number">产品批号</string>
 </resources>
