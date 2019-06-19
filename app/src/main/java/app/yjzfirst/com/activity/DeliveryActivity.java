@@ -149,7 +149,7 @@ public class DeliveryActivity extends AppCompatActivity {
                 if(qrcodetextmode==qrcodemode.BAR_CODE){
 
 //                    CheckproductinfoTask checkproductinfoTask=new CheckproductinfoTask(content);
-                    CheckproductinfoTask checkproductinfoTask=new CheckproductinfoTask("123");
+                    CheckproductinfoTask checkproductinfoTask=new CheckproductinfoTask(content);
                     checkproductinfoTask.execute();
                 }else if(qrcodetextmode==qrcodemode.LIBRARY_NUMBER){
 //                    mdeliverylibrarynumber.setText(content);
@@ -359,7 +359,7 @@ public class DeliveryActivity extends AppCompatActivity {
                     if(jsonObject!=null) {
                         msg = jsonObject.getString("message");
                         success = jsonObject.getString("success");
-                        JSONObject data =jsonObject.getJSONObject("data");
+//                        JSONObject data =jsonObject.getJSONObject("data");
 //                        String token =data.getString("token");
 //                        JSONArray rights=data.getJSONArray("rights");//"group_app_mrp_finish_in","group_app_mrp_finish_in_confirm","group_app_mrp_move","group_app_sales_delivery"
 
@@ -421,9 +421,25 @@ public class DeliveryActivity extends AppCompatActivity {
         String product_code="";
         String success="";
         String msg="";
+        String lot_id="";
+        String qty="";
         int responsecode=0;
         CheckproductinfoTask(String content) {
-            product_code=content;
+            String productinfo[]=content.split(",");
+            for(int i=0;i<productinfo.length;i++){
+               String info= productinfo[i];
+                if(i==0){
+//                    product_code=info;
+                    product_code="123";
+                }else if(i==1){
+                    lot_id=info;
+                }else if(i==2){
+                    qty=info;
+                }else if(i>2){
+                    break;
+                }
+            }
+//            product_code=content;
             batch_num=mdeliverybatchnumber.getText().toString();
             token=PreferencesUtils.getString(DeliveryActivity.this,token_key,"");
         }
@@ -437,6 +453,7 @@ public class DeliveryActivity extends AppCompatActivity {
                         +":"+PreferencesUtils.getString(DeliveryActivity.this,port_key,"8061")+
                         IndexConstants.CHECKDELIVERYPRODUCT+"?product_code="+product_code+"&name="+batch_num+"&token="+token;
 //                "login:","登录帐号","Password":"密码"
+                Print("lot_id:::"+lot_id+"qty:::"+qty);
                 Print("url:::"+url);
                 URL posturl = new URL(url);
                 HttpURLConnection conn = (HttpURLConnection) posturl.openConnection();
@@ -487,6 +504,8 @@ public class DeliveryActivity extends AppCompatActivity {
                 Util.showShortToastMessage(DeliveryActivity.this,msg);
                 if(mdeliverybarcode.getText().toString().equals(product_code)){
                     boxnum++;
+                    boxesnum.remove(boxesnum.size()-1);
+                    saveBoxNum();
                 }else {
                     saveBoxNum();
 
@@ -494,6 +513,8 @@ public class DeliveryActivity extends AppCompatActivity {
                     boxnum=1;
                 }
                 mdeliverynumboxes.setText(boxnum+"");
+                mdeliveryOrdernumber.setText(lot_id);
+                mdeliveryNumberperbox.setText(qty);
             } else {
                 Util.showShortToastMessage(DeliveryActivity.this,msg);
                 mdeliverybarcode.setError("产品编号有错");
@@ -680,12 +701,15 @@ public class DeliveryActivity extends AppCompatActivity {
         String token="";//token
         int responsecode=0;
         OutStockTask() {
-            saveBoxNum();
+
             batch_num=mdeliverybatchnumber.getText().toString();
             barcode=mdeliverybarcode.getText().toString();
-            location_id=mdeliverylibrarynumber.getText().toString();
+            String Warehouse=mdeliverylibrarynumber.getText().toString();
+            String Warehouseids[]=Warehouse.split("-");
+            warehouse_id=Warehouseids[0];
+            location_id=Warehouseids[1];
             box_qty=mdeliverynumboxes.getText().toString();
-//            min_box=mdeliveryNumberperbox.getText().toString();
+            qty=mdeliveryNumberperbox.getText().toString();
             lot_id=mdeliveryOrdernumber.getText().toString();
             token=PreferencesUtils.getString(DeliveryActivity.this,token_key,"");
         }
@@ -701,11 +725,12 @@ public class DeliveryActivity extends AppCompatActivity {
                 Print("url:::"+url);
                 Map<String,HashMap<String,String>> mparams=new HashMap<String,HashMap<String,String>>();
 //                mparams.put("login",PreferencesUtils.getString(DeliveryActivity.this,email_key,"8061"));
-
-                for(int i=0;i<=boxesnum.size();i++){
+                Print("boxesnum.size():::"+boxesnum.size());
+                for(int i=0;i<boxesnum.size();i++){
                     for(String productkey : boxesnum.get(i).keySet()){
                         String key="("+productkey+","+warehouse_id+","
                                 +location_id+","+lot_id+","+""+","+""+")";
+                        Print("boxesnum. key:::"+key+"  "+productkey);
                         String boxnum=boxesnum.get(i).get(productkey);
                         HashMap<String,String> nums=new HashMap<String,String>();
                         nums.put("qty",boxnum);
@@ -715,6 +740,7 @@ public class DeliveryActivity extends AppCompatActivity {
                 }
 
                 String postparams = new Gson().toJson(mparams);
+                Print("urlpostparams:::"+postparams);
 //                postparams=URLEncoder.encode(postparams,"utf-8");
 
 //                String postparams ="{"+"login:",mEmail,"Password:",mPassword}//"login:"+mEmail+"&password:"+mPassword;
