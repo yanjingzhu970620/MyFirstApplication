@@ -36,4 +36,19 @@
     <string name="title_activity_entry">EntryActivity</string>
     <string name="title_activity_check">CheckActivity</string>
     <string name="entry">entry</string>
+    <string name="report_main">report</string>
+    <string name="report_cardid">report cardid</string>
+    <string name="current_process">current process</string>
+    <string name="Product_Specification">specification</string>
+    <string name="report_state">state</string>
+    <string name="numbers">numbers</string>
+    <string name="number_applications">number_applications</string>
+    <string name="Delivery_detail">detail</string>
+    <string name="container_weight">container_weight</string>
+    <string name="report_thousand_weight">report_thousand_weight</string>
+    <string name="net_weight">net weight</string>
+    <string name="waste">waste</string>
+    <string name="gross_weight">gross_weight</string>
+    <string name="report_num">report number</string>
+    <string name="container_id">container id</string>
 </resources>

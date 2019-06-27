@@ -5,6 +5,7 @@
     <string name="action_sign_in">登录/注册</string>
     <string name="action_sign_in_short">登录</string>
     <string name="check_main">报工</string>
+    <string name="report_main">报工</string>
     <string name="delivery">出库</string>
     <string name="entry">入库</string>
     <string name="error_field_required">This field is required</string>
@@ -22,18 +23,28 @@
     <string name="prompt_ip">IP</string>
     <string name="prompt_port">端口</string>
     <string name="product_batch_number">出货单号</string>
+    <string name="report_cardid">流程卡号</string>
     <string name="Number_per_box">每箱数量</string>
+    <string name="container_weight">容器重量</string>
+    <string name="container_id">容器编号</string>
     <string name="Number_of_boxes">箱  数</string>
     <string name="Library_number">库位编号</string>
+    <string name="report_state">状态</string>
     <string name="Delivery_detail">出库明细</string>
     <string name="Bar_code">产品编码</string>
+    <string name="current_process">当前工序</string>
     <string name="number_applications">申请数量</string>
     <string name="Product_Specification">产品规格</string>
     <string name="numbers">已选数量</string>
+    <string name="report_num">数量</string>
     <string name="title_activity_check">CheckActivity</string>
     <string name="title_activity_delivery">DeliveryActivity</string>
     <string name="title_activity_entry">EntryActivity</string>
     <string name="action_submit">提  交</string>
     <string name="Thousand_weight">千件重量</string>
+    <string name="report_thousand_weight">报工千支重</string>
+    <string name="net_weight">净重</string>
+    <string name="gross_weight">毛重</string>
+    <string name="waste">损耗</string>
     <string name="Order_number">产品批号</string>
 </resources>
