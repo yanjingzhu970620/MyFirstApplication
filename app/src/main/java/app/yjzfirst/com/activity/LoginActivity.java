@@ -35,6 +35,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 
 import static app.yjzfirst.com.activity.R.id.login;
+import static com.yjzfirst.util.IndexConstants.db_key;
 import static com.yjzfirst.util.IndexConstants.email_key;
 import static com.yjzfirst.util.IndexConstants.ip_key;
 import static com.yjzfirst.util.IndexConstants.password_key;
@@ -359,8 +360,9 @@ public class LoginActivity extends AppCompatActivity {
             // TODO: attempt authentication against a network service.
 
             try {
-                String url = "http://" + PreferencesUtils.getString(LoginActivity.this, ip_key, "106.15.187.52")
-                        + ":" + PreferencesUtils.getString(LoginActivity.this, port_key, "8061") + IndexConstants.LOGINURL + "/abw_t"
+                String url = "http://" + PreferencesUtils.getString(LoginActivity.this, ip_key, "120.27.2.177")
+                        + ":" + PreferencesUtils.getString(LoginActivity.this, port_key, "8061") + IndexConstants.LOGINURL +
+                        "/"+PreferencesUtils.getString(LoginActivity.this, db_key, "demo-efasten")
                         + "/" + mEmail + "/" + mPassword;
 //                "login:","登录帐号","Password":"密码"
                 Print("url:::" + url);

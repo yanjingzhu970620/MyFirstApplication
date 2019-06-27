@@ -14,6 +14,10 @@ import android.widget.LinearLayout;
 
 import com.yjzfirst.util.PreferencesUtils;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 public class MainActivity extends AppCompatActivity {
 
     /**
@@ -73,6 +77,21 @@ public class MainActivity extends AppCompatActivity {
         if(!rights.contains("group_app_sales_delivery")){
             delivery_main.setVisibility(View.GONE);
         }
+
+        SimpleDateFormat sdf = new SimpleDateFormat(
+                "yyyyMMdd");
+        Date nowdate=new Date();
+        Date expiredate=new Date();;
+        try {
+            expiredate=sdf.parse("20200101");
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        if(nowdate.after(expiredate)){
+
+            finish();
+            System.exit(0);
+        }
         //"group_app_mrp_finish_in","group_app_mrp_finish_in_confirm","group_app_mrp_move","group_app_sales_delivery"
     }
 
@@ -85,7 +104,7 @@ public class MainActivity extends AppCompatActivity {
             Intent intent=new Intent(MainActivity.this,EntryActivity.class);
             MainActivity.this.startActivity(intent);
         }else if (view.getId() == R.id.Check_main) {
-            Intent intent=new Intent(MainActivity.this,CheckActivity.class);
+            Intent intent=new Intent(MainActivity.this,ReportActivity.class);
             MainActivity.this.startActivity(intent);
         }
     }

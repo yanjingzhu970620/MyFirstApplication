@@ -198,7 +198,7 @@ public class CheckActivity extends AppCompatActivity {
             // TODO: attempt authentication against a network service.
 
             try {
-                String url="http://"+PreferencesUtils.getString(CheckActivity.this,ip_key,"106.15.187.52")
+                String url="http://"+PreferencesUtils.getString(CheckActivity.this,ip_key,"120.27.2.177")
                         +":"+PreferencesUtils.getString(CheckActivity.this,port_key,"8061")+ IndexConstants.TAKINGCHECKBARCODE;
 //                "login:","登录帐号","Password":"密码"
                 Print("url:::"+url);
@@ -347,7 +347,7 @@ public class CheckActivity extends AppCompatActivity {
             // TODO: attempt authentication against a network service.
 
             try {
-                String url="http://"+PreferencesUtils.getString(CheckActivity.this,ip_key,"106.15.187.52")
+                String url="http://"+PreferencesUtils.getString(CheckActivity.this,ip_key,"120.27.2.177")
                         +":"+PreferencesUtils.getString(CheckActivity.this,port_key,"8061")+ IndexConstants.TAKINGSTOCK;
 //                "login:","登录帐号","Password":"密码"
                 Print("url:::"+url);

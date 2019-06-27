@@ -153,12 +153,12 @@ public class DeliveryActivity extends AppCompatActivity {
                     checkproductinfoTask.execute();
                 }else if(qrcodetextmode==qrcodemode.LIBRARY_NUMBER){
 //                    mdeliverylibrarynumber.setText(content);
-                    mdeliverylibrarynumber.setText("9995-YF10102");
+                    mdeliverylibrarynumber.setText("9995-YF10101");
                     CheckLibrarynumTask checklibrarynumTask=new CheckLibrarynumTask();
                     checklibrarynumTask.execute();
                 }else if(qrcodetextmode==qrcodemode.BATCH_NUMBER){
 //                    mdeliverybatchnumber.setText(content);//
-                    mdeliverybatchnumber.setText("SD20190416-01");//测试数据
+                    mdeliverybatchnumber.setText("SD20190403-01");//测试数据
                     GetforminfoTask getforminfotask=new GetforminfoTask();
                     getforminfotask.execute((Void) null);
                 }
@@ -231,7 +231,7 @@ public class DeliveryActivity extends AppCompatActivity {
             // TODO: attempt authentication against a network service.
 
             try {
-                String url="http://"+PreferencesUtils.getString(DeliveryActivity.this,ip_key,"106.15.187.52")
+                String url="http://"+PreferencesUtils.getString(DeliveryActivity.this,ip_key,"120.27.2.177")
                         +":"+PreferencesUtils.getString(DeliveryActivity.this,port_key,"8061")+
                         IndexConstants.CHECKDELIVERYFORM+"?name="+batch_num+"&token="+token;
                 Print("url:::"+url);
@@ -338,7 +338,7 @@ public class DeliveryActivity extends AppCompatActivity {
             // TODO: attempt authentication against a network service.
 
             try {
-                String url="http://"+PreferencesUtils.getString(DeliveryActivity.this,ip_key,"106.15.187.52")
+                String url="http://"+PreferencesUtils.getString(DeliveryActivity.this,ip_key,"120.27.2.177")
                         +":"+PreferencesUtils.getString(DeliveryActivity.this,port_key,"8061")+
                         IndexConstants.CHECKLIBRARY+"?location_barcode="+library_num+"&token="+token;
 //                "login:","登录帐号","Password":"密码"
@@ -430,7 +430,7 @@ public class DeliveryActivity extends AppCompatActivity {
                String info= productinfo[i];
                 if(i==0){
 //                    product_code=info;
-                    product_code="123";
+                    product_code="2402";
                 }else if(i==1){
                     lot_id=info;
                 }else if(i==2){
@@ -449,7 +449,7 @@ public class DeliveryActivity extends AppCompatActivity {
             // TODO: attempt authentication against a network service.
 
             try {
-                String url="http://"+PreferencesUtils.getString(DeliveryActivity.this,ip_key,"106.15.187.52")
+                String url="http://"+PreferencesUtils.getString(DeliveryActivity.this,ip_key,"120.27.2.177")
                         +":"+PreferencesUtils.getString(DeliveryActivity.this,port_key,"8061")+
                         IndexConstants.CHECKDELIVERYPRODUCT+"?product_code="+product_code+"&name="+batch_num+"&token="+token;
 //                "login:","登录帐号","Password":"密码"
@@ -502,13 +502,12 @@ public class DeliveryActivity extends AppCompatActivity {
         protected void onPostExecute(final Boolean success) {
             if (success) {
                 Util.showShortToastMessage(DeliveryActivity.this,msg);
-                if(mdeliverybarcode.getText().toString().equals(product_code)){
+                if(product_code.equals(mdeliverybarcode.getText().toString())){
                     boxnum++;
                     boxesnum.remove(boxesnum.size()-1);
-                    saveBoxNum();
+                    saveBoxNum(product_code);
                 }else {
-                    saveBoxNum();
-
+                    saveBoxNum(product_code);
                     mdeliverybarcode.setText(product_code);
                     boxnum=1;
                 }
@@ -548,9 +547,9 @@ public class DeliveryActivity extends AppCompatActivity {
 
 
     }
-    private void saveBoxNum(){
+    private void saveBoxNum(String code){
         Map<String,String> map=new HashMap<String,String>();
-        map.put(mdeliverybarcode.getText().toString(),boxnum+"");
+        map.put(code,boxnum+"");
         boxesnum.add(map);//存起每个产品的数量 提交使用
 
     }
@@ -573,7 +572,7 @@ public class DeliveryActivity extends AppCompatActivity {
             // TODO: attempt authentication against a network service.
 
             try {
-                String url="http://"+PreferencesUtils.getString(DeliveryActivity.this,ip_key,"106.15.187.52")
+                String url="http://"+PreferencesUtils.getString(DeliveryActivity.this,ip_key,"120.27.2.177")
                         +":"+PreferencesUtils.getString(DeliveryActivity.this,port_key,"8061")+ IndexConstants.TAKINGCHECKBARCODE;
 //                "login:","登录帐号","Password":"密码"
                 Print("url:::"+url);
@@ -719,46 +718,47 @@ public class DeliveryActivity extends AppCompatActivity {
             // TODO: attempt authentication against a network service.
 
             try {
-                String url="http://"+PreferencesUtils.getString(DeliveryActivity.this,ip_key,"106.15.187.52")
+                String url="http://"+PreferencesUtils.getString(DeliveryActivity.this,ip_key,"120.27.2.177")
                         +":"+PreferencesUtils.getString(DeliveryActivity.this,port_key,"8061")+ IndexConstants.OUTSTOCK;
 //                "login:","登录帐号","Password":"密码"
                 Print("url:::"+url);
-                Map<String,HashMap<String,String>> mparams=new HashMap<String,HashMap<String,String>>();
+//                Map<String,HashMap<String,String>> mparams=new HashMap<String,HashMap<String,String>>();
 //                mparams.put("login",PreferencesUtils.getString(DeliveryActivity.this,email_key,"8061"));
                 Print("boxesnum.size():::"+boxesnum.size());
+                String mparams="";
                 for(int i=0;i<boxesnum.size();i++){
+                    Print("boxesnum. key:::"+boxesnum.get(i).keySet().toString());
                     for(String productkey : boxesnum.get(i).keySet()){
-                        String key="("+productkey+","+warehouse_id+","
-                                +location_id+","+lot_id+","+""+","+""+")";
-                        Print("boxesnum. key:::"+key+"  "+productkey);
+                        String key="{\"("+productkey+","+warehouse_id+","
+                                +location_id+","+lot_id+","+""+","+""+")\"=";
+                        Print("boxesnum. key:::"+key+"  productkey：："+productkey);
                         String boxnum=boxesnum.get(i).get(productkey);
-                        HashMap<String,String> nums=new HashMap<String,String>();
-                        nums.put("qty",boxnum);
-                        nums.put("box_qty",boxnum);
-                        mparams.put(key,nums);
+                        String value="{\"qty\"="+boxnum+",\"box_qty\"="+boxnum+"}}";
+                        mparams=key+value;
                     }
                 }
 
-                String postparams = new Gson().toJson(mparams);
-                Print("urlpostparams:::"+postparams);
+//                String postparams = new Gson().toJson(mparams);
+//                Print("urlpostparams:::"+postparams);
 //                postparams=URLEncoder.encode(postparams,"utf-8");
 
 //                String postparams ="{"+"login:",mEmail,"Password:",mPassword}//"login:"+mEmail+"&password:"+mPassword;
-                byte[] data = postparams.getBytes();
+//                byte[] data = postparams.getBytes();
 //                System.err.println("postparams postparams:::"+postparams+data.length);
+                url=url+mparams;
                 URL posturl = new URL(url);
                 HttpURLConnection conn = (HttpURLConnection) posturl.openConnection();
-                conn.setConnectTimeout(10000);
-                conn.setDoInput(true);                  //打开输入流，以便从服务器获取数据
-                conn.setDoOutput(true);                 //打开输出流，以便向服务器提交数据
-                conn.setRequestMethod("POST");     //设置以Post方式提交数据
-                conn.setUseCaches(false);               //使用Post方式不能使用缓存
-                //设置请求体的类型是文本类型
-                conn.setRequestProperty("Content-Type", "application/json");
-                conn.setRequestProperty("Content-Length", String.valueOf(data.length)); // 注意是字节长度, 不是字符长度
-
-//                conn.setDoOutput(true); // 准备写出
-                conn.getOutputStream().write(data);
+//                conn.setConnectTimeout(10000);
+//                conn.setDoInput(true);                  //打开输入流，以便从服务器获取数据
+//                conn.setDoOutput(true);                 //打开输出流，以便向服务器提交数据
+                conn.setRequestMethod("GET");     //设置以Post方式提交数据
+//                conn.setUseCaches(false);               //使用Post方式不能使用缓存
+//                //设置请求体的类型是文本类型
+//                conn.setRequestProperty("Content-Type", "application/json");
+//                conn.setRequestProperty("Content-Length", String.valueOf(data.length)); // 注意是字节长度, 不是字符长度
+//
+////                conn.setDoOutput(true); // 准备写出
+//                conn.getOutputStream().write(data);
 
                 responsecode=conn.getResponseCode();
                 if(responsecode==200) {
@@ -788,7 +788,7 @@ public class DeliveryActivity extends AppCompatActivity {
 //            }
 
             // TODO: register the new account here.
-            return success.equals("1");
+            return success.equals("true");
         }
 
         @Override
@@ -814,6 +814,7 @@ public class DeliveryActivity extends AppCompatActivity {
 //                mPasswordView.setError(getString(R.string.error_incorrect_password));
 //                mPasswordView.requestFocus();
             }
+            mdeliveryTask=null;
         }
 
         @Override
@@ -827,6 +828,7 @@ public class DeliveryActivity extends AppCompatActivity {
                 data = readStream(ins);
 
                 String  json = new String(data);        // 把字符数组转换成字符串
+                Print("parse submit json:::"+json);
 //            JSONArray array = new JSONArray(json);
 //            for(int i = 0 ; i < array.length() ; i++){
                 JSONObject jsonObject = new JSONObject(json);//array.getJSONObject(i);
