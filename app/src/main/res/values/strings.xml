@@ -51,4 +51,11 @@
     <string name="gross_weight">gross_weight</string>
     <string name="report_num">report number</string>
     <string name="container_id">container id</string>
+    <string name="action_inspect_cancel">inspect_cancel</string>
+    <string name="action_inspect_ng">nspect_ng</string>
+    <string name="action_inspect_pass">inspect_pass</string>
+    <string name="action_material">material</string>
+    <string name="action_material_cancel">material_cancel</string>
+    <string name="action_report">report</string>
+    <string name="action_report_cancel">report_cancel</string>
 </resources>

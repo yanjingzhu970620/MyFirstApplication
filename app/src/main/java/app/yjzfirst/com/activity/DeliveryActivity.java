@@ -26,6 +26,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -153,7 +154,7 @@ public class DeliveryActivity extends AppCompatActivity {
                     checkproductinfoTask.execute();
                 }else if(qrcodetextmode==qrcodemode.LIBRARY_NUMBER){
 //                    mdeliverylibrarynumber.setText(content);
-                    mdeliverylibrarynumber.setText("9995-YF10101");
+                    mdeliverylibrarynumber.setText("9995-0001");
                     CheckLibrarynumTask checklibrarynumTask=new CheckLibrarynumTask();
                     checklibrarynumTask.execute();
                 }else if(qrcodetextmode==qrcodemode.BATCH_NUMBER){
@@ -171,14 +172,7 @@ public class DeliveryActivity extends AppCompatActivity {
         if (mdeliveryTask != null) {
             return;
         }
-//
-//        // Reset errors.
-//        mEmailView.setError(null);
-//        mPasswordView.setError(null);
-//
-//        // Store values at the time of the login attempt.
-//        String email = mEmailView.getText().toString();
-//        String password = mPasswordView.getText().toString();
+
 //
         String lot_no=mdeliverybatchnumber.getText().toString();
         String barcode=mdeliverybarcode.getText().toString();
@@ -232,7 +226,7 @@ public class DeliveryActivity extends AppCompatActivity {
 
             try {
                 String url="http://"+PreferencesUtils.getString(DeliveryActivity.this,ip_key,"120.27.2.177")
-                        +":"+PreferencesUtils.getString(DeliveryActivity.this,port_key,"8061")+
+                        +":"+PreferencesUtils.getString(DeliveryActivity.this,port_key,"8062")+
                         IndexConstants.CHECKDELIVERYFORM+"?name="+batch_num+"&token="+token;
                 Print("url:::"+url);
                 URL posturl = new URL(url);
@@ -253,6 +247,7 @@ public class DeliveryActivity extends AppCompatActivity {
                         success = jsonObject.getString("success");
                         if(success.equals("true")) {
                             JSONArray data = jsonObject.getJSONArray("data");
+                            Print(" return:::"+data);
                             for(int d=0;d<data.length();d++) {
 //                        String token =data.getString("line_data");
                                 JSONArray line_data = data.getJSONObject(d).getJSONArray("line_data");
@@ -339,7 +334,7 @@ public class DeliveryActivity extends AppCompatActivity {
 
             try {
                 String url="http://"+PreferencesUtils.getString(DeliveryActivity.this,ip_key,"120.27.2.177")
-                        +":"+PreferencesUtils.getString(DeliveryActivity.this,port_key,"8061")+
+                        +":"+PreferencesUtils.getString(DeliveryActivity.this,port_key,"8062")+
                         IndexConstants.CHECKLIBRARY+"?location_barcode="+library_num+"&token="+token;
 //                "login:","登录帐号","Password":"密码"
                 Print("url:::"+url);
@@ -430,7 +425,7 @@ public class DeliveryActivity extends AppCompatActivity {
                String info= productinfo[i];
                 if(i==0){
 //                    product_code=info;
-                    product_code="2402";
+                    product_code="005";
                 }else if(i==1){
                     lot_id=info;
                 }else if(i==2){
@@ -450,7 +445,7 @@ public class DeliveryActivity extends AppCompatActivity {
 
             try {
                 String url="http://"+PreferencesUtils.getString(DeliveryActivity.this,ip_key,"120.27.2.177")
-                        +":"+PreferencesUtils.getString(DeliveryActivity.this,port_key,"8061")+
+                        +":"+PreferencesUtils.getString(DeliveryActivity.this,port_key,"8062")+
                         IndexConstants.CHECKDELIVERYPRODUCT+"?product_code="+product_code+"&name="+batch_num+"&token="+token;
 //                "login:","登录帐号","Password":"密码"
                 Print("lot_id:::"+lot_id+"qty:::"+qty);
@@ -573,11 +568,11 @@ public class DeliveryActivity extends AppCompatActivity {
 
             try {
                 String url="http://"+PreferencesUtils.getString(DeliveryActivity.this,ip_key,"120.27.2.177")
-                        +":"+PreferencesUtils.getString(DeliveryActivity.this,port_key,"8061")+ IndexConstants.TAKINGCHECKBARCODE;
+                        +":"+PreferencesUtils.getString(DeliveryActivity.this,port_key,"8062")+ IndexConstants.TAKINGCHECKBARCODE;
 //                "login:","登录帐号","Password":"密码"
                 Print("url:::"+url);
                 Map<String,String> mparams=new HashMap<String,String>();
-                mparams.put("login",PreferencesUtils.getString(DeliveryActivity.this,email_key,"8061"));
+                mparams.put("login",PreferencesUtils.getString(DeliveryActivity.this,email_key,"8062"));
                 mparams.put("lot_no",lot_no);
                 mparams.put("barcode",barcode);
                 mparams.put("location",location);
@@ -685,10 +680,6 @@ public class DeliveryActivity extends AppCompatActivity {
         //        String lot_no="";
 //        String location="";
         String barcode="";
-//        String min_box="";
-//        String lot_no="";
-//        String cn_box= "";
-//        String so="";
         String success="";
         String msg="";
         String warehouse_id="";
@@ -719,46 +710,53 @@ public class DeliveryActivity extends AppCompatActivity {
 
             try {
                 String url="http://"+PreferencesUtils.getString(DeliveryActivity.this,ip_key,"120.27.2.177")
-                        +":"+PreferencesUtils.getString(DeliveryActivity.this,port_key,"8061")+ IndexConstants.OUTSTOCK;
+                        +":"+PreferencesUtils.getString(DeliveryActivity.this,port_key,"8062")+
+                        IndexConstants.OUTSTOCK+ "token="+PreferencesUtils.getString(DeliveryActivity.this,token_key,"");
 //                "login:","登录帐号","Password":"密码"
-                Print("url:::"+url);
-//                Map<String,HashMap<String,String>> mparams=new HashMap<String,HashMap<String,String>>();
-//                mparams.put("login",PreferencesUtils.getString(DeliveryActivity.this,email_key,"8061"));
-                Print("boxesnum.size():::"+boxesnum.size());
-                String mparams="";
+                Map<String,Map<String,HashMap<String,String>>> mparams=new HashMap<String,Map<String,HashMap<String,String>>>();
+//                mparams.put("login",PreferencesUtils.getString(DeliveryActivity.this,email_key,"8062"));
+//                Print("boxesnum.size():::"+boxesnum.size());
+//                String mparams="";
                 for(int i=0;i<boxesnum.size();i++){
                     Print("boxesnum. key:::"+boxesnum.get(i).keySet().toString());
+                    Map<String,HashMap<String,String>> data
+                            =new HashMap<String,HashMap<String,String>>();
                     for(String productkey : boxesnum.get(i).keySet()){
-                        String key="{\"("+productkey+","+warehouse_id+","
-                                +location_id+","+lot_id+","+""+","+""+")\"=";
+                        String key="("+productkey+","+warehouse_id+","
+                                +location_id+","+lot_id+","+""+","+""+")";
                         Print("boxesnum. key:::"+key+"  productkey：："+productkey);
                         String boxnum=boxesnum.get(i).get(productkey);
-                        String value="{\"qty\"="+boxnum+",\"box_qty\"="+boxnum+"}}";
-                        mparams=key+value;
+//                        String value="{\"qty\"="+boxnum+",\"box_qty\"="+boxnum+"}}";
+                        HashMap<String,String> nummap=new HashMap<String,String>();
+                        nummap.put("qty",boxnum);
+                        nummap.put("box_qty",boxnum);
+                        data.put(key,nummap);
                     }
+                    mparams.put("data",data);
                 }
 
-//                String postparams = new Gson().toJson(mparams);
-//                Print("urlpostparams:::"+postparams);
-//                postparams=URLEncoder.encode(postparams,"utf-8");
+                String postparams = new Gson().toJson(mparams);
+                Print("urlpostparams:::"+mparams);
+                postparams= URLEncoder.encode(postparams,"utf-8");
 
 //                String postparams ="{"+"login:",mEmail,"Password:",mPassword}//"login:"+mEmail+"&password:"+mPassword;
-//                byte[] data = postparams.getBytes();
+                byte[] data = postparams.getBytes();
 //                System.err.println("postparams postparams:::"+postparams+data.length);
-                url=url+mparams;
+//                url=url+"&"+mparams;
+                Print("url:::"+url);
                 URL posturl = new URL(url);
                 HttpURLConnection conn = (HttpURLConnection) posturl.openConnection();
-//                conn.setConnectTimeout(10000);
-//                conn.setDoInput(true);                  //打开输入流，以便从服务器获取数据
-//                conn.setDoOutput(true);                 //打开输出流，以便向服务器提交数据
-                conn.setRequestMethod("GET");     //设置以Post方式提交数据
+                conn.setConnectTimeout(10000);
+                conn.setDoInput(true);                  //打开输入流，以便从服务器获取数据
+                conn.setDoOutput(true);                 //打开输出流，以便向服务器提交数据
+                conn.setRequestMethod("POST");     //设置以Post方式提交数据
 //                conn.setUseCaches(false);               //使用Post方式不能使用缓存
 //                //设置请求体的类型是文本类型
-//                conn.setRequestProperty("Content-Type", "application/json");
-//                conn.setRequestProperty("Content-Length", String.valueOf(data.length)); // 注意是字节长度, 不是字符长度
-//
-////                conn.setDoOutput(true); // 准备写出
-//                conn.getOutputStream().write(data);
+                conn.setRequestProperty("Content-Type", "application/json");
+                conn.setRequestProperty("Content-Length", String.valueOf(data.length)); // 注意是字节长度, 不是字符长度
+
+//                conn.setDoOutput(true); // 准备写出
+                conn.getOutputStream().write(data);
 
                 responsecode=conn.getResponseCode();
                 if(responsecode==200) {

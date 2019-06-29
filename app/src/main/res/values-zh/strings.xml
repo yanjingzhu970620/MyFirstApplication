@@ -41,6 +41,13 @@
     <string name="title_activity_delivery">DeliveryActivity</string>
     <string name="title_activity_entry">EntryActivity</string>
     <string name="action_submit">提  交</string>
+    <string name="action_inspect_ng">检验ng</string>
+    <string name="action_material_cancel">取消领料</string>
+    <string name="action_inspect_cancel">取消检验</string>
+    <string name="action_report_cancel">取消报工</string>
+    <string name="action_material">领  料</string>
+    <string name="action_inspect_pass">检  验</string>
+    <string name="action_report">报  工</string>
     <string name="Thousand_weight">千件重量</string>
     <string name="report_thousand_weight">报工千支重</string>
     <string name="net_weight">净重</string>

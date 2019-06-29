@@ -199,11 +199,11 @@ public class CheckActivity extends AppCompatActivity {
 
             try {
                 String url="http://"+PreferencesUtils.getString(CheckActivity.this,ip_key,"120.27.2.177")
-                        +":"+PreferencesUtils.getString(CheckActivity.this,port_key,"8061")+ IndexConstants.TAKINGCHECKBARCODE;
+                        +":"+PreferencesUtils.getString(CheckActivity.this,port_key,"8062")+ IndexConstants.TAKINGCHECKBARCODE;
 //                "login:","登录帐号","Password":"密码"
                 Print("url:::"+url);
                 Map<String,String> mparams=new HashMap<String,String>();
-                mparams.put("login",PreferencesUtils.getString(CheckActivity.this,email_key,"8061"));
+                mparams.put("login",PreferencesUtils.getString(CheckActivity.this,email_key,"8062"));
                 mparams.put("lot_no",lot_no);
                 mparams.put("barcode",barcode);
                 mparams.put("location",location);
@@ -348,11 +348,11 @@ public class CheckActivity extends AppCompatActivity {
 
             try {
                 String url="http://"+PreferencesUtils.getString(CheckActivity.this,ip_key,"120.27.2.177")
-                        +":"+PreferencesUtils.getString(CheckActivity.this,port_key,"8061")+ IndexConstants.TAKINGSTOCK;
+                        +":"+PreferencesUtils.getString(CheckActivity.this,port_key,"8062")+ IndexConstants.TAKINGSTOCK;
 //                "login:","登录帐号","Password":"密码"
                 Print("url:::"+url);
                 Map<String,String> mparams=new HashMap<String,String>();
-                mparams.put("login",PreferencesUtils.getString(CheckActivity.this,email_key,"8061"));
+                mparams.put("login",PreferencesUtils.getString(CheckActivity.this,email_key,"8062"));
                 mparams.put("lot_no",lot_no);
                 mparams.put("barcode",barcode);
                 mparams.put("location",location);

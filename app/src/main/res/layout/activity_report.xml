@@ -52,13 +52,13 @@
         <include layout="@layout/include_line" />
 
         <ScrollView
-            android:id="@+id/check_form"
+            android:id="@+id/report_form"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:paddingBottom="@dimen/activity_vertical_margin"
             android:paddingLeft="@dimen/activity_horizontal_margin"
+            android:paddingTop="@dimen/activity_vertical_margin"
             android:paddingRight="@dimen/activity_horizontal_margin"
-            android:paddingTop="@dimen/activity_vertical_margin">
+            android:paddingBottom="@dimen/activity_vertical_margin">
 
             <LinearLayout
                 android:id="@+id/report_content_card"
@@ -77,23 +77,26 @@
                         android:layout_height="match_parent"
                         android:layout_weight="1"
                         android:gravity="center"
-                        android:text="@string/report_cardid"/>
+                        android:text="@string/report_cardid" />
 
-                        <EditText
-                            android:id="@+id/edittext_report_card_id"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="3"
-                            android:maxLines="1"
-                            android:singleLine="true"
-                            android:textColor="@color/black" />
+                    <EditText
+                        android:id="@+id/edittext_report_card_id"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="3"
+                        android:maxLines="1"
+                        android:singleLine="true"
+                        android:textColor="@color/black" />
+
                     <ImageView
                         android:id="@+id/report_card_id_button"
                         android:layout_width="25dp"
                         android:layout_height="25dp"
+                        android:layout_gravity="bottom"
+                        android:layout_marginBottom="@dimen/erqode_vertical_margin"
+                        android:background="@mipmap/ercode"
                         android:clickable="true"
-                        android:onClick="onClick"
-                        android:background="@mipmap/ercode" />
+                        android:onClick="onClick" />
                 </LinearLayout>
 
                 <LinearLayout
@@ -101,21 +104,22 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal">
+
                     <TextView
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
-                        android:gravity="center"
                         android:layout_weight="1"
-                        android:text="@string/current_process"/>
+                        android:gravity="center"
+                        android:text="@string/current_process" />
 
-                        <EditText
-                            android:id="@+id/edittext_current_process"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:maxLines="1"
-                            android:layout_weight="3"
-                            android:singleLine="true"
-                            android:textColor="@color/black" />
+                    <EditText
+                        android:id="@+id/edittext_current_process"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="3"
+                        android:maxLines="1"
+                        android:singleLine="true"
+                        android:textColor="@color/black" />
 
                 </LinearLayout>
 
@@ -124,43 +128,46 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal">
+
                     <TextView
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
-                        android:gravity="center"
                         android:layout_weight="1"
-                        android:text="@string/report_state"/>
+                        android:gravity="center"
+                        android:text="@string/report_state" />
 
                     <EditText
                         android:id="@+id/edittext_report_state"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:maxLines="1"
                         android:layout_weight="3"
+                        android:maxLines="1"
                         android:singleLine="true"
                         android:textColor="@color/black" />
 
                 </LinearLayout>
+
                 <LinearLayout
                     android:id="@+id/container_id_layout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal">
+
                     <TextView
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
-                        android:gravity="center"
                         android:layout_weight="1"
-                        android:text="@string/container_weight"/>
+                        android:gravity="center"
+                        android:text="@string/container_weight" />
 
                     <EditText
                         android:id="@+id/edittext_container_id"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:maxLines="1"
                         android:layout_weight="3"
                         android:digits="1234567890."
                         android:inputType="phone|number"
+                        android:maxLines="1"
                         android:singleLine="true"
                         android:textColor="@color/black" />
 
@@ -171,21 +178,22 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal">
+
                     <TextView
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
-                        android:gravity="center"
                         android:layout_weight="1"
-                        android:text="@string/container_weight"/>
+                        android:gravity="center"
+                        android:text="@string/container_weight" />
 
                     <EditText
                         android:id="@+id/edittext_container_weight"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:maxLines="1"
                         android:layout_weight="3"
                         android:digits="1234567890."
                         android:inputType="phone|number"
+                        android:maxLines="1"
                         android:singleLine="true"
                         android:textColor="@color/black" />
 
@@ -196,21 +204,22 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal">
+
                     <TextView
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
-                        android:gravity="center"
                         android:layout_weight="1"
-                        android:text="@string/report_thousand_weight"/>
+                        android:gravity="center"
+                        android:text="@string/report_thousand_weight" />
 
                     <EditText
                         android:id="@+id/edit_thousand_weight"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:maxLines="1"
+                        android:layout_weight="3"
                         android:digits="1234567890"
                         android:inputType="phone|number"
-                        android:layout_weight="3"
+                        android:maxLines="1"
                         android:singleLine="true"
                         android:textColor="@color/black" />
 
@@ -221,21 +230,22 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal">
+
                     <TextView
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
-                        android:gravity="center"
                         android:layout_weight="1"
-                        android:text="@string/net_weight"/>
+                        android:gravity="center"
+                        android:text="@string/net_weight" />
 
                     <EditText
                         android:id="@+id/edit_net_weight"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:maxLines="1"
+                        android:layout_weight="3"
                         android:digits="1234567890"
                         android:inputType="phone|number"
-                        android:layout_weight="3"
+                        android:maxLines="1"
                         android:singleLine="true"
                         android:textColor="@color/black" />
 
@@ -246,21 +256,22 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal">
+
                     <TextView
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
-                        android:gravity="center"
                         android:layout_weight="1"
-                        android:text="@string/waste"/>
+                        android:gravity="center"
+                        android:text="@string/waste" />
 
                     <EditText
                         android:id="@+id/edit_waste"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:maxLines="1"
+                        android:layout_weight="3"
                         android:digits="1234567890"
                         android:inputType="phone|number"
-                        android:layout_weight="3"
+                        android:maxLines="1"
                         android:singleLine="true"
                         android:textColor="@color/black" />
 
@@ -271,21 +282,22 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal">
+
                     <TextView
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
-                        android:gravity="center"
                         android:layout_weight="1"
-                        android:text="@string/gross_weight"/>
+                        android:gravity="center"
+                        android:text="@string/gross_weight" />
 
                     <EditText
                         android:id="@+id/edit_gross_weight"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:maxLines="1"
+                        android:layout_weight="3"
                         android:digits="1234567890"
                         android:inputType="phone|number"
-                        android:layout_weight="3"
+                        android:maxLines="1"
                         android:singleLine="true"
                         android:textColor="@color/black" />
 
@@ -296,37 +308,122 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal">
+
                     <TextView
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
-                        android:gravity="center"
                         android:layout_weight="1"
-                        android:text="@string/report_num"/>
+                        android:gravity="center"
+                        android:text="@string/report_num" />
 
                     <EditText
                         android:id="@+id/edit_report_num"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:maxLines="1"
+                        android:layout_weight="3"
                         android:digits="1234567890"
                         android:inputType="phone|number"
-                        android:layout_weight="3"
+                        android:maxLines="1"
                         android:singleLine="true"
                         android:textColor="@color/black" />
 
                 </LinearLayout>
 
-                <Button
-                    android:id="@+id/check_submit_button"
-                    style="?android:textAppearanceSmall"
-                    android:onClick="onClick"
-                    android:background="@color/colorbarbackground"
+                <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="16dp"
-                    android:layout_weight="1"
-                    android:text="@string/action_submit"
-                    android:textStyle="bold" />
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal">
+
+                    <Button
+                        android:id="@+id/report_submit_button"
+                        style="?android:textAppearanceSmall"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="16dp"
+                        android:layout_weight="1"
+                        android:background="@color/colorbarbackground"
+                        android:onClick="onClick"
+                        android:text="@string/action_report"
+                        android:textStyle="bold" />
+
+                    <Button
+                        android:id="@+id/report_inspect_submit_button"
+                        android:visibility="gone"
+                        style="?android:textAppearanceSmall"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="16dp"
+                        android:layout_weight="1"
+                        android:background="@color/colorbarbackground"
+                        android:onClick="onClick"
+                        android:text="@string/action_inspect_pass"
+                        android:textStyle="bold" />
+
+                    <Button
+                        android:id="@+id/report_material_submit_button"
+                        android:visibility="gone"
+                        style="?android:textAppearanceSmall"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="16dp"
+                        android:layout_weight="1"
+                        android:background="@color/colorbarbackground"
+                        android:onClick="onClick"
+                        android:text="@string/action_material"
+                        android:textStyle="bold" />
+
+                    <Button
+                        android:id="@+id/report_cancel_submitbutton"
+                        android:visibility="gone"
+                        style="?android:textAppearanceSmall"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="16dp"
+                        android:layout_weight="1"
+                        android:background="@color/colorbarbackground"
+                        android:onClick="onClick"
+                        android:text="@string/action_report_cancel"
+                        android:textStyle="bold" />
+
+                    <Button
+                        android:id="@+id/report_inspect_cancel_submitbutton"
+                        android:visibility="gone"
+                        style="?android:textAppearanceSmall"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="16dp"
+                        android:layout_weight="1"
+                        android:background="@color/colorbarbackground"
+                        android:onClick="onClick"
+                        android:text="@string/action_inspect_cancel"
+                        android:textStyle="bold" />
+
+                    <Button
+                        android:id="@+id/report_material_cancel_submitbutton"
+                        android:visibility="gone"
+                        style="?android:textAppearanceSmall"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="16dp"
+                        android:layout_weight="1"
+                        android:background="@color/colorbarbackground"
+                        android:onClick="onClick"
+                        android:text="@string/action_material_cancel"
+                        android:textStyle="bold" />
+
+                    <Button
+                        android:id="@+id/report_inspect_ng_submitbutton"
+                        android:visibility="gone"
+                        style="?android:textAppearanceSmall"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="16dp"
+                        android:layout_weight="1"
+                        android:background="@color/colorbarbackground"
+                        android:onClick="onClick"
+                        android:text="@string/action_inspect_ng"
+                        android:textStyle="bold" />
+                </LinearLayout>
             </LinearLayout>
         </ScrollView>
     </LinearLayout>

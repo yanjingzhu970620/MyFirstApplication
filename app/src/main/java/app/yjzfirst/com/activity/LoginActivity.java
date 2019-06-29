@@ -361,7 +361,7 @@ public class LoginActivity extends AppCompatActivity {
 
             try {
                 String url = "http://" + PreferencesUtils.getString(LoginActivity.this, ip_key, "120.27.2.177")
-                        + ":" + PreferencesUtils.getString(LoginActivity.this, port_key, "8061") + IndexConstants.LOGINURL +
+                        + ":" + PreferencesUtils.getString(LoginActivity.this, port_key, "8062") + IndexConstants.LOGINURL +
                         "/"+PreferencesUtils.getString(LoginActivity.this, db_key, "demo-efasten")
                         + "/" + mEmail + "/" + mPassword;
 //                "login:","登录帐号","Password":"密码"
@@ -411,7 +411,7 @@ public class LoginActivity extends AppCompatActivity {
 //                    String s = ins.toString();
 //                    System.err.println("sssssssss:::"+success);
                 }
-                Print("login return:::" + responsecode + "port:::" + PreferencesUtils.getString(LoginActivity.this, port_key, "8061"));
+                Print("login return:::" + responsecode + "port:::" + PreferencesUtils.getString(LoginActivity.this, port_key, "8062"));
 //                ins.close();
             } catch (Exception e) {
                 // TODO: handle exception
@@ -435,7 +435,7 @@ public class LoginActivity extends AppCompatActivity {
         protected void onPostExecute(final Boolean success) {
             mAuthTask = null;
             showProgress(false);
-            Util.showShortToastMessage(LoginActivity.this, msg + "port:::" + PreferencesUtils.getString(LoginActivity.this, port_key, "8061"));
+            Util.showShortToastMessage(LoginActivity.this, msg + "port:::" + PreferencesUtils.getString(LoginActivity.this, port_key, "8062"));
             if (success) {
                 PreferencesUtils.putString(LoginActivity.this, email_key, mEmail);
                 PreferencesUtils.putString(LoginActivity.this, password_key, mPassword);

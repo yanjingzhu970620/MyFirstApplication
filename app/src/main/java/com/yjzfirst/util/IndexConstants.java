@@ -15,8 +15,10 @@ public class IndexConstants {
     public static final String LOGINURL="/app/login";
     public static final String TAKINGCHECKBARCODE="/api/taking/checkbarcode";
     public static final String CHECKCARDID="/app/mrp_runcard/get";
+	public static final String REPORTCARD="/app/mrp_runcard/report";
     public static final String CHECKDELIVERYFORM="/app/sale_delivery/get";
     public static final String CHECKDELIVERYPRODUCT="/app/sale_delivery/check_product";
+	public static final String CHECKDELIVERYPRODUCTLABEL="/app/product_label/get";
 
     public static final String CHECKLIBRARY="/app/stock_location/get";
 
@@ -27,5 +29,5 @@ public class IndexConstants {
 
     public static final String TAKINGSTOCK="/api/taking/stock_taking ";
     public static final String INSTOCK="/api/instock/product_instock  ";
-    public static final String OUTSTOCK="/app/sale_delivery/add_op";
+    public static final String OUTSTOCK="/app/sale_delivery/add_op?";
 }

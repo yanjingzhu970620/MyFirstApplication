@@ -91,6 +91,8 @@
                         android:id="@+id/delivery_batch_number_button"
                         android:layout_width="25dp"
                         android:layout_height="25dp"
+                        android:layout_gravity="bottom"
+                        android:layout_marginBottom="@dimen/erqode_vertical_margin"
                         android:clickable="true"
                         android:onClick="onClick"
                         android:background="@mipmap/ercode" />
@@ -121,6 +123,8 @@
                         android:id="@+id/delivery_library_number_button"
                         android:layout_width="25dp"
                         android:layout_height="25dp"
+                        android:layout_gravity="bottom"
+                        android:layout_marginBottom="@dimen/erqode_vertical_margin"
                         android:clickable="true"
                         android:onClick="onClick"
                         android:background="@mipmap/ercode" />
@@ -150,6 +154,8 @@
                         android:id="@+id/delivery_bar_code_button"
                         android:layout_width="25dp"
                         android:layout_height="25dp"
+                        android:layout_gravity="bottom"
+                        android:layout_marginBottom="@dimen/erqode_vertical_margin"
                         android:clickable="true"
                         android:onClick="onClick"
                         android:background="@mipmap/ercode" />
