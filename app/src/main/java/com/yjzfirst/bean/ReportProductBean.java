@@ -2,42 +2,42 @@ package com.yjzfirst.bean;
 
 public class ReportProductBean {
 
-//    public String runcard_no;//"MO20190617-01-10",#流程卡号
-//	public String date ;// "2019-06-21",#日期
-//	public String product_id ;// 356,#产品id
-//	public String default_code ;// "03011413",#产品编码
-//	public String product_name ;// "六角凹穴法兰面螺栓 8.8级",#产品名称
-//	public String product_spec ;// "M5*14",#产品规格
-//	public String container_weight ;// null, #容器重
-//	public String container_id ;// null, #容器id
-//	public String container_no ;// null, #容器编码
-//	public String from_runcard_id ;// null,#从流程卡id
-//	public String to_runcard_id ;// null, #到流程卡id
-//	public String process_id ;// null,#工序id
-//	public String process_code ;// null, #工序代码
-//	public String process_name ;// null, #工序名称
-//	public String workorder_id ;// null,#作业计划id
-//	public String state ;// "draft",
-//	public String unit_weight ;// null,#千支重
-//	public String process_status ;// "to_report",#状态
-//	public String qty ;// null,#数量
-//	public String weight ;// null, #重量
-//	public String factor ;// 1000,#转换率
-//	public String line_data ;// [#明细数据
+    public String runcard_no;//"MO20190617-01-10",#流程卡号
+	public String date ;// "2019-06-21",#日期
+	public String product_id ;// 356,#产品id
+	public String default_code ;// "03011413",#产品编码
+	public String product_name ;// "六角凹穴法兰面螺栓 8.8级",#产品名称
+	public String product_spec ;// "M5*14",#产品规格
+	public String container_weight ;// null, #容器重
+	public String container_id ;// null, #容器id
+	public String container_no ;// null, #容器编码
+	public String from_runcard_id ;// null,#从流程卡id
+	public String to_runcard_id ;// null, #到流程卡id
+	public String process_id ;// null,#工序id
+	public String process_code ;// null, #工序代码
+	public String process_name ;// null, #工序名称
+	public String workorder_id ;// null,#作业计划id
+	public String state ;// "draft",
+	public String unit_weight ;// null,#千支重
+	public String process_status ;// "to_report",#状态
+	public String qty ;// null,#数量
+	public String weight ;// null, #重量
+	public String factor ;// 1000,#转换率
+	public String line_data ;// [#明细数据
 	
 	
 //	{
 	public String master_id ;// 1068, #流程卡id
 	public String sequence ;// 1, #项次
-	public String workorder_id ;// 1368, #作业计划id
+//	public String workorder_id ;// 1368, #作业计划id
 	public String workcenter_id ;// 17,#加工中心id
-	public String process_id ;// 1,#工序id
-	public String process_code ;// "01",#工序代码
-	public String process_name ;// "冷镦",#工序名称
+//	public String process_id ;// 1,#工序id
+//	public String process_code ;// "01",#工序代码
+//	public String process_name ;// "冷镦",#工序名称
 	public String qty_in ;// null,#领料数量
 	public String weight_in ;// null, #领料重量
-	public String qty ;// null, #报工数量
-	public String weight ;// null#报工重量
+//	public String qty ;// null, #报工数量
+//	public String weight ;// null#报工重量
 //	},
 //	{
 //		"master_id ;// 1068,

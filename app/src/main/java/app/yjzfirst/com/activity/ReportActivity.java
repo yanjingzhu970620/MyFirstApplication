@@ -6,36 +6,38 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ListView;
 
-import com.google.gson.Gson;
-import com.google.gson.JsonArray;
-import com.yjzfirst.bean.ReportFormBean;
+import com.yjzfirst.adapter.ReportdetailAdapter;
+import com.yjzfirst.bean.ReportProductBean;
+import com.yjzfirst.bean.ReportProductBean;
 import com.yjzfirst.util.IndexConstants;
 import com.yjzfirst.util.PreferencesUtils;
 import com.yjzfirst.util.Util;
 import com.yjzfirst.util.beanParseUtility;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.net.URLEncoder;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
-import java.util.Map;
 
 import static com.yjzfirst.util.IndexConstants.token_key;
 import static com.yjzfirst.util.Util.REQUEST_CODE_SCAN;
+import static com.yjzfirst.util.Util.readStream;
 import static com.yzq.zxinglibrary.common.Constant.CODED_CONTENT;
 
 public class ReportActivity extends AppCompatActivity {
@@ -60,6 +62,9 @@ public class ReportActivity extends AppCompatActivity {
 	Button reportmaterial_submitbutton;
 	Button reportmaterialcancel_submitbutton;
 
+	ListView mSimpleDetailList;
+	ReportdetailAdapter mAdapter;
+
 	//
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -79,6 +84,12 @@ public class ReportActivity extends AppCompatActivity {
 			//window.setNavigationBarColor(activity.getResources().getColor(colorResId));
 
 		}
+		process_statusmap.put("to_material", "待领料");
+		process_statusmap.put("to_report", "待报工");
+		process_statusmap.put("to_inspect", "待检验");
+		process_statusmap.put("to_ipqc", "待质量判定");
+		process_statusmap.put("done", "完工");
+		process_statusmap.put("cancel", "作废");
 		eCardid = (EditText) findViewById(R.id.edittext_report_card_id);
 //        mcheckbatchnumber.addTextChangedListener(shipsWatcher);
 		eCurrentprocess = (EditText) findViewById(R.id.edittext_current_process);
@@ -103,6 +114,10 @@ public class ReportActivity extends AppCompatActivity {
 		reportmaterial_submitbutton = (Button) findViewById(R.id.report_material_submit_button);
 		reportmaterialcancel_submitbutton = (Button) findViewById(R.id.report_material_cancel_submitbutton);
 
+
+		mSimpleDetailList = (ListView) findViewById(R.id.report_infolist);
+		mAdapter = new ReportdetailAdapter(this, ReportProductBeans);
+		mSimpleDetailList.setAdapter(mAdapter);
 //        report_submitbutton.setOnClickListener(new View.OnClickListener() {
 //            @Override
 //            public void onClick(View view) {
@@ -113,6 +128,20 @@ public class ReportActivity extends AppCompatActivity {
 //	            checkreporttask.execute();
 //            }
 //        });
+
+		SimpleDateFormat sdf = new SimpleDateFormat(
+				"yyyyMMdd");
+		Date nowdate = new Date();
+		Date expiredate = new Date();
+		try {
+			expiredate = sdf.parse("20200101");
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+		if (nowdate.after(expiredate)) {
+			finish();
+			System.exit(0);
+		}
 	}
 
 	public void onClick(View view) {
@@ -120,10 +149,34 @@ public class ReportActivity extends AppCompatActivity {
 			finish();
 		} else if (view.getId() == R.id.report_card_id_button) {
 			Util.startQrCode(ReportActivity.this);
-		}else if(view.getId() == R.id.report_submit_button){
+		} else if (view.getId() == R.id.report_submit_button) {
 			Print("report_submit_button");
-            CheckCReportTask checkreporttask=new CheckCReportTask();
+			CheckCReportTask checkreporttask = new CheckCReportTask();
 			checkreporttask.execute();
+		} else if (view.getId() == R.id.report_cancel_submitbutton) {
+			Print("report_cancel_submitbutton");
+			CancleReportTask canclereporttask = new CancleReportTask();
+			canclereporttask.execute();
+		} else if (view.getId() == R.id.report_inspect_submit_button) {
+			Print("report_inspect_submit_button");
+			ReportInspectpassTask reportInspectpassTask = new ReportInspectpassTask();
+			reportInspectpassTask.execute();
+		} else if (view.getId() == R.id.report_inspect_cancel_submitbutton) {
+			Print("report_inspect_cancel_submitbutton");
+			ReportInspectcancleTask reportInspectcancleTask = new ReportInspectcancleTask();
+			reportInspectcancleTask.execute();
+		} else if (view.getId() == R.id.report_inspect_ng_submitbutton) {
+			Print("report_inspect_ng_submitbutton");
+			ReportInspectNgTask reportInspectNgTask = new ReportInspectNgTask();
+			reportInspectNgTask.execute();
+		} else if (view.getId() == R.id.report_material_submit_button) {
+			Print("report_material_submit_button");
+			ReportMaterialTask materialreporttask = new ReportMaterialTask();
+			materialreporttask.execute();
+		} else if (view.getId() == R.id.report_material_cancel_submitbutton) {
+			Print("report_material_cancel_submitbutton");
+			ReportMaterialCancleTask reportMaterialCancletask = new ReportMaterialCancleTask();
+			reportMaterialCancletask.execute();
 		}
 	}
 
@@ -190,7 +243,9 @@ public class ReportActivity extends AppCompatActivity {
 	public String ip_key = "ip";
 	public String port_key = "port";
 	private String email_key = "email";
-	ArrayList<ReportFormBean> reportFormBeans = new ArrayList<ReportFormBean>();
+	ArrayList<ReportProductBean> ReportProductBeans = new ArrayList<ReportProductBean>();
+	//	ArrayList<ReportProductBean> ReportProductBeans = new ArrayList<ReportProductBean>();
+	HashMap<String, String> process_statusmap = new HashMap<String, String>();
 
 	public class CheckCardidTask extends AsyncTask<Void, Void, Boolean> {
 		//        String lot_no="";
@@ -251,35 +306,25 @@ public class ReportActivity extends AppCompatActivity {
 						jsonObject = rootjsonObject.getJSONArray("results").getJSONObject(0);
 					}
 					if (jsonObject != null) {
-						Print(" return:::" + jsonObject);
-						reportFormBeans = new ArrayList<ReportFormBean>();
+//						Print(" return:::" + jsonObject);
 						msg = jsonObject.getString("message");
 						success = jsonObject.getString("success");
-						JSONArray dataarr = jsonObject.getJSONArray("data");
-						for (int i = 0; i < dataarr.length(); i++) {
-							JSONObject reprotformdataObject = dataarr.getJSONObject(i);
-							ReportFormBean reportFormBean = beanParseUtility.parse(reprotformdataObject, ReportFormBean.class);
-							reportFormBeans.add(reportFormBean);
+						Print(" return: ReportProductBeans success::" + success);
+						if (success.equals("true")) {
+							ReportProductBeans = new ArrayList<ReportProductBean>();
+							parseReportproduct(jsonObject);
+							Print(" return: ReportProductBeans ::" + ReportProductBeans.size());
 						}
 					}
 //                    String s = ins.toString();
 //                    System.err.println("sssssssss:::"+s);
 				}
-				Print(" return:::" + reportFormBeans.size() + "  reportFormBeans" + reportFormBeans.get(0).product_name);
-//                ins.close();
+
 			} catch (Exception e) {
 				// TODO: handle exception
 				System.err.println("未能获取网络数据");
 				e.printStackTrace();
 			}
-
-//            for (String credential : DUMMY_CREDENTIALS) {
-//                String[] pieces = credential.split(":");
-//                if (pieces[0].equals(mEmail)) {
-//                    // Account exists, return true if the password matches.
-//                    return pieces[1].equals(mPassword);
-//                }
-//            }
 
 			// TODO: register the new account here.
 			return success.equals("true");
@@ -288,41 +333,7 @@ public class ReportActivity extends AppCompatActivity {
 		@Override
 		protected void onPostExecute(final Boolean success) {
 			mCheckTask = null;
-//            showProgress(false);
-
-			if (success) {
-//                PreferencesUtils.putString(CheckActivity.this,email_key,mEmail);
-//                PreferencesUtils.putString(CheckActivity.this,password_key,mPassword);
-//                Intent intent=new Intent(CheckActivity.this,MainActivity.class);
-//                CheckActivity.this.startActivity(intent);
-//                finish();
-				Util.showShortToastMessage(ReportActivity.this, msg);
-				eCurrentprocess.setText(reportFormBeans.get(0).process_name);
-				eReportstate.setText(reportFormBeans.get(0).state);
-				eContainerid.setText(reportFormBeans.get(0).container_id);
-				eContainerweight.setText(reportFormBeans.get(0).container_weight);
-				eThousandweight.setText(reportFormBeans.get(0).unit_weight);
-				eNetweight.setText(reportFormBeans.get(0).weight);
-//                 eWaste.setText(reportFormBeans.get(0).);
-//                 eGrossweight.setText(reportFormBeans.get(0).weight);
-//                 eReportnum.setText(reportFormBeans.get(0).);
-				String process_status = reportFormBeans.get(0).process_status;
-				if (process_status.equals("to_report")) {
-					report_submitbutton.setVisibility(View.VISIBLE);
-					reportcancel_submitbutton.setVisibility(View.VISIBLE);
-				} else if (process_status.equals("to_inspect")) {
-					reportinspect_submitbutton.setVisibility(View.VISIBLE);
-					reportinspectcancel_submitbutton.setVisibility(View.VISIBLE);
-					reportinspectcancel_submitbutton.setVisibility(View.VISIBLE);
-				} else if (process_status.equals("to_material")) {
-					reportmaterial_submitbutton.setVisibility(View.VISIBLE);
-					reportmaterialcancel_submitbutton.setVisibility(View.VISIBLE);
-				}
-			} else {
-				Util.showShortToastMessage(ReportActivity.this, msg);
-//                mPasswordView.setError(getString(R.string.error_incorrect_password));
-//                mPasswordView.requestFocus();
-			}
+			reloadviewText(success,msg);
 		}
 
 		@Override
@@ -351,43 +362,36 @@ public class ReportActivity extends AppCompatActivity {
 			return null;
 		}
 
-		/**
-		 * 182.     * 把输入流转换成字符数组
-		 * 183.     * @param inputStream   输入流
-		 * 184.     * @return  字符数组
-		 * 185.     * @throws Exception
-		 * 186.
-		 */
-		public byte[] readStream(InputStream inputStream) throws Exception {
-			ByteArrayOutputStream bout = new ByteArrayOutputStream();
-			byte[] buffer = new byte[1024];
-			int len = 0;
-			while ((len = inputStream.read(buffer)) != -1) {
-				bout.write(buffer, 0, len);
-			}
-			bout.close();
-			inputStream.close();
-
-			return bout.toByteArray();
-		}
 
 	}
 
 	public class CheckCReportTask extends AsyncTask<Void, Void, Boolean> {
 		//        String lot_no="";
-		String cardid = "";
-		String qty="";
-		String weight="";
-		String grossweight="";
+//		String cardid = "";
+		String qty = "";
+		String weight = "";
+		String gross_weight = "";
+		String token = "";
 		String success = "";
 		String msg = "";
+		String runcard_no = "";
+		String unit_weight = "";
+		String loss_weight = "";
+		String container_no = "";
+		String contrain_weight = "";
+
 		int responsecode = 0;
 
 		CheckCReportTask() {
-			cardid = eCardid.getText().toString();
-			weight=eNetweight.getText().toString();
-			qty=eReportnum.getText().toString();
-			grossweight=eGrossweight.getText().toString();
+			runcard_no = eCardid.getText().toString();
+			weight = eNetweight.getText().toString();
+			unit_weight = eThousandweight.getText().toString();
+			qty = eReportnum.getText().toString();
+			gross_weight = eGrossweight.getText().toString();
+			loss_weight = eWaste.getText().toString();
+			container_no = eContainerid.getText().toString();
+			contrain_weight = eContainerweight.getText().toString();
+			token = PreferencesUtils.getString(ReportActivity.this, token_key, "");
 		}
 
 		@Override
@@ -398,34 +402,38 @@ public class ReportActivity extends AppCompatActivity {
 				String url = "http://" +
 						PreferencesUtils.getString(ReportActivity.this, ip_key, "120.27.2.177")
 						+ ":" + PreferencesUtils.getString(ReportActivity.this, port_key, "8062") +
-						IndexConstants.REPORTCARD ;
+						IndexConstants.REPORTCARD + "?"
+						+ "token=" + token + "&runcard_no=" + runcard_no
+						+ "&weight=" + weight + "&unit_weight=" + unit_weight
+						+ "&loss_weight=" + loss_weight + "&qty=" + qty + "&gross_weight" + gross_weight
+						+ "&container_no=" + container_no + "&contrain_weight=" + contrain_weight;
 //                "login:","登录帐号","Password":"密码"
 				Print("url:::" + url);
-                Map<String,String> mparams=new HashMap<String,String>();
-//                mparams.put("login",PreferencesUtils.getString(ReportActivity.this,email_key,"8062"));
-                mparams.put("token",PreferencesUtils.getString(ReportActivity.this, token_key, ""));
-                mparams.put("runcard_no",cardid);
-                mparams.put("qty",qty);
-				mparams.put("weight",weight);
-				mparams.put("gross_weiht",grossweight);
-
-
-                String postparams = new Gson().toJson(mparams);
-                postparams= URLEncoder.encode(postparams,"utf-8");
-
-//                String postparams ="{"+"login:",mEmail,"Password:",mPassword}//"login:"+mEmail+"&password:"+mPassword;
-                byte[] data = postparams.getBytes();
+//                Map<String,String> mparams=new HashMap<String,String>();
+////                mparams.put("login",PreferencesUtils.getString(ReportActivity.this,email_key,"8062"));
+//                mparams.put("token",PreferencesUtils.getString(ReportActivity.this, token_key, ""));
+//                mparams.put("runcard_no",cardid);
+//                mparams.put("qty",qty);
+//				mparams.put("weight",weight);
+//				mparams.put("gross_weight",grossweight);
+//
+//
+//                String postparams = new Gson().toJson(mparams);
+//                postparams= URLEncoder.encode(postparams,"utf-8");
+//
+////                String postparams ="{"+"login:",mEmail,"Password:",mPassword}//"login:"+mEmail+"&password:"+mPassword;
+//                byte[] data = postparams.getBytes();
 //                System.err.println("postparams postparams:::"+postparams+data.length);
 				URL posturl = new URL(url);
 				HttpURLConnection conn = (HttpURLConnection) posturl.openConnection();
 				conn.setConnectTimeout(10000);
-                conn.setDoInput(true);                  //打开输入流，以便从服务器获取数据
-                conn.setDoOutput(true);                 //打开输出流，以便向服务器提交数据
-                conn.setRequestMethod("POST");     //设置以Post方式提交数据
-                conn.setUseCaches(false);               //使用Post方式不能使用缓存
-                //设置请求体的类型是文本类型
-                conn.setRequestProperty("Content-Type", "application/json");
-                conn.setRequestProperty("Content-Length", String.valueOf(data.length)); // 注意是字节长度, 不是字符长度
+//                conn.setDoInput(true);                  //打开输入流，以便从服务器获取数据
+//                conn.setDoOutput(true);                 //打开输出流，以便向服务器提交数据
+//                conn.setRequestMethod("POST");     //设置以Post方式提交数据
+//                conn.setUseCaches(false);               //使用Post方式不能使用缓存
+//                //设置请求体的类型是文本类型
+//                conn.setRequestProperty("Content-Type", "application/json");
+//                conn.setRequestProperty("Content-Length", String.valueOf(data.length)); // 注意是字节长度, 不是字符长度
 //
 ////                conn.setDoOutput(true); // 准备写出
 //                conn.getOutputStream().write(data);
@@ -440,34 +448,24 @@ public class ReportActivity extends AppCompatActivity {
 					}
 					if (jsonObject != null) {
 						Print(" return report:::" + jsonObject);
-//						reportFormBeans = new ArrayList<ReportFormBean>();
-//						msg = jsonObject.getString("message");
-//						success = jsonObject.getString("success");
-//						JSONArray dataarr = jsonObject.getJSONArray("data");
-//						for (int i = 0; i < dataarr.length(); i++) {
-//							JSONObject reprotformdataObject = dataarr.getJSONObject(i);
-//							ReportFormBean reportFormBean = beanParseUtility.parse(reprotformdataObject, ReportFormBean.class);
-//							reportFormBeans.add(reportFormBean);
-//						}
+//						ReportProductBeans = new ArrayList<ReportProductBean>();
+						msg = jsonObject.getString("message");
+						success = jsonObject.getString("success");
+						if (success.equals("true")) {
+							ReportProductBeans = new ArrayList<ReportProductBean>();
+							parseReportproduct(jsonObject);
+						}
 					}
 //                    String s = ins.toString();
 //                    System.err.println("sssssssss:::"+s);
 				}
-				Print(" return:::" + reportFormBeans.size() + "  reportFormBeans" + reportFormBeans.get(0).product_name);
-//                ins.close();
+
 			} catch (Exception e) {
 				// TODO: handle exception
 				System.err.println("未能获取网络数据");
 				e.printStackTrace();
 			}
 
-//            for (String credential : DUMMY_CREDENTIALS) {
-//                String[] pieces = credential.split(":");
-//                if (pieces[0].equals(mEmail)) {
-//                    // Account exists, return true if the password matches.
-//                    return pieces[1].equals(mPassword);
-//                }
-//            }
 
 			// TODO: register the new account here.
 			return success.equals("true");
@@ -475,37 +473,12 @@ public class ReportActivity extends AppCompatActivity {
 
 		@Override
 		protected void onPostExecute(final Boolean success) {
-			mCheckTask = null;
 //            showProgress(false);
-
-			if (success) {
-//                PreferencesUtils.putString(CheckActivity.this,email_key,mEmail);
-//                PreferencesUtils.putString(CheckActivity.this,password_key,mPassword);
-//                Intent intent=new Intent(CheckActivity.this,MainActivity.class);
-//                CheckActivity.this.startActivity(intent);
-//                finish();
-				Util.showShortToastMessage(ReportActivity.this, msg);
-				eCurrentprocess.setText(reportFormBeans.get(0).process_name);
-				eReportstate.setText(reportFormBeans.get(0).state);
-				eContainerid.setText(reportFormBeans.get(0).container_id);
-				eContainerweight.setText(reportFormBeans.get(0).container_weight);
-				eThousandweight.setText(reportFormBeans.get(0).unit_weight);
-				eNetweight.setText(reportFormBeans.get(0).weight);
-//                 eWaste.setText(reportFormBeans.get(0).);
-//                 eGrossweight.setText(reportFormBeans.get(0).weight);
-//                 eReportnum.setText(reportFormBeans.get(0).);
-				String process_status = reportFormBeans.get(0).process_status;
-
-			} else {
-				Util.showShortToastMessage(ReportActivity.this, msg);
-//                mPasswordView.setError(getString(R.string.error_incorrect_password));
-//                mPasswordView.requestFocus();
-			}
+			reloadviewText(success,msg);
 		}
 
 		@Override
 		protected void onCancelled() {
-			mCheckTask = null;
 //            showProgress(false);
 		}
 
@@ -515,11 +488,7 @@ public class ReportActivity extends AppCompatActivity {
 				data = readStream(ins);
 
 				String json = new String(data);        // 把字符数组转换成字符串
-//            JSONArray array = new JSONArray(json);
-//            for(int i = 0 ; i < array.length() ; i++){
 				JSONObject jsonObject = new JSONObject(json);//array.getJSONObject(i);
-//                String msg=jsonObject.getString("message");
-//                String success=jsonObject.getString("success");
 				return jsonObject;
 //                Print("login msgmsg:::"+msg);
 //            }
@@ -550,1141 +519,61 @@ public class ReportActivity extends AppCompatActivity {
 		}
 
 	}
-//
-//	public class CheckCardidTask extends AsyncTask<Void, Void, Boolean> {
-//		//        String lot_no="";
-//		String cardid = "";
-//		String success = "";
-//		String msg = "";
-//		int responsecode = 0;
-//
-//		CheckCardidTask() {
-//			cardid = eCardid.getText().toString();
-//		}
-//
-//		@Override
-//		protected Boolean doInBackground(Void... params) {
-//			// TODO: attempt authentication against a network service.
-//
-//			try {
-//				String url = "http://" +
-//						PreferencesUtils.getString(ReportActivity.this, ip_key, "120.27.2.177")
-//						+ ":" + PreferencesUtils.getString(ReportActivity.this, port_key, "8062") +
-//						IndexConstants.CHECKCARDID + "?token=" +
-//						PreferencesUtils.getString(ReportActivity.this, token_key, "") + "&runcard_no=" + cardid;
-////                "login:","登录帐号","Password":"密码"
-//				Print("url:::" + url);
-////                Map<String,String> mparams=new HashMap<String,String>();
-////                mparams.put("login",PreferencesUtils.getString(ReportActivity.this,email_key,"8062"));
-////                mparams.put("lot_no",lot_no);
-////                mparams.put("barcode",barcode);
-////                mparams.put("location",location);
-//
-//
-////                String postparams = new Gson().toJson(mparams);
-////                postparams=URLEncoder.encode(postparams,"utf-8");
-//
-////                String postparams ="{"+"login:",mEmail,"Password:",mPassword}//"login:"+mEmail+"&password:"+mPassword;
-////                byte[] data = postparams.getBytes();
-////                System.err.println("postparams postparams:::"+postparams+data.length);
-//				URL posturl = new URL(url);
-//				HttpURLConnection conn = (HttpURLConnection) posturl.openConnection();
-//				conn.setConnectTimeout(10000);
-////                conn.setDoInput(true);                  //打开输入流，以便从服务器获取数据
-////                conn.setDoOutput(true);                 //打开输出流，以便向服务器提交数据
-////                conn.setRequestMethod("POST");     //设置以Post方式提交数据
-////                conn.setUseCaches(false);               //使用Post方式不能使用缓存
-////                //设置请求体的类型是文本类型
-////                conn.setRequestProperty("Content-Type", "application/json");
-////                conn.setRequestProperty("Content-Length", String.valueOf(data.length)); // 注意是字节长度, 不是字符长度
-////
-//////                conn.setDoOutput(true); // 准备写出
-////                conn.getOutputStream().write(data);
-//
-//				responsecode = conn.getResponseCode();
-//				if (responsecode == 200) {
-//					InputStream ins = conn.getInputStream();
-//					JSONObject rootjsonObject = parseJson(ins);
-//					JSONObject jsonObject = null;
-//					if (rootjsonObject != null) {
-//						jsonObject = rootjsonObject.getJSONArray("results").getJSONObject(0);
-//					}
-//					if (jsonObject != null) {
-//						Print(" return:::" + jsonObject);
-//						reportFormBeans = new ArrayList<ReportFormBean>();
-//						msg = jsonObject.getString("message");
-//						success = jsonObject.getString("success");
-//						JSONArray dataarr = jsonObject.getJSONArray("data");
-//						for (int i = 0; i < dataarr.length(); i++) {
-//							JSONObject reprotformdataObject = dataarr.getJSONObject(i);
-//							ReportFormBean reportFormBean = beanParseUtility.parse(reprotformdataObject, ReportFormBean.class);
-//							reportFormBeans.add(reportFormBean);
-//						}
-//					}
-////                    String s = ins.toString();
-////                    System.err.println("sssssssss:::"+s);
-//				}
-//				Print(" return:::" + reportFormBeans.size() + "  reportFormBeans" + reportFormBeans.get(0).product_name);
-////                ins.close();
-//			} catch (Exception e) {
-//				// TODO: handle exception
-//				System.err.println("未能获取网络数据");
-//				e.printStackTrace();
-//			}
-//
-////            for (String credential : DUMMY_CREDENTIALS) {
-////                String[] pieces = credential.split(":");
-////                if (pieces[0].equals(mEmail)) {
-////                    // Account exists, return true if the password matches.
-////                    return pieces[1].equals(mPassword);
-////                }
-////            }
-//
-//			// TODO: register the new account here.
-//			return success.equals("true");
-//		}
-//
-//		@Override
-//		protected void onPostExecute(final Boolean success) {
-//			mCheckTask = null;
-////            showProgress(false);
-//
-//			if (success) {
-////                PreferencesUtils.putString(CheckActivity.this,email_key,mEmail);
-////                PreferencesUtils.putString(CheckActivity.this,password_key,mPassword);
-////                Intent intent=new Intent(CheckActivity.this,MainActivity.class);
-////                CheckActivity.this.startActivity(intent);
-////                finish();
-//				Util.showShortToastMessage(ReportActivity.this, msg);
-//				eCurrentprocess.setText(reportFormBeans.get(0).process_name);
-//				eReportstate.setText(reportFormBeans.get(0).state);
-//				eContainerid.setText(reportFormBeans.get(0).container_id);
-//				eContainerweight.setText(reportFormBeans.get(0).container_weight);
-//				eThousandweight.setText(reportFormBeans.get(0).unit_weight);
-//				eNetweight.setText(reportFormBeans.get(0).weight);
-////                 eWaste.setText(reportFormBeans.get(0).);
-////                 eGrossweight.setText(reportFormBeans.get(0).weight);
-////                 eReportnum.setText(reportFormBeans.get(0).);
-//				String process_status = reportFormBeans.get(0).process_status;
-//				if (process_status.equals("to_report")) {
-//					report_submitbutton.setVisibility(View.VISIBLE);
-//					reportcancel_submitbutton.setVisibility(View.VISIBLE);
-//				} else if (process_status.equals("to_inspect")) {
-//					reportinspect_submitbutton.setVisibility(View.VISIBLE);
-//					reportinspectcancel_submitbutton.setVisibility(View.VISIBLE);
-//					reportinspectcancel_submitbutton.setVisibility(View.VISIBLE);
-//				} else if (process_status.equals("to_material")) {
-//					reportmaterial_submitbutton.setVisibility(View.VISIBLE);
-//					reportmaterialcancel_submitbutton.setVisibility(View.VISIBLE);
-//				}
-//			} else {
-//				Util.showShortToastMessage(ReportActivity.this, msg);
-////                mPasswordView.setError(getString(R.string.error_incorrect_password));
-////                mPasswordView.requestFocus();
-//			}
-//		}
-//
-//		@Override
-//		protected void onCancelled() {
-//			mCheckTask = null;
-////            showProgress(false);
-//		}
-//
-//		private JSONObject parseJson(InputStream ins) {
-//			byte[] data = new byte[0];   // 把输入流转换成字符数组
-//			try {
-//				data = readStream(ins);
-//
-//				String json = new String(data);        // 把字符数组转换成字符串
-////            JSONArray array = new JSONArray(json);
-////            for(int i = 0 ; i < array.length() ; i++){
-//				JSONObject jsonObject = new JSONObject(json);//array.getJSONObject(i);
-////                String msg=jsonObject.getString("message");
-////                String success=jsonObject.getString("success");
-//				return jsonObject;
-////                Print("login msgmsg:::"+msg);
-////            }
-//			} catch (Exception e) {
-//				e.printStackTrace();
-//			}
-//			return null;
-//		}
-//
-//		/**
-//		 * 182.     * 把输入流转换成字符数组
-//		 * 183.     * @param inputStream   输入流
-//		 * 184.     * @return  字符数组
-//		 * 185.     * @throws Exception
-//		 * 186.
-//		 */
-//		public byte[] readStream(InputStream inputStream) throws Exception {
-//			ByteArrayOutputStream bout = new ByteArrayOutputStream();
-//			byte[] buffer = new byte[1024];
-//			int len = 0;
-//			while ((len = inputStream.read(buffer)) != -1) {
-//				bout.write(buffer, 0, len);
-//			}
-//			bout.close();
-//			inputStream.close();
-//
-//			return bout.toByteArray();
-//		}
-//
-//	}
-//
-//	public class CheckCardidTask extends AsyncTask<Void, Void, Boolean> {
-//		//        String lot_no="";
-//		String cardid = "";
-//		String success = "";
-//		String msg = "";
-//		int responsecode = 0;
-//
-//		CheckCardidTask() {
-//			cardid = eCardid.getText().toString();
-//		}
-//
-//		@Override
-//		protected Boolean doInBackground(Void... params) {
-//			// TODO: attempt authentication against a network service.
-//
-//			try {
-//				String url = "http://" +
-//						PreferencesUtils.getString(ReportActivity.this, ip_key, "120.27.2.177")
-//						+ ":" + PreferencesUtils.getString(ReportActivity.this, port_key, "8062") +
-//						IndexConstants.CHECKCARDID + "?token=" +
-//						PreferencesUtils.getString(ReportActivity.this, token_key, "") + "&runcard_no=" + cardid;
-////                "login:","登录帐号","Password":"密码"
-//				Print("url:::" + url);
-////                Map<String,String> mparams=new HashMap<String,String>();
-////                mparams.put("login",PreferencesUtils.getString(ReportActivity.this,email_key,"8062"));
-////                mparams.put("lot_no",lot_no);
-////                mparams.put("barcode",barcode);
-////                mparams.put("location",location);
-//
-//
-////                String postparams = new Gson().toJson(mparams);
-////                postparams=URLEncoder.encode(postparams,"utf-8");
-//
-////                String postparams ="{"+"login:",mEmail,"Password:",mPassword}//"login:"+mEmail+"&password:"+mPassword;
-////                byte[] data = postparams.getBytes();
-////                System.err.println("postparams postparams:::"+postparams+data.length);
-//				URL posturl = new URL(url);
-//				HttpURLConnection conn = (HttpURLConnection) posturl.openConnection();
-//				conn.setConnectTimeout(10000);
-////                conn.setDoInput(true);                  //打开输入流，以便从服务器获取数据
-////                conn.setDoOutput(true);                 //打开输出流，以便向服务器提交数据
-////                conn.setRequestMethod("POST");     //设置以Post方式提交数据
-////                conn.setUseCaches(false);               //使用Post方式不能使用缓存
-////                //设置请求体的类型是文本类型
-////                conn.setRequestProperty("Content-Type", "application/json");
-////                conn.setRequestProperty("Content-Length", String.valueOf(data.length)); // 注意是字节长度, 不是字符长度
-////
-//////                conn.setDoOutput(true); // 准备写出
-////                conn.getOutputStream().write(data);
-//
-//				responsecode = conn.getResponseCode();
-//				if (responsecode == 200) {
-//					InputStream ins = conn.getInputStream();
-//					JSONObject rootjsonObject = parseJson(ins);
-//					JSONObject jsonObject = null;
-//					if (rootjsonObject != null) {
-//						jsonObject = rootjsonObject.getJSONArray("results").getJSONObject(0);
-//					}
-//					if (jsonObject != null) {
-//						Print(" return:::" + jsonObject);
-//						reportFormBeans = new ArrayList<ReportFormBean>();
-//						msg = jsonObject.getString("message");
-//						success = jsonObject.getString("success");
-//						JSONArray dataarr = jsonObject.getJSONArray("data");
-//						for (int i = 0; i < dataarr.length(); i++) {
-//							JSONObject reprotformdataObject = dataarr.getJSONObject(i);
-//							ReportFormBean reportFormBean = beanParseUtility.parse(reprotformdataObject, ReportFormBean.class);
-//							reportFormBeans.add(reportFormBean);
-//						}
-//					}
-////                    String s = ins.toString();
-////                    System.err.println("sssssssss:::"+s);
-//				}
-//				Print(" return:::" + reportFormBeans.size() + "  reportFormBeans" + reportFormBeans.get(0).product_name);
-////                ins.close();
-//			} catch (Exception e) {
-//				// TODO: handle exception
-//				System.err.println("未能获取网络数据");
-//				e.printStackTrace();
-//			}
-//
-////            for (String credential : DUMMY_CREDENTIALS) {
-////                String[] pieces = credential.split(":");
-////                if (pieces[0].equals(mEmail)) {
-////                    // Account exists, return true if the password matches.
-////                    return pieces[1].equals(mPassword);
-////                }
-////            }
-//
-//			// TODO: register the new account here.
-//			return success.equals("true");
-//		}
-//
-//		@Override
-//		protected void onPostExecute(final Boolean success) {
-//			mCheckTask = null;
-////            showProgress(false);
-//
-//			if (success) {
-////                PreferencesUtils.putString(CheckActivity.this,email_key,mEmail);
-////                PreferencesUtils.putString(CheckActivity.this,password_key,mPassword);
-////                Intent intent=new Intent(CheckActivity.this,MainActivity.class);
-////                CheckActivity.this.startActivity(intent);
-////                finish();
-//				Util.showShortToastMessage(ReportActivity.this, msg);
-//				eCurrentprocess.setText(reportFormBeans.get(0).process_name);
-//				eReportstate.setText(reportFormBeans.get(0).state);
-//				eContainerid.setText(reportFormBeans.get(0).container_id);
-//				eContainerweight.setText(reportFormBeans.get(0).container_weight);
-//				eThousandweight.setText(reportFormBeans.get(0).unit_weight);
-//				eNetweight.setText(reportFormBeans.get(0).weight);
-////                 eWaste.setText(reportFormBeans.get(0).);
-////                 eGrossweight.setText(reportFormBeans.get(0).weight);
-////                 eReportnum.setText(reportFormBeans.get(0).);
-//				String process_status = reportFormBeans.get(0).process_status;
-//				if (process_status.equals("to_report")) {
-//					report_submitbutton.setVisibility(View.VISIBLE);
-//					reportcancel_submitbutton.setVisibility(View.VISIBLE);
-//				} else if (process_status.equals("to_inspect")) {
-//					reportinspect_submitbutton.setVisibility(View.VISIBLE);
-//					reportinspectcancel_submitbutton.setVisibility(View.VISIBLE);
-//					reportinspectcancel_submitbutton.setVisibility(View.VISIBLE);
-//				} else if (process_status.equals("to_material")) {
-//					reportmaterial_submitbutton.setVisibility(View.VISIBLE);
-//					reportmaterialcancel_submitbutton.setVisibility(View.VISIBLE);
-//				}
-//			} else {
-//				Util.showShortToastMessage(ReportActivity.this, msg);
-////                mPasswordView.setError(getString(R.string.error_incorrect_password));
-////                mPasswordView.requestFocus();
-//			}
-//		}
-//
-//		@Override
-//		protected void onCancelled() {
-//			mCheckTask = null;
-////            showProgress(false);
-//		}
-//
-//		private JSONObject parseJson(InputStream ins) {
-//			byte[] data = new byte[0];   // 把输入流转换成字符数组
-//			try {
-//				data = readStream(ins);
-//
-//				String json = new String(data);        // 把字符数组转换成字符串
-////            JSONArray array = new JSONArray(json);
-////            for(int i = 0 ; i < array.length() ; i++){
-//				JSONObject jsonObject = new JSONObject(json);//array.getJSONObject(i);
-////                String msg=jsonObject.getString("message");
-////                String success=jsonObject.getString("success");
-//				return jsonObject;
-////                Print("login msgmsg:::"+msg);
-////            }
-//			} catch (Exception e) {
-//				e.printStackTrace();
-//			}
-//			return null;
-//		}
-//
-//		/**
-//		 * 182.     * 把输入流转换成字符数组
-//		 * 183.     * @param inputStream   输入流
-//		 * 184.     * @return  字符数组
-//		 * 185.     * @throws Exception
-//		 * 186.
-//		 */
-//		public byte[] readStream(InputStream inputStream) throws Exception {
-//			ByteArrayOutputStream bout = new ByteArrayOutputStream();
-//			byte[] buffer = new byte[1024];
-//			int len = 0;
-//			while ((len = inputStream.read(buffer)) != -1) {
-//				bout.write(buffer, 0, len);
-//			}
-//			bout.close();
-//			inputStream.close();
-//
-//			return bout.toByteArray();
-//		}
-//
-//	}
-//
-//	public class CheckCardidTask extends AsyncTask<Void, Void, Boolean> {
-//		//        String lot_no="";
-//		String cardid = "";
-//		String success = "";
-//		String msg = "";
-//		int responsecode = 0;
-//
-//		CheckCardidTask() {
-//			cardid = eCardid.getText().toString();
-//		}
-//
-//		@Override
-//		protected Boolean doInBackground(Void... params) {
-//			// TODO: attempt authentication against a network service.
-//
-//			try {
-//				String url = "http://" +
-//						PreferencesUtils.getString(ReportActivity.this, ip_key, "120.27.2.177")
-//						+ ":" + PreferencesUtils.getString(ReportActivity.this, port_key, "8062") +
-//						IndexConstants.CHECKCARDID + "?token=" +
-//						PreferencesUtils.getString(ReportActivity.this, token_key, "") + "&runcard_no=" + cardid;
-////                "login:","登录帐号","Password":"密码"
-//				Print("url:::" + url);
-////                Map<String,String> mparams=new HashMap<String,String>();
-////                mparams.put("login",PreferencesUtils.getString(ReportActivity.this,email_key,"8062"));
-////                mparams.put("lot_no",lot_no);
-////                mparams.put("barcode",barcode);
-////                mparams.put("location",location);
-//
-//
-////                String postparams = new Gson().toJson(mparams);
-////                postparams=URLEncoder.encode(postparams,"utf-8");
-//
-////                String postparams ="{"+"login:",mEmail,"Password:",mPassword}//"login:"+mEmail+"&password:"+mPassword;
-////                byte[] data = postparams.getBytes();
-////                System.err.println("postparams postparams:::"+postparams+data.length);
-//				URL posturl = new URL(url);
-//				HttpURLConnection conn = (HttpURLConnection) posturl.openConnection();
-//				conn.setConnectTimeout(10000);
-////                conn.setDoInput(true);                  //打开输入流，以便从服务器获取数据
-////                conn.setDoOutput(true);                 //打开输出流，以便向服务器提交数据
-////                conn.setRequestMethod("POST");     //设置以Post方式提交数据
-////                conn.setUseCaches(false);               //使用Post方式不能使用缓存
-////                //设置请求体的类型是文本类型
-////                conn.setRequestProperty("Content-Type", "application/json");
-////                conn.setRequestProperty("Content-Length", String.valueOf(data.length)); // 注意是字节长度, 不是字符长度
-////
-//////                conn.setDoOutput(true); // 准备写出
-////                conn.getOutputStream().write(data);
-//
-//				responsecode = conn.getResponseCode();
-//				if (responsecode == 200) {
-//					InputStream ins = conn.getInputStream();
-//					JSONObject rootjsonObject = parseJson(ins);
-//					JSONObject jsonObject = null;
-//					if (rootjsonObject != null) {
-//						jsonObject = rootjsonObject.getJSONArray("results").getJSONObject(0);
-//					}
-//					if (jsonObject != null) {
-//						Print(" return:::" + jsonObject);
-//						reportFormBeans = new ArrayList<ReportFormBean>();
-//						msg = jsonObject.getString("message");
-//						success = jsonObject.getString("success");
-//						JSONArray dataarr = jsonObject.getJSONArray("data");
-//						for (int i = 0; i < dataarr.length(); i++) {
-//							JSONObject reprotformdataObject = dataarr.getJSONObject(i);
-//							ReportFormBean reportFormBean = beanParseUtility.parse(reprotformdataObject, ReportFormBean.class);
-//							reportFormBeans.add(reportFormBean);
-//						}
-//					}
-////                    String s = ins.toString();
-////                    System.err.println("sssssssss:::"+s);
-//				}
-//				Print(" return:::" + reportFormBeans.size() + "  reportFormBeans" + reportFormBeans.get(0).product_name);
-////                ins.close();
-//			} catch (Exception e) {
-//				// TODO: handle exception
-//				System.err.println("未能获取网络数据");
-//				e.printStackTrace();
-//			}
-//
-////            for (String credential : DUMMY_CREDENTIALS) {
-////                String[] pieces = credential.split(":");
-////                if (pieces[0].equals(mEmail)) {
-////                    // Account exists, return true if the password matches.
-////                    return pieces[1].equals(mPassword);
-////                }
-////            }
-//
-//			// TODO: register the new account here.
-//			return success.equals("true");
-//		}
-//
-//		@Override
-//		protected void onPostExecute(final Boolean success) {
-//			mCheckTask = null;
-////            showProgress(false);
-//
-//			if (success) {
-////                PreferencesUtils.putString(CheckActivity.this,email_key,mEmail);
-////                PreferencesUtils.putString(CheckActivity.this,password_key,mPassword);
-////                Intent intent=new Intent(CheckActivity.this,MainActivity.class);
-////                CheckActivity.this.startActivity(intent);
-////                finish();
-//				Util.showShortToastMessage(ReportActivity.this, msg);
-//				eCurrentprocess.setText(reportFormBeans.get(0).process_name);
-//				eReportstate.setText(reportFormBeans.get(0).state);
-//				eContainerid.setText(reportFormBeans.get(0).container_id);
-//				eContainerweight.setText(reportFormBeans.get(0).container_weight);
-//				eThousandweight.setText(reportFormBeans.get(0).unit_weight);
-//				eNetweight.setText(reportFormBeans.get(0).weight);
-////                 eWaste.setText(reportFormBeans.get(0).);
-////                 eGrossweight.setText(reportFormBeans.get(0).weight);
-////                 eReportnum.setText(reportFormBeans.get(0).);
-//				String process_status = reportFormBeans.get(0).process_status;
-//				if (process_status.equals("to_report")) {
-//					report_submitbutton.setVisibility(View.VISIBLE);
-//					reportcancel_submitbutton.setVisibility(View.VISIBLE);
-//				} else if (process_status.equals("to_inspect")) {
-//					reportinspect_submitbutton.setVisibility(View.VISIBLE);
-//					reportinspectcancel_submitbutton.setVisibility(View.VISIBLE);
-//					reportinspectcancel_submitbutton.setVisibility(View.VISIBLE);
-//				} else if (process_status.equals("to_material")) {
-//					reportmaterial_submitbutton.setVisibility(View.VISIBLE);
-//					reportmaterialcancel_submitbutton.setVisibility(View.VISIBLE);
-//				}
-//			} else {
-//				Util.showShortToastMessage(ReportActivity.this, msg);
-////                mPasswordView.setError(getString(R.string.error_incorrect_password));
-////                mPasswordView.requestFocus();
-//			}
-//		}
-//
-//		@Override
-//		protected void onCancelled() {
-//			mCheckTask = null;
-////            showProgress(false);
-//		}
-//
-//		private JSONObject parseJson(InputStream ins) {
-//			byte[] data = new byte[0];   // 把输入流转换成字符数组
-//			try {
-//				data = readStream(ins);
-//
-//				String json = new String(data);        // 把字符数组转换成字符串
-////            JSONArray array = new JSONArray(json);
-////            for(int i = 0 ; i < array.length() ; i++){
-//				JSONObject jsonObject = new JSONObject(json);//array.getJSONObject(i);
-////                String msg=jsonObject.getString("message");
-////                String success=jsonObject.getString("success");
-//				return jsonObject;
-////                Print("login msgmsg:::"+msg);
-////            }
-//			} catch (Exception e) {
-//				e.printStackTrace();
-//			}
-//			return null;
-//		}
-//
-//		/**
-//		 * 182.     * 把输入流转换成字符数组
-//		 * 183.     * @param inputStream   输入流
-//		 * 184.     * @return  字符数组
-//		 * 185.     * @throws Exception
-//		 * 186.
-//		 */
-//		public byte[] readStream(InputStream inputStream) throws Exception {
-//			ByteArrayOutputStream bout = new ByteArrayOutputStream();
-//			byte[] buffer = new byte[1024];
-//			int len = 0;
-//			while ((len = inputStream.read(buffer)) != -1) {
-//				bout.write(buffer, 0, len);
-//			}
-//			bout.close();
-//			inputStream.close();
-//
-//			return bout.toByteArray();
-//		}
-//
-//	}
-//
-//	public class CheckCardidTask extends AsyncTask<Void, Void, Boolean> {
-//		//        String lot_no="";
-//		String cardid = "";
-//		String success = "";
-//		String msg = "";
-//		int responsecode = 0;
-//
-//		CheckCardidTask() {
-//			cardid = eCardid.getText().toString();
-//		}
-//
-//		@Override
-//		protected Boolean doInBackground(Void... params) {
-//			// TODO: attempt authentication against a network service.
-//
-//			try {
-//				String url = "http://" +
-//						PreferencesUtils.getString(ReportActivity.this, ip_key, "120.27.2.177")
-//						+ ":" + PreferencesUtils.getString(ReportActivity.this, port_key, "8062") +
-//						IndexConstants.CHECKCARDID + "?token=" +
-//						PreferencesUtils.getString(ReportActivity.this, token_key, "") + "&runcard_no=" + cardid;
-////                "login:","登录帐号","Password":"密码"
-//				Print("url:::" + url);
-////                Map<String,String> mparams=new HashMap<String,String>();
-////                mparams.put("login",PreferencesUtils.getString(ReportActivity.this,email_key,"8062"));
-////                mparams.put("lot_no",lot_no);
-////                mparams.put("barcode",barcode);
-////                mparams.put("location",location);
-//
-//
-////                String postparams = new Gson().toJson(mparams);
-////                postparams=URLEncoder.encode(postparams,"utf-8");
-//
-////                String postparams ="{"+"login:",mEmail,"Password:",mPassword}//"login:"+mEmail+"&password:"+mPassword;
-////                byte[] data = postparams.getBytes();
-////                System.err.println("postparams postparams:::"+postparams+data.length);
-//				URL posturl = new URL(url);
-//				HttpURLConnection conn = (HttpURLConnection) posturl.openConnection();
-//				conn.setConnectTimeout(10000);
-////                conn.setDoInput(true);                  //打开输入流，以便从服务器获取数据
-////                conn.setDoOutput(true);                 //打开输出流，以便向服务器提交数据
-////                conn.setRequestMethod("POST");     //设置以Post方式提交数据
-////                conn.setUseCaches(false);               //使用Post方式不能使用缓存
-////                //设置请求体的类型是文本类型
-////                conn.setRequestProperty("Content-Type", "application/json");
-////                conn.setRequestProperty("Content-Length", String.valueOf(data.length)); // 注意是字节长度, 不是字符长度
-////
-//////                conn.setDoOutput(true); // 准备写出
-////                conn.getOutputStream().write(data);
-//
-//				responsecode = conn.getResponseCode();
-//				if (responsecode == 200) {
-//					InputStream ins = conn.getInputStream();
-//					JSONObject rootjsonObject = parseJson(ins);
-//					JSONObject jsonObject = null;
-//					if (rootjsonObject != null) {
-//						jsonObject = rootjsonObject.getJSONArray("results").getJSONObject(0);
-//					}
-//					if (jsonObject != null) {
-//						Print(" return:::" + jsonObject);
-//						reportFormBeans = new ArrayList<ReportFormBean>();
-//						msg = jsonObject.getString("message");
-//						success = jsonObject.getString("success");
-//						JSONArray dataarr = jsonObject.getJSONArray("data");
-//						for (int i = 0; i < dataarr.length(); i++) {
-//							JSONObject reprotformdataObject = dataarr.getJSONObject(i);
-//							ReportFormBean reportFormBean = beanParseUtility.parse(reprotformdataObject, ReportFormBean.class);
-//							reportFormBeans.add(reportFormBean);
-//						}
-//					}
-////                    String s = ins.toString();
-////                    System.err.println("sssssssss:::"+s);
-//				}
-//				Print(" return:::" + reportFormBeans.size() + "  reportFormBeans" + reportFormBeans.get(0).product_name);
-////                ins.close();
-//			} catch (Exception e) {
-//				// TODO: handle exception
-//				System.err.println("未能获取网络数据");
-//				e.printStackTrace();
-//			}
-//
-////            for (String credential : DUMMY_CREDENTIALS) {
-////                String[] pieces = credential.split(":");
-////                if (pieces[0].equals(mEmail)) {
-////                    // Account exists, return true if the password matches.
-////                    return pieces[1].equals(mPassword);
-////                }
-////            }
-//
-//			// TODO: register the new account here.
-//			return success.equals("true");
-//		}
-//
-//		@Override
-//		protected void onPostExecute(final Boolean success) {
-//			mCheckTask = null;
-////            showProgress(false);
-//
-//			if (success) {
-////                PreferencesUtils.putString(CheckActivity.this,email_key,mEmail);
-////                PreferencesUtils.putString(CheckActivity.this,password_key,mPassword);
-////                Intent intent=new Intent(CheckActivity.this,MainActivity.class);
-////                CheckActivity.this.startActivity(intent);
-////                finish();
-//				Util.showShortToastMessage(ReportActivity.this, msg);
-//				eCurrentprocess.setText(reportFormBeans.get(0).process_name);
-//				eReportstate.setText(reportFormBeans.get(0).state);
-//				eContainerid.setText(reportFormBeans.get(0).container_id);
-//				eContainerweight.setText(reportFormBeans.get(0).container_weight);
-//				eThousandweight.setText(reportFormBeans.get(0).unit_weight);
-//				eNetweight.setText(reportFormBeans.get(0).weight);
-////                 eWaste.setText(reportFormBeans.get(0).);
-////                 eGrossweight.setText(reportFormBeans.get(0).weight);
-////                 eReportnum.setText(reportFormBeans.get(0).);
-//				String process_status = reportFormBeans.get(0).process_status;
-//				if (process_status.equals("to_report")) {
-//					report_submitbutton.setVisibility(View.VISIBLE);
-//					reportcancel_submitbutton.setVisibility(View.VISIBLE);
-//				} else if (process_status.equals("to_inspect")) {
-//					reportinspect_submitbutton.setVisibility(View.VISIBLE);
-//					reportinspectcancel_submitbutton.setVisibility(View.VISIBLE);
-//					reportinspectcancel_submitbutton.setVisibility(View.VISIBLE);
-//				} else if (process_status.equals("to_material")) {
-//					reportmaterial_submitbutton.setVisibility(View.VISIBLE);
-//					reportmaterialcancel_submitbutton.setVisibility(View.VISIBLE);
-//				}
-//			} else {
-//				Util.showShortToastMessage(ReportActivity.this, msg);
-////                mPasswordView.setError(getString(R.string.error_incorrect_password));
-////                mPasswordView.requestFocus();
-//			}
-//		}
-//
-//		@Override
-//		protected void onCancelled() {
-//			mCheckTask = null;
-////            showProgress(false);
-//		}
-//
-//		private JSONObject parseJson(InputStream ins) {
-//			byte[] data = new byte[0];   // 把输入流转换成字符数组
-//			try {
-//				data = readStream(ins);
-//
-//				String json = new String(data);        // 把字符数组转换成字符串
-////            JSONArray array = new JSONArray(json);
-////            for(int i = 0 ; i < array.length() ; i++){
-//				JSONObject jsonObject = new JSONObject(json);//array.getJSONObject(i);
-////                String msg=jsonObject.getString("message");
-////                String success=jsonObject.getString("success");
-//				return jsonObject;
-////                Print("login msgmsg:::"+msg);
-////            }
-//			} catch (Exception e) {
-//				e.printStackTrace();
-//			}
-//			return null;
-//		}
-//
-//		/**
-//		 * 182.     * 把输入流转换成字符数组
-//		 * 183.     * @param inputStream   输入流
-//		 * 184.     * @return  字符数组
-//		 * 185.     * @throws Exception
-//		 * 186.
-//		 */
-//		public byte[] readStream(InputStream inputStream) throws Exception {
-//			ByteArrayOutputStream bout = new ByteArrayOutputStream();
-//			byte[] buffer = new byte[1024];
-//			int len = 0;
-//			while ((len = inputStream.read(buffer)) != -1) {
-//				bout.write(buffer, 0, len);
-//			}
-//			bout.close();
-//			inputStream.close();
-//
-//			return bout.toByteArray();
-//		}
-//
-//	}
-//
-//	public class CheckCardidTask extends AsyncTask<Void, Void, Boolean> {
-//		//        String lot_no="";
-//		String cardid = "";
-//		String success = "";
-//		String msg = "";
-//		int responsecode = 0;
-//
-//		CheckCardidTask() {
-//			cardid = eCardid.getText().toString();
-//		}
-//
-//		@Override
-//		protected Boolean doInBackground(Void... params) {
-//			// TODO: attempt authentication against a network service.
-//
-//			try {
-//				String url = "http://" +
-//						PreferencesUtils.getString(ReportActivity.this, ip_key, "120.27.2.177")
-//						+ ":" + PreferencesUtils.getString(ReportActivity.this, port_key, "8062") +
-//						IndexConstants.CHECKCARDID + "?token=" +
-//						PreferencesUtils.getString(ReportActivity.this, token_key, "") + "&runcard_no=" + cardid;
-////                "login:","登录帐号","Password":"密码"
-//				Print("url:::" + url);
-////                Map<String,String> mparams=new HashMap<String,String>();
-////                mparams.put("login",PreferencesUtils.getString(ReportActivity.this,email_key,"8062"));
-////                mparams.put("lot_no",lot_no);
-////                mparams.put("barcode",barcode);
-////                mparams.put("location",location);
-//
-//
-////                String postparams = new Gson().toJson(mparams);
-////                postparams=URLEncoder.encode(postparams,"utf-8");
-//
-////                String postparams ="{"+"login:",mEmail,"Password:",mPassword}//"login:"+mEmail+"&password:"+mPassword;
-////                byte[] data = postparams.getBytes();
-////                System.err.println("postparams postparams:::"+postparams+data.length);
-//				URL posturl = new URL(url);
-//				HttpURLConnection conn = (HttpURLConnection) posturl.openConnection();
-//				conn.setConnectTimeout(10000);
-////                conn.setDoInput(true);                  //打开输入流，以便从服务器获取数据
-////                conn.setDoOutput(true);                 //打开输出流，以便向服务器提交数据
-////                conn.setRequestMethod("POST");     //设置以Post方式提交数据
-////                conn.setUseCaches(false);               //使用Post方式不能使用缓存
-////                //设置请求体的类型是文本类型
-////                conn.setRequestProperty("Content-Type", "application/json");
-////                conn.setRequestProperty("Content-Length", String.valueOf(data.length)); // 注意是字节长度, 不是字符长度
-////
-//////                conn.setDoOutput(true); // 准备写出
-////                conn.getOutputStream().write(data);
-//
-//				responsecode = conn.getResponseCode();
-//				if (responsecode == 200) {
-//					InputStream ins = conn.getInputStream();
-//					JSONObject rootjsonObject = parseJson(ins);
-//					JSONObject jsonObject = null;
-//					if (rootjsonObject != null) {
-//						jsonObject = rootjsonObject.getJSONArray("results").getJSONObject(0);
-//					}
-//					if (jsonObject != null) {
-//						Print(" return:::" + jsonObject);
-//						reportFormBeans = new ArrayList<ReportFormBean>();
-//						msg = jsonObject.getString("message");
-//						success = jsonObject.getString("success");
-//						JSONArray dataarr = jsonObject.getJSONArray("data");
-//						for (int i = 0; i < dataarr.length(); i++) {
-//							JSONObject reprotformdataObject = dataarr.getJSONObject(i);
-//							ReportFormBean reportFormBean = beanParseUtility.parse(reprotformdataObject, ReportFormBean.class);
-//							reportFormBeans.add(reportFormBean);
-//						}
-//					}
-////                    String s = ins.toString();
-////                    System.err.println("sssssssss:::"+s);
-//				}
-//				Print(" return:::" + reportFormBeans.size() + "  reportFormBeans" + reportFormBeans.get(0).product_name);
-////                ins.close();
-//			} catch (Exception e) {
-//				// TODO: handle exception
-//				System.err.println("未能获取网络数据");
-//				e.printStackTrace();
-//			}
-//
-////            for (String credential : DUMMY_CREDENTIALS) {
-////                String[] pieces = credential.split(":");
-////                if (pieces[0].equals(mEmail)) {
-////                    // Account exists, return true if the password matches.
-////                    return pieces[1].equals(mPassword);
-////                }
-////            }
-//
-//			// TODO: register the new account here.
-//			return success.equals("true");
-//		}
-//
-//		@Override
-//		protected void onPostExecute(final Boolean success) {
-//			mCheckTask = null;
-////            showProgress(false);
-//
-//			if (success) {
-////                PreferencesUtils.putString(CheckActivity.this,email_key,mEmail);
-////                PreferencesUtils.putString(CheckActivity.this,password_key,mPassword);
-////                Intent intent=new Intent(CheckActivity.this,MainActivity.class);
-////                CheckActivity.this.startActivity(intent);
-////                finish();
-//				Util.showShortToastMessage(ReportActivity.this, msg);
-//				eCurrentprocess.setText(reportFormBeans.get(0).process_name);
-//				eReportstate.setText(reportFormBeans.get(0).state);
-//				eContainerid.setText(reportFormBeans.get(0).container_id);
-//				eContainerweight.setText(reportFormBeans.get(0).container_weight);
-//				eThousandweight.setText(reportFormBeans.get(0).unit_weight);
-//				eNetweight.setText(reportFormBeans.get(0).weight);
-////                 eWaste.setText(reportFormBeans.get(0).);
-////                 eGrossweight.setText(reportFormBeans.get(0).weight);
-////                 eReportnum.setText(reportFormBeans.get(0).);
-//				String process_status = reportFormBeans.get(0).process_status;
-//				if (process_status.equals("to_report")) {
-//					report_submitbutton.setVisibility(View.VISIBLE);
-//					reportcancel_submitbutton.setVisibility(View.VISIBLE);
-//				} else if (process_status.equals("to_inspect")) {
-//					reportinspect_submitbutton.setVisibility(View.VISIBLE);
-//					reportinspectcancel_submitbutton.setVisibility(View.VISIBLE);
-//					reportinspectcancel_submitbutton.setVisibility(View.VISIBLE);
-//				} else if (process_status.equals("to_material")) {
-//					reportmaterial_submitbutton.setVisibility(View.VISIBLE);
-//					reportmaterialcancel_submitbutton.setVisibility(View.VISIBLE);
-//				}
-//			} else {
-//				Util.showShortToastMessage(ReportActivity.this, msg);
-////                mPasswordView.setError(getString(R.string.error_incorrect_password));
-////                mPasswordView.requestFocus();
-//			}
-//		}
-//
-//		@Override
-//		protected void onCancelled() {
-//			mCheckTask = null;
-////            showProgress(false);
-//		}
-//
-//		private JSONObject parseJson(InputStream ins) {
-//			byte[] data = new byte[0];   // 把输入流转换成字符数组
-//			try {
-//				data = readStream(ins);
-//
-//				String json = new String(data);        // 把字符数组转换成字符串
-////            JSONArray array = new JSONArray(json);
-////            for(int i = 0 ; i < array.length() ; i++){
-//				JSONObject jsonObject = new JSONObject(json);//array.getJSONObject(i);
-////                String msg=jsonObject.getString("message");
-////                String success=jsonObject.getString("success");
-//				return jsonObject;
-////                Print("login msgmsg:::"+msg);
-////            }
-//			} catch (Exception e) {
-//				e.printStackTrace();
-//			}
-//			return null;
-//		}
-//
-//		/**
-//		 * 182.     * 把输入流转换成字符数组
-//		 * 183.     * @param inputStream   输入流
-//		 * 184.     * @return  字符数组
-//		 * 185.     * @throws Exception
-//		 * 186.
-//		 */
-//		public byte[] readStream(InputStream inputStream) throws Exception {
-//			ByteArrayOutputStream bout = new ByteArrayOutputStream();
-//			byte[] buffer = new byte[1024];
-//			int len = 0;
-//			while ((len = inputStream.read(buffer)) != -1) {
-//				bout.write(buffer, 0, len);
-//			}
-//			bout.close();
-//			inputStream.close();
-//
-//			return bout.toByteArray();
-//		}
-//
-//	}
-//
-//	public class CheckCardidTask extends AsyncTask<Void, Void, Boolean> {
-//		//        String lot_no="";
-//		String cardid = "";
-//		String success = "";
-//		String msg = "";
-//		int responsecode = 0;
-//
-//		CheckCardidTask() {
-//			cardid = eCardid.getText().toString();
-//		}
-//
-//		@Override
-//		protected Boolean doInBackground(Void... params) {
-//			// TODO: attempt authentication against a network service.
-//
-//			try {
-//				String url = "http://" +
-//						PreferencesUtils.getString(ReportActivity.this, ip_key, "120.27.2.177")
-//						+ ":" + PreferencesUtils.getString(ReportActivity.this, port_key, "8062") +
-//						IndexConstants.CHECKCARDID + "?token=" +
-//						PreferencesUtils.getString(ReportActivity.this, token_key, "") + "&runcard_no=" + cardid;
-////                "login:","登录帐号","Password":"密码"
-//				Print("url:::" + url);
-////                Map<String,String> mparams=new HashMap<String,String>();
-////                mparams.put("login",PreferencesUtils.getString(ReportActivity.this,email_key,"8062"));
-////                mparams.put("lot_no",lot_no);
-////                mparams.put("barcode",barcode);
-////                mparams.put("location",location);
-//
-//
-////                String postparams = new Gson().toJson(mparams);
-////                postparams=URLEncoder.encode(postparams,"utf-8");
-//
-////                String postparams ="{"+"login:",mEmail,"Password:",mPassword}//"login:"+mEmail+"&password:"+mPassword;
-////                byte[] data = postparams.getBytes();
-////                System.err.println("postparams postparams:::"+postparams+data.length);
-//				URL posturl = new URL(url);
-//				HttpURLConnection conn = (HttpURLConnection) posturl.openConnection();
-//				conn.setConnectTimeout(10000);
-////                conn.setDoInput(true);                  //打开输入流，以便从服务器获取数据
-////                conn.setDoOutput(true);                 //打开输出流，以便向服务器提交数据
-////                conn.setRequestMethod("POST");     //设置以Post方式提交数据
-////                conn.setUseCaches(false);               //使用Post方式不能使用缓存
-////                //设置请求体的类型是文本类型
-////                conn.setRequestProperty("Content-Type", "application/json");
-////                conn.setRequestProperty("Content-Length", String.valueOf(data.length)); // 注意是字节长度, 不是字符长度
-////
-//////                conn.setDoOutput(true); // 准备写出
-////                conn.getOutputStream().write(data);
-//
-//				responsecode = conn.getResponseCode();
-//				if (responsecode == 200) {
-//					InputStream ins = conn.getInputStream();
-//					JSONObject rootjsonObject = parseJson(ins);
-//					JSONObject jsonObject = null;
-//					if (rootjsonObject != null) {
-//						jsonObject = rootjsonObject.getJSONArray("results").getJSONObject(0);
-//					}
-//					if (jsonObject != null) {
-//						Print(" return:::" + jsonObject);
-//						reportFormBeans = new ArrayList<ReportFormBean>();
-//						msg = jsonObject.getString("message");
-//						success = jsonObject.getString("success");
-//						JSONArray dataarr = jsonObject.getJSONArray("data");
-//						for (int i = 0; i < dataarr.length(); i++) {
-//							JSONObject reprotformdataObject = dataarr.getJSONObject(i);
-//							ReportFormBean reportFormBean = beanParseUtility.parse(reprotformdataObject, ReportFormBean.class);
-//							reportFormBeans.add(reportFormBean);
-//						}
-//					}
-////                    String s = ins.toString();
-////                    System.err.println("sssssssss:::"+s);
-//				}
-//				Print(" return:::" + reportFormBeans.size() + "  reportFormBeans" + reportFormBeans.get(0).product_name);
-////                ins.close();
-//			} catch (Exception e) {
-//				// TODO: handle exception
-//				System.err.println("未能获取网络数据");
-//				e.printStackTrace();
-//			}
-//
-////            for (String credential : DUMMY_CREDENTIALS) {
-////                String[] pieces = credential.split(":");
-////                if (pieces[0].equals(mEmail)) {
-////                    // Account exists, return true if the password matches.
-////                    return pieces[1].equals(mPassword);
-////                }
-////            }
-//
-//			// TODO: register the new account here.
-//			return success.equals("true");
-//		}
-//
-//		@Override
-//		protected void onPostExecute(final Boolean success) {
-//			mCheckTask = null;
-////            showProgress(false);
-//
-//			if (success) {
-////                PreferencesUtils.putString(CheckActivity.this,email_key,mEmail);
-////                PreferencesUtils.putString(CheckActivity.this,password_key,mPassword);
-////                Intent intent=new Intent(CheckActivity.this,MainActivity.class);
-////                CheckActivity.this.startActivity(intent);
-////                finish();
-//				Util.showShortToastMessage(ReportActivity.this, msg);
-//				eCurrentprocess.setText(reportFormBeans.get(0).process_name);
-//				eReportstate.setText(reportFormBeans.get(0).state);
-//				eContainerid.setText(reportFormBeans.get(0).container_id);
-//				eContainerweight.setText(reportFormBeans.get(0).container_weight);
-//				eThousandweight.setText(reportFormBeans.get(0).unit_weight);
-//				eNetweight.setText(reportFormBeans.get(0).weight);
-////                 eWaste.setText(reportFormBeans.get(0).);
-////                 eGrossweight.setText(reportFormBeans.get(0).weight);
-////                 eReportnum.setText(reportFormBeans.get(0).);
-//				String process_status = reportFormBeans.get(0).process_status;
-//				if (process_status.equals("to_report")) {
-//					report_submitbutton.setVisibility(View.VISIBLE);
-//					reportcancel_submitbutton.setVisibility(View.VISIBLE);
-//				} else if (process_status.equals("to_inspect")) {
-//					reportinspect_submitbutton.setVisibility(View.VISIBLE);
-//					reportinspectcancel_submitbutton.setVisibility(View.VISIBLE);
-//					reportinspectcancel_submitbutton.setVisibility(View.VISIBLE);
-//				} else if (process_status.equals("to_material")) {
-//					reportmaterial_submitbutton.setVisibility(View.VISIBLE);
-//					reportmaterialcancel_submitbutton.setVisibility(View.VISIBLE);
-//				}
-//			} else {
-//				Util.showShortToastMessage(ReportActivity.this, msg);
-////                mPasswordView.setError(getString(R.string.error_incorrect_password));
-////                mPasswordView.requestFocus();
-//			}
-//		}
-//
-//		@Override
-//		protected void onCancelled() {
-//			mCheckTask = null;
-////            showProgress(false);
-//		}
-//
-//		private JSONObject parseJson(InputStream ins) {
-//			byte[] data = new byte[0];   // 把输入流转换成字符数组
-//			try {
-//				data = readStream(ins);
-//
-//				String json = new String(data);        // 把字符数组转换成字符串
-////            JSONArray array = new JSONArray(json);
-////            for(int i = 0 ; i < array.length() ; i++){
-//				JSONObject jsonObject = new JSONObject(json);//array.getJSONObject(i);
-////                String msg=jsonObject.getString("message");
-////                String success=jsonObject.getString("success");
-//				return jsonObject;
-////                Print("login msgmsg:::"+msg);
-////            }
-//			} catch (Exception e) {
-//				e.printStackTrace();
-//			}
-//			return null;
-//		}
-//
-//		/**
-//		 * 182.     * 把输入流转换成字符数组
-//		 * 183.     * @param inputStream   输入流
-//		 * 184.     * @return  字符数组
-//		 * 185.     * @throws Exception
-//		 * 186.
-//		 */
-//		public byte[] readStream(InputStream inputStream) throws Exception {
-//			ByteArrayOutputStream bout = new ByteArrayOutputStream();
-//			byte[] buffer = new byte[1024];
-//			int len = 0;
-//			while ((len = inputStream.read(buffer)) != -1) {
-//				bout.write(buffer, 0, len);
-//			}
-//			bout.close();
-//			inputStream.close();
-//
-//			return bout.toByteArray();
-//		}
-//
-//	}
 
+	//
+	public class ReportMaterialTask extends AsyncTask<Void, Void, Boolean> {
+		//        String lot_no="";
+		String runcard_no = "";
+		String success = "";
+		String msg = "";
+		String token = "";
+		int responsecode = 0;
 
-	//    public class TakingStockTask extends AsyncTask<Void, Void, Boolean> {
-//        //        String lot_no="";
-//        String location="";
-//        String barcode="";
-//        String min_box="";
-//        String lot_no="";
-//        String cn_box="";
-//        String success="";
-//        String msg="";
-//        int responsecode=0;
-//        TakingStockTask() {
-//            lot_no=mcheckbatchnumber.getText().toString();
-//            barcode=mcheckbarcode.getText().toString();
-//            location=mchecklibrarynumber.getText().toString();
-//            cn_box=mchecknumboxes.getText().toString();
-//            min_box=mcheckNumberperbox.getText().toString();
-//        }
-//
-//        @Override
-//        protected Boolean doInBackground(Void... params) {
-//            // TODO: attempt authentication against a network service.
-//
-//            try {
-//                String url="http://"+PreferencesUtils.getString(ReportActivity.this,ip_key,"120.27.2.177")
-//                        +":"+PreferencesUtils.getString(ReportActivity.this,port_key,"8062")+ IndexConstants.TAKINGSTOCK;
-////                "login:","登录帐号","Password":"密码"
-//                Print("url:::"+url);
+		String qty = "";
+		String weight = "";
+		String gross_weight = "";
+
+		ReportMaterialTask() {
+			runcard_no = eCardid.getText().toString();
+			weight = eNetweight.getText().toString();
+			qty = eReportnum.getText().toString();
+			gross_weight = eGrossweight.getText().toString();
+			token = PreferencesUtils.getString(ReportActivity.this, token_key, "");
+		}
+
+		@Override
+		protected Boolean doInBackground(Void... params) {
+			// TODO: attempt authentication against a network service.
+
+			try {
+				String url = "http://" +
+						PreferencesUtils.getString(ReportActivity.this, ip_key, "120.27.2.177")
+						+ ":" + PreferencesUtils.getString(ReportActivity.this, port_key, "8062") +
+						IndexConstants.REPORTMATERIAL + "?"
+						+ "token=" + token + "&runcard_no=" + runcard_no + "&weight=" + weight
+						+ "&qty=" + qty
+						+ "&gross_weight=" + gross_weight;
+//                "login:","登录帐号","Password":"密码"
+				Print("REPORTMATERIAL url:::" + url);
 //                Map<String,String> mparams=new HashMap<String,String>();
 //                mparams.put("login",PreferencesUtils.getString(ReportActivity.this,email_key,"8062"));
 //                mparams.put("lot_no",lot_no);
 //                mparams.put("barcode",barcode);
 //                mparams.put("location",location);
-//                mparams.put("min_box",min_box);
-//                mparams.put("cn_box",cn_box);
-//
+
+
 //                String postparams = new Gson().toJson(mparams);
-////                postparams=URLEncoder.encode(postparams,"utf-8");
-//
-////                String postparams ="{"+"login:",mEmail,"Password:",mPassword}//"login:"+mEmail+"&password:"+mPassword;
+//                postparams=URLEncoder.encode(postparams,"utf-8");
+
+//                String postparams ="{"+"login:",mEmail,"Password:",mPassword}//"login:"+mEmail+"&password:"+mPassword;
 //                byte[] data = postparams.getBytes();
-////                System.err.println("postparams postparams:::"+postparams+data.length);
-//                URL posturl = new URL(url);
-//                HttpURLConnection conn = (HttpURLConnection) posturl.openConnection();
-//                conn.setConnectTimeout(10000);
+//                System.err.println("postparams postparams:::"+postparams+data.length);
+				URL posturl = new URL(url);
+				HttpURLConnection conn = (HttpURLConnection) posturl.openConnection();
+				conn.setConnectTimeout(10000);
 //                conn.setDoInput(true);                  //打开输入流，以便从服务器获取数据
 //                conn.setDoOutput(true);                 //打开输出流，以便向服务器提交数据
-//                conn.setRequestMethod("POST");     //设置以Post方式提交数据
+//				conn.setRequestMethod("POST");     //设置以Post方式提交数据
 //                conn.setUseCaches(false);               //使用Post方式不能使用缓存
 //                //设置请求体的类型是文本类型
 //                conn.setRequestProperty("Content-Type", "application/json");
@@ -1692,110 +581,746 @@ public class ReportActivity extends AppCompatActivity {
 //
 ////                conn.setDoOutput(true); // 准备写出
 //                conn.getOutputStream().write(data);
-//
-//                responsecode=conn.getResponseCode();
-//                if(responsecode==200) {
-//                    InputStream ins = conn.getInputStream();
-//                    JSONObject jsonObject= parseJson(ins);
-//                    if(jsonObject!=null) {
-//                        msg = jsonObject.getString("message");
-//                        success = jsonObject.getString("success");
-//                    }
-////                    String s = ins.toString();
-////                    System.err.println("sssssssss:::"+s);
-//                }
-//                Print(" return:::"+responsecode);
-////                ins.close();
-//            } catch (Exception e) {
-//                // TODO: handle exception
-//                System.err.println("未能获取网络数据");
-//                e.printStackTrace();
+
+				responsecode = conn.getResponseCode();
+				if (responsecode == 200) {
+					InputStream ins = conn.getInputStream();
+					JSONObject rootjsonObject = parseJson(ins);
+					JSONObject jsonObject = null;
+					if (rootjsonObject != null) {
+						jsonObject = rootjsonObject.getJSONArray("results").getJSONObject(0);
+					}
+					if (jsonObject != null) {
+						Print(" return:::" + jsonObject);
+						ReportProductBeans = new ArrayList<ReportProductBean>();
+						msg = jsonObject.getString("message");
+						success = jsonObject.getString("success");
+						if (success.equals("true")) {
+							ReportProductBeans = new ArrayList<ReportProductBean>();
+							parseReportproduct(jsonObject);
+						}
+					}
+//                    String s = ins.toString();
+//                    System.err.println("sssssssss:::"+s);
+				}
+
+			} catch (Exception e) {
+				// TODO: handle exception
+				System.err.println("未能获取网络数据");
+				e.printStackTrace();
+			}
+
+
+			// TODO: register the new account here.
+			return success.equals("true");
+		}
+
+		@Override
+		protected void onPostExecute(final Boolean success) {
+			reloadviewText(success,msg);
+		}
+
+		@Override
+		protected void onCancelled() {
+//            showProgress(false);
+		}
+
+		private JSONObject parseJson(InputStream ins) {
+			byte[] data = new byte[0];   // 把输入流转换成字符数组
+			try {
+				data = readStream(ins);
+
+				String json = new String(data);        // 把字符数组转换成字符串
+//            JSONArray array = new JSONArray(json);
+//            for(int i = 0 ; i < array.length() ; i++){
+				JSONObject jsonObject = new JSONObject(json);//array.getJSONObject(i);
+				return jsonObject;
+//                Print("login msgmsg:::"+msg);
 //            }
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			return null;
+		}
+
+
+	}
+
+	public class CancleReportTask extends AsyncTask<Void, Void, Boolean> {
+		//        String lot_no="";
+		String runcard_no = "";
+		String success = "";
+		String msg = "";
+		String token = "";
+		int responsecode = 0;
+
+		CancleReportTask() {
+			runcard_no = eCardid.getText().toString();
+			token = PreferencesUtils.getString(ReportActivity.this, token_key, "");
+		}
+
+		@Override
+		protected Boolean doInBackground(Void... params) {
+			// TODO: attempt authentication against a network service.
+
+			try {
+				String url = "http://" +
+						PreferencesUtils.getString(ReportActivity.this, ip_key, "120.27.2.177")
+						+ ":" + PreferencesUtils.getString(ReportActivity.this, port_key, "8062") +
+						IndexConstants.REPORTCARD_CANCLE + "?"
+						+ "token=" + token + "&runcard_no=" + runcard_no;
+//                "login:","登录帐号","Password":"密码"
+				Print("url:::" + url);
+//                Map<String,String> mparams=new HashMap<String,String>();
+//                mparams.put("login",PreferencesUtils.getString(ReportActivity.this,email_key,"8062"));
+//                mparams.put("lot_no",lot_no);
+//                mparams.put("barcode",barcode);
+//                mparams.put("location",location);
+
+
+//                String postparams = new Gson().toJson(mparams);
+//                postparams=URLEncoder.encode(postparams,"utf-8");
+
+//                String postparams ="{"+"login:",mEmail,"Password:",mPassword}//"login:"+mEmail+"&password:"+mPassword;
+//                byte[] data = postparams.getBytes();
+//                System.err.println("postparams postparams:::"+postparams+data.length);
+				URL posturl = new URL(url);
+				HttpURLConnection conn = (HttpURLConnection) posturl.openConnection();
+				conn.setConnectTimeout(10000);
+//                conn.setDoInput(true);                  //打开输入流，以便从服务器获取数据
+//                conn.setDoOutput(true);                 //打开输出流，以便向服务器提交数据
+//				conn.setRequestMethod("POST");     //设置以Post方式提交数据
+//                conn.setUseCaches(false);               //使用Post方式不能使用缓存
+//                //设置请求体的类型是文本类型
+//                conn.setRequestProperty("Content-Type", "application/json");
+//                conn.setRequestProperty("Content-Length", String.valueOf(data.length)); // 注意是字节长度, 不是字符长度
 //
-////            for (String credential : DUMMY_CREDENTIALS) {
-////                String[] pieces = credential.split(":");
-////                if (pieces[0].equals(mEmail)) {
-////                    // Account exists, return true if the password matches.
-////                    return pieces[1].equals(mPassword);
-////                }
-////            }
-//
-//            // TODO: register the new account here.
-//            return success.equals("1");
-//        }
-//
-//        @Override
-//        protected void onPostExecute(final Boolean success) {
-////            mAuthTask = null;
-////            showProgress(false);
-//            Util.showShortToastMessage(ReportActivity.this,msg);
-//            if (success) {
-//
-//                 mcheckbatchnumber.setText("");
-//                 mcheckbarcode.setText("");
-//                 mchecklibrarynumber.setText("");
-//                 mcheckNumberperbox.setText("");
-//                 mchecknumboxes.setText("");
-//                 mcheckbatchnumber.requestFocus();
-//
-////                PreferencesUtils.putString(CheckActivity.this,email_key,mEmail);
-////                PreferencesUtils.putString(CheckActivity.this,password_key,mPassword);
-////                Intent intent=new Intent(CheckActivity.this,MainActivity.class);
-////                CheckActivity.this.startActivity(intent);
-////                finish();
-//            } else {
-////                mPasswordView.setError(getString(R.string.error_incorrect_password));
-////                mPasswordView.requestFocus();
+////                conn.setDoOutput(true); // 准备写出
+//                conn.getOutputStream().write(data);
+
+				responsecode = conn.getResponseCode();
+				if (responsecode == 200) {
+					InputStream ins = conn.getInputStream();
+					JSONObject rootjsonObject = parseJson(ins);
+					JSONObject jsonObject = null;
+					if (rootjsonObject != null) {
+						jsonObject = rootjsonObject.getJSONArray("results").getJSONObject(0);
+					}
+					if (jsonObject != null) {
+						Print(" return:::" + jsonObject);
+						ReportProductBeans = new ArrayList<ReportProductBean>();
+						msg = jsonObject.getString("message");
+						success = jsonObject.getString("success");
+						if (success.equals("true")) {
+							ReportProductBeans = new ArrayList<ReportProductBean>();
+							parseReportproduct(jsonObject);
+						}
+					}
+//                    String s = ins.toString();
+//                    System.err.println("sssssssss:::"+s);
+				}
+
+			} catch (Exception e) {
+				// TODO: handle exception
+				System.err.println("未能获取网络数据");
+				e.printStackTrace();
+			}
+
+
+			// TODO: register the new account here.
+			return success.equals("true");
+		}
+
+		@Override
+		protected void onPostExecute(final Boolean success) {
+			reloadviewText(success,msg);
+		}
+
+		@Override
+		protected void onCancelled() {
+//            showProgress(false);
+		}
+
+		private JSONObject parseJson(InputStream ins) {
+			byte[] data = new byte[0];   // 把输入流转换成字符数组
+			try {
+				data = readStream(ins);
+
+				String json = new String(data);        // 把字符数组转换成字符串
+//            JSONArray array = new JSONArray(json);
+//            for(int i = 0 ; i < array.length() ; i++){
+				JSONObject jsonObject = new JSONObject(json);//array.getJSONObject(i);
+				return jsonObject;
+//                Print("login msgmsg:::"+msg);
 //            }
-//        }
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			return null;
+		}
+
+
+	}
+
+	public class ReportInspectpassTask extends AsyncTask<Void, Void, Boolean> {
+		//        String lot_no="";
+		String runcard_no = "";
+		String success = "";
+		String msg = "";
+		String token = "";
+		int responsecode = 0;
+
+		ReportInspectpassTask() {
+			runcard_no = eCardid.getText().toString();
+			token = PreferencesUtils.getString(ReportActivity.this, token_key, "");
+		}
+
+		@Override
+		protected Boolean doInBackground(Void... params) {
+			// TODO: attempt authentication against a network service.
+
+			try {
+				String url = "http://" +
+						PreferencesUtils.getString(ReportActivity.this, ip_key, "120.27.2.177")
+						+ ":" + PreferencesUtils.getString(ReportActivity.this, port_key, "8062") +
+						IndexConstants.REPORT_INSPECTPASS + "?"
+						+ "token=" + token + "&runcard_no=" + runcard_no;
+//                "login:","登录帐号","Password":"密码"
+				Print("url:::" + url);
+//                Map<String,String> mparams=new HashMap<String,String>();
+//                mparams.put("login",PreferencesUtils.getString(ReportActivity.this,email_key,"8062"));
+//                mparams.put("lot_no",lot_no);
+//                mparams.put("barcode",barcode);
+//                mparams.put("location",location);
+
+
+//                String postparams = new Gson().toJson(mparams);
+//                postparams=URLEncoder.encode(postparams,"utf-8");
+
+//                String postparams ="{"+"login:",mEmail,"Password:",mPassword}//"login:"+mEmail+"&password:"+mPassword;
+//                byte[] data = postparams.getBytes();
+//                System.err.println("postparams postparams:::"+postparams+data.length);
+				URL posturl = new URL(url);
+				HttpURLConnection conn = (HttpURLConnection) posturl.openConnection();
+				conn.setConnectTimeout(10000);
+//                conn.setDoInput(true);                  //打开输入流，以便从服务器获取数据
+//                conn.setDoOutput(true);                 //打开输出流，以便向服务器提交数据
+//				conn.setRequestMethod("POST");     //设置以Post方式提交数据
+//                conn.setUseCaches(false);               //使用Post方式不能使用缓存
+//                //设置请求体的类型是文本类型
+//                conn.setRequestProperty("Content-Type", "application/json");
+//                conn.setRequestProperty("Content-Length", String.valueOf(data.length)); // 注意是字节长度, 不是字符长度
 //
-//        @Override
-//        protected void onCancelled() {
-////            mAuthTask = null;
-////            showProgress(false);
-//        }
-//        private JSONObject parseJson(InputStream ins){
-//            byte[] data = new byte[0];   // 把输入流转换成字符数组
-//            try {
-//                data = readStream(ins);
-//
-//                String  json = new String(data);        // 把字符数组转换成字符串
-////            JSONArray array = new JSONArray(json);
-////            for(int i = 0 ; i < array.length() ; i++){
-//                JSONObject jsonObject = new JSONObject(json);//array.getJSONObject(i);
-////                String msg=jsonObject.getString("message");
-////                String success=jsonObject.getString("success");
-//                return jsonObject;
-////                Print("login msgmsg:::"+msg);
-////            }
-//            } catch (Exception e) {
-//                e.printStackTrace();
+////                conn.setDoOutput(true); // 准备写出
+//                conn.getOutputStream().write(data);
+
+				responsecode = conn.getResponseCode();
+				if (responsecode == 200) {
+					InputStream ins = conn.getInputStream();
+					JSONObject rootjsonObject = parseJson(ins);
+					JSONObject jsonObject = null;
+					if (rootjsonObject != null) {
+						jsonObject = rootjsonObject.getJSONArray("results").getJSONObject(0);
+					}
+					if (jsonObject != null) {
+						Print(" return:::" + jsonObject);
+						ReportProductBeans = new ArrayList<ReportProductBean>();
+						msg = jsonObject.getString("message");
+						success = jsonObject.getString("success");
+						if (success.equals("true")) {
+							ReportProductBeans = new ArrayList<ReportProductBean>();
+							parseReportproduct(jsonObject);
+						}
+					}
+//                    String s = ins.toString();
+//                    System.err.println("sssssssss:::"+s);
+				}
+
+			} catch (Exception e) {
+				// TODO: handle exception
+				System.err.println("未能获取网络数据");
+				e.printStackTrace();
+			}
+
+
+			// TODO: register the new account here.
+			return success.equals("true");
+		}
+
+		@Override
+		protected void onPostExecute(final Boolean success) {
+			reloadviewText(success,msg);
+		}
+
+		@Override
+		protected void onCancelled() {
+//            showProgress(false);
+		}
+
+		private JSONObject parseJson(InputStream ins) {
+			byte[] data = new byte[0];   // 把输入流转换成字符数组
+			try {
+				data = readStream(ins);
+
+				String json = new String(data);        // 把字符数组转换成字符串
+//            JSONArray array = new JSONArray(json);
+//            for(int i = 0 ; i < array.length() ; i++){
+				JSONObject jsonObject = new JSONObject(json);//array.getJSONObject(i);
+				return jsonObject;
+//                Print("login msgmsg:::"+msg);
 //            }
-//            return null;
-//        }
-//        /**
-//         182.     * 把输入流转换成字符数组
-//         183.     * @param inputStream   输入流
-//         184.     * @return  字符数组
-//         185.     * @throws Exception
-//         186.     */
-//        public  byte[] readStream(InputStream inputStream) throws Exception {
-//            ByteArrayOutputStream bout = new ByteArrayOutputStream();
-//            byte[] buffer = new byte[1024];
-//            int len = 0;
-//            while ((len = inputStream.read(buffer)) != -1) {
-//                bout.write(buffer, 0, len);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			return null;
+		}
+
+
+	}
+
+	public class ReportInspectcancleTask extends AsyncTask<Void, Void, Boolean> {
+		//        String lot_no="";
+		String runcard_no = "";
+		String success = "";
+		String msg = "";
+		String token = "";
+		int responsecode = 0;
+
+		ReportInspectcancleTask() {
+			runcard_no = eCardid.getText().toString();
+			token = PreferencesUtils.getString(ReportActivity.this, token_key, "");
+		}
+
+		@Override
+		protected Boolean doInBackground(Void... params) {
+			// TODO: attempt authentication against a network service.
+
+			try {
+				String url = "http://" +
+						PreferencesUtils.getString(ReportActivity.this, ip_key, "120.27.2.177")
+						+ ":" + PreferencesUtils.getString(ReportActivity.this, port_key, "8062") +
+						IndexConstants.REPORT_INSPECTCANCLE + "?"
+						+ "token=" + token + "&runcard_no=" + runcard_no;
+//                "login:","登录帐号","Password":"密码"
+				Print("url:::" + url);
+//                Map<String,String> mparams=new HashMap<String,String>();
+//                mparams.put("login",PreferencesUtils.getString(ReportActivity.this,email_key,"8062"));
+//                mparams.put("lot_no",lot_no);
+//                mparams.put("barcode",barcode);
+//                mparams.put("location",location);
+
+
+//                String postparams = new Gson().toJson(mparams);
+//                postparams=URLEncoder.encode(postparams,"utf-8");
+
+//                String postparams ="{"+"login:",mEmail,"Password:",mPassword}//"login:"+mEmail+"&password:"+mPassword;
+//                byte[] data = postparams.getBytes();
+//                System.err.println("postparams postparams:::"+postparams+data.length);
+				URL posturl = new URL(url);
+				HttpURLConnection conn = (HttpURLConnection) posturl.openConnection();
+				conn.setConnectTimeout(10000);
+//                conn.setDoInput(true);                  //打开输入流，以便从服务器获取数据
+//                conn.setDoOutput(true);                 //打开输出流，以便向服务器提交数据
+//				conn.setRequestMethod("POST");     //设置以Post方式提交数据
+//                conn.setUseCaches(false);               //使用Post方式不能使用缓存
+//                //设置请求体的类型是文本类型
+//                conn.setRequestProperty("Content-Type", "application/json");
+//                conn.setRequestProperty("Content-Length", String.valueOf(data.length)); // 注意是字节长度, 不是字符长度
+//
+////                conn.setDoOutput(true); // 准备写出
+//                conn.getOutputStream().write(data);
+
+				responsecode = conn.getResponseCode();
+				if (responsecode == 200) {
+					InputStream ins = conn.getInputStream();
+					JSONObject rootjsonObject = parseJson(ins);
+					JSONObject jsonObject = null;
+					if (rootjsonObject != null) {
+						jsonObject = rootjsonObject.getJSONArray("results").getJSONObject(0);
+					}
+					if (jsonObject != null) {
+						Print(" return:::" + jsonObject);
+						ReportProductBeans = new ArrayList<ReportProductBean>();
+						msg = jsonObject.getString("message");
+						success = jsonObject.getString("success");
+						if (success.equals("true")) {
+							ReportProductBeans = new ArrayList<ReportProductBean>();
+							parseReportproduct(jsonObject);
+						}
+					}
+//                    String s = ins.toString();
+//                    System.err.println("sssssssss:::"+s);
+				}
+
+			} catch (Exception e) {
+				// TODO: handle exception
+				System.err.println("未能获取网络数据");
+				e.printStackTrace();
+			}
+
+
+			// TODO: register the new account here.
+			return success.equals("true");
+		}
+
+		@Override
+		protected void onPostExecute(final Boolean success) {
+			reloadviewText(success,msg);
+		}
+
+		@Override
+		protected void onCancelled() {
+//            showProgress(false);
+		}
+
+		private JSONObject parseJson(InputStream ins) {
+			byte[] data = new byte[0];   // 把输入流转换成字符数组
+			try {
+				data = readStream(ins);
+
+				String json = new String(data);        // 把字符数组转换成字符串
+//            JSONArray array = new JSONArray(json);
+//            for(int i = 0 ; i < array.length() ; i++){
+				JSONObject jsonObject = new JSONObject(json);//array.getJSONObject(i);
+//                String msg=jsonObject.getString("message");
+//                String success=jsonObject.getString("success");
+				return jsonObject;
+//                Print("login msgmsg:::"+msg);
 //            }
-//            bout.close();
-//            inputStream.close();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			return null;
+		}
+
+
+	}
+
+	public class ReportInspectNgTask extends AsyncTask<Void, Void, Boolean> {
+		//        String lot_no="";
+		String runcard_no = "";
+		String success = "";
+		String msg = "";
+		String token = "";
+		int responsecode = 0;
+
+		ReportInspectNgTask() {
+			runcard_no = eCardid.getText().toString();
+			token = PreferencesUtils.getString(ReportActivity.this, token_key, "");
+		}
+
+		@Override
+		protected Boolean doInBackground(Void... params) {
+			// TODO: attempt authentication against a network service.
+
+			try {
+				String url = "http://" +
+						PreferencesUtils.getString(ReportActivity.this, ip_key, "120.27.2.177")
+						+ ":" + PreferencesUtils.getString(ReportActivity.this, port_key, "8062") +
+						IndexConstants.REPORT_INSPECTNG + "?"
+						+ "token=" + token + "&runcard_no=" + runcard_no;
+//                "login:","登录帐号","Password":"密码"
+				Print("url:::" + url);
+//                Map<String,String> mparams=new HashMap<String,String>();
+//                mparams.put("login",PreferencesUtils.getString(ReportActivity.this,email_key,"8062"));
+//                mparams.put("lot_no",lot_no);
+//                mparams.put("barcode",barcode);
+//                mparams.put("location",location);
+
+
+//                String postparams = new Gson().toJson(mparams);
+//                postparams=URLEncoder.encode(postparams,"utf-8");
+
+//                String postparams ="{"+"login:",mEmail,"Password:",mPassword}//"login:"+mEmail+"&password:"+mPassword;
+//                byte[] data = postparams.getBytes();
+//                System.err.println("postparams postparams:::"+postparams+data.length);
+				URL posturl = new URL(url);
+				HttpURLConnection conn = (HttpURLConnection) posturl.openConnection();
+				conn.setConnectTimeout(10000);
+//                conn.setDoInput(true);                  //打开输入流，以便从服务器获取数据
+//                conn.setDoOutput(true);                 //打开输出流，以便向服务器提交数据
+//				conn.setRequestMethod("POST");     //设置以Post方式提交数据
+//                conn.setUseCaches(false);               //使用Post方式不能使用缓存
+//                //设置请求体的类型是文本类型
+//                conn.setRequestProperty("Content-Type", "application/json");
+//                conn.setRequestProperty("Content-Length", String.valueOf(data.length)); // 注意是字节长度, 不是字符长度
 //
-//            return bout.toByteArray();
-//        }
+////                conn.setDoOutput(true); // 准备写出
+//                conn.getOutputStream().write(data);
+
+				responsecode = conn.getResponseCode();
+				if (responsecode == 200) {
+					InputStream ins = conn.getInputStream();
+					JSONObject rootjsonObject = parseJson(ins);
+					JSONObject jsonObject = null;
+					if (rootjsonObject != null) {
+						jsonObject = rootjsonObject.getJSONArray("results").getJSONObject(0);
+					}
+					if (jsonObject != null) {
+						Print(" return:::" + jsonObject);
+						ReportProductBeans = new ArrayList<ReportProductBean>();
+						msg = jsonObject.getString("message");
+						success = jsonObject.getString("success");
+						if (success.equals("true")) {
+							ReportProductBeans = new ArrayList<ReportProductBean>();
+							parseReportproduct(jsonObject);
+						}
+					}
+//                    String s = ins.toString();
+//                    System.err.println("sssssssss:::"+s);
+				}
+
+			} catch (Exception e) {
+				// TODO: handle exception
+				System.err.println("未能获取网络数据");
+				e.printStackTrace();
+			}
+
+
+			// TODO: register the new account here.
+			return success.equals("true");
+		}
+
+		@Override
+		protected void onPostExecute(final Boolean success) {
+			reloadviewText(success,msg);
+		}
+
+		@Override
+		protected void onCancelled() {
+//            showProgress(false);
+		}
+
+		private JSONObject parseJson(InputStream ins) {
+			byte[] data = new byte[0];   // 把输入流转换成字符数组
+			try {
+				data = readStream(ins);
+
+				String json = new String(data);        // 把字符数组转换成字符串
+//            JSONArray array = new JSONArray(json);
+//            for(int i = 0 ; i < array.length() ; i++){
+				JSONObject jsonObject = new JSONObject(json);//array.getJSONObject(i);
+//                String msg=jsonObject.getString("message");
+//                String success=jsonObject.getString("success");
+				return jsonObject;
+//                Print("login msgmsg:::"+msg);
+//            }
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			return null;
+		}
+
+
+	}
+
+	public class ReportMaterialCancleTask extends AsyncTask<Void, Void, Boolean> {
+		//        String lot_no="";
+		String runcard_no = "";
+		String success = "";
+		String msg = "";
+		String token = "";
+		int responsecode = 0;
+
+		ReportMaterialCancleTask() {
+			runcard_no = eCardid.getText().toString();
+			token = PreferencesUtils.getString(ReportActivity.this, token_key, "");
+		}
+
+		@Override
+		protected Boolean doInBackground(Void... params) {
+			// TODO: attempt authentication against a network service.
+
+			try {
+				String url = "http://" +
+						PreferencesUtils.getString(ReportActivity.this, ip_key, "120.27.2.177")
+						+ ":" + PreferencesUtils.getString(ReportActivity.this, port_key, "8062") +
+						IndexConstants.REPORT_MATERIALCANCLE + "?"
+						+ "token=" + token + "&runcard_no=" + runcard_no;
+//                "login:","登录帐号","Password":"密码"
+				Print("url:::" + url);
+//                Map<String,String> mparams=new HashMap<String,String>();
+//                mparams.put("login",PreferencesUtils.getString(ReportActivity.this,email_key,"8062"));
+//                mparams.put("lot_no",lot_no);
+//                mparams.put("barcode",barcode);
+//                mparams.put("location",location);
+
+
+//                String postparams = new Gson().toJson(mparams);
+//                postparams=URLEncoder.encode(postparams,"utf-8");
+
+//                String postparams ="{"+"login:",mEmail,"Password:",mPassword}//"login:"+mEmail+"&password:"+mPassword;
+//                byte[] data = postparams.getBytes();
+//                System.err.println("postparams postparams:::"+postparams+data.length);
+				URL posturl = new URL(url);
+				HttpURLConnection conn = (HttpURLConnection) posturl.openConnection();
+				conn.setConnectTimeout(10000);
+//                conn.setDoInput(true);                  //打开输入流，以便从服务器获取数据
+//                conn.setDoOutput(true);                 //打开输出流，以便向服务器提交数据
+//				conn.setRequestMethod("POST");     //设置以Post方式提交数据
+//                conn.setUseCaches(false);               //使用Post方式不能使用缓存
+//                //设置请求体的类型是文本类型
+//                conn.setRequestProperty("Content-Type", "application/json");
+//                conn.setRequestProperty("Content-Length", String.valueOf(data.length)); // 注意是字节长度, 不是字符长度
 //
-//    }
+////                conn.setDoOutput(true); // 准备写出
+//                conn.getOutputStream().write(data);
+
+				responsecode = conn.getResponseCode();
+				if (responsecode == 200) {
+					InputStream ins = conn.getInputStream();
+					JSONObject rootjsonObject = parseJson(ins);
+					JSONObject jsonObject = null;
+					if (rootjsonObject != null) {
+						jsonObject = rootjsonObject.getJSONArray("results").getJSONObject(0);
+					}
+					if (jsonObject != null) {
+						Print(" return:::" + jsonObject);
+						ReportProductBeans = new ArrayList<ReportProductBean>();
+						msg = jsonObject.getString("message");
+						success = jsonObject.getString("success");
+						if (success.equals("true")) {
+							ReportProductBeans = new ArrayList<ReportProductBean>();
+							parseReportproduct(jsonObject);
+						}
+					}
+//                    String s = ins.toString();
+//                    System.err.println("sssssssss:::"+s);
+				}
+
+			} catch (Exception e) {
+				// TODO: handle exception
+				System.err.println("未能获取网络数据");
+				e.printStackTrace();
+			}
+
+
+			// TODO: register the new account here.
+			return success.equals("true");
+		}
+
+		@Override
+		protected void onPostExecute(final Boolean success) {
+			reloadviewText(success,msg);
+		}
+
+		@Override
+		protected void onCancelled() {
+//            showProgress(false);
+		}
+
+		private JSONObject parseJson(InputStream ins) {
+			byte[] data = new byte[0];   // 把输入流转换成字符数组
+			try {
+				data = readStream(ins);
+
+				String json = new String(data);        // 把字符数组转换成字符串
+//            JSONArray array = new JSONArray(json);
+//            for(int i = 0 ; i < array.length() ; i++){
+				JSONObject jsonObject = new JSONObject(json);//array.getJSONObject(i);
+//                String msg=jsonObject.getString("message");
+//                String success=jsonObject.getString("success");
+				return jsonObject;
+//                Print("login msgmsg:::"+msg);
+//            }
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			return null;
+		}
+
+
+	}
+
+
 	String TAG = "Checkctivity::";
 
 	public void Print(String s) {
 		System.out.println(TAG + s);
+	}
+
+	public String CheckNullString(String s) {
+
+		if (s == null || s.equals("null")) {
+			return "";
+		} else {
+			return s;
+		}
+	}
+
+	protected void parseReportproduct(JSONObject jsonObject) {
+		JSONArray dataarr = null;
+		try {
+			dataarr = jsonObject.getJSONArray("data");
+			for (int i = 0; i < dataarr.length(); i++) {
+				JSONObject reprotformdataObject = dataarr.getJSONObject(i);
+				if(reprotformdataObject.has("line_data")) {
+					JSONArray linedataarr = reprotformdataObject.getJSONArray("line_data");
+					for (int j = 0; j < linedataarr.length(); j++) {
+						JSONObject reprotformlinedataObject = linedataarr.getJSONObject(j);
+						ReportProductBean ReportProductlineBean = beanParseUtility.MergeBean(reprotformdataObject,
+								reprotformlinedataObject, ReportProductBean.class);
+						ReportProductBeans.add(ReportProductlineBean);
+					}
+				}else{
+
+				    ReportProductBean ReportProductBean = beanParseUtility.parse(reprotformdataObject, ReportProductBean.class);
+					ReportProductBeans.add(ReportProductBean);
+				}
+
+			}
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+	}
+
+	protected void reloadviewText(Boolean success,String msg){
+		if (success&&ReportProductBeans!=null) {
+			Util.showShortToastMessage(ReportActivity.this, msg);
+			Print("ReportProductBeans size::"+ReportProductBeans.size());
+			eCurrentprocess.setText(CheckNullString(ReportProductBeans.get(0).process_name));
+			String process_status = ReportProductBeans.get(0).process_status;
+			eReportstate.setText(CheckNullString(process_statusmap.get(process_status)));
+			eContainerid.setText(CheckNullString(ReportProductBeans.get(0).container_id));
+			eContainerweight.setText(CheckNullString(ReportProductBeans.get(0).container_weight));
+			eThousandweight.setText(CheckNullString(ReportProductBeans.get(0).unit_weight));
+			eNetweight.setText(CheckNullString(ReportProductBeans.get(0).weight));
+			if (!eContainerweight.getText().toString().equals("")
+					&& !eNetweight.getText().toString().equals("")) {
+				eGrossweight.setText(Double.valueOf(eContainerweight.getText().toString())
+						+ Double.valueOf(eNetweight.getText().toString()) + "");
+			}
+			if (!eNetweight.getText().toString().equals("")
+					&& !eThousandweight.getText().toString().equals("")
+					&& !ReportProductBeans.get(0).factor.equals("")) {
+				Long num = Math.round(Double.valueOf(eNetweight.getText().toString()) /
+						Double.valueOf(eThousandweight.getText().toString()) *
+						Double.valueOf(ReportProductBeans.get(0).factor));
+				eReportnum.setText(num + "");
+			}
+			mAdapter = new ReportdetailAdapter(ReportActivity.this, ReportProductBeans);
+			mSimpleDetailList.setAdapter(mAdapter);
+//                 eWaste.setText(ReportProductBeans.get(0).);
+//                 eGrossweight.setText(ReportProductBeans.get(0).weight);
+//                 eReportnum.setText(ReportProductBeans.get(0).);
+//				String process_status = ReportProductBeans.get(0).process_status;
+//				{
+			if (process_status.equals("to_report")) {
+				report_submitbutton.setVisibility(View.VISIBLE);
+				reportmaterialcancel_submitbutton.setVisibility(View.VISIBLE);
+			} else if (process_status.equals("to_inspect")) {
+				reportinspect_submitbutton.setVisibility(View.VISIBLE);
+				reportinspect_ng_submitbutton.setVisibility(View.VISIBLE);
+				reportcancel_submitbutton.setVisibility(View.VISIBLE);
+			} else if (process_status.equals("to_material")) {
+				reportmaterial_submitbutton.setVisibility(View.VISIBLE);
+				reportinspectcancel_submitbutton.setVisibility(View.VISIBLE);
+			}
+//				}
+		} else {
+			Util.showShortToastMessage(ReportActivity.this, msg);
+//                mPasswordView.setError(getString(R.string.error_incorrect_password));
+//                mPasswordView.requestFocus();
+		}
 	}
 }

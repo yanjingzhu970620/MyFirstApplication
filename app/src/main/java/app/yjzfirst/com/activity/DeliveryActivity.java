@@ -5,6 +5,7 @@ import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.Window;
@@ -13,6 +14,7 @@ import android.widget.EditText;
 import android.widget.ListView;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 import com.yjzfirst.adapter.ChooseShipAdapter;
 import com.yjzfirst.bean.DeliveryBean;
 import com.yjzfirst.util.IndexConstants;
@@ -24,13 +26,16 @@ import org.json.JSONObject;
 
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
+import java.io.SyncFailedException;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import static com.yjzfirst.util.IndexConstants.ip_key;
 import static com.yjzfirst.util.IndexConstants.port_key;
@@ -46,6 +51,8 @@ public class DeliveryActivity extends AppCompatActivity {
     EditText mdeliveryNumberperbox;
     EditText mdeliverynumboxes;
     EditText mdeliverystocknumboxes;
+    EditText mdeliveryInventoryquantity;
+    EditText mdeliveryInventoryquantityboxes;
     EditText mdeliveryOrdernumber;
     ListView mSimpleDetailList;
     ChooseShipAdapter mAdapter;
@@ -56,6 +63,9 @@ public class DeliveryActivity extends AppCompatActivity {
     };
     private qrcodemode qrcodetextmode=qrcodemode.BAR_CODE;
     private int boxnum=0;
+    private HashMap<String,HashMap<String,String>> productinfomap=new HashMap<String, HashMap<String,String>>();
+    private HashMap<String,String> locationmap=new HashMap<String, String>();
+//    private HashMap<String,String> locationmap=new HashMap<String, String>();
     private ArrayList<Map<String,String>> boxesnum=new ArrayList<Map<String,String>>();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -86,6 +96,8 @@ public class DeliveryActivity extends AppCompatActivity {
 //        mdeliveryNumberperbox.addTextChangedListener(shipsWatcher);
         mdeliverynumboxes = (EditText) findViewById(R.id.delivery_num_boxes);
         mdeliverystocknumboxes= (EditText) findViewById(R.id.delivery_stocknum_boxes);
+        mdeliveryInventoryquantity= (EditText) findViewById(R.id.delivery_inventory_quantity);
+        mdeliveryInventoryquantityboxes= (EditText) findViewById(R.id.delivery_inventory_boxes);
 
 //        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         mdeliveryOrdernumber = (EditText) findViewById(R.id.delivery_Order_number);
@@ -146,7 +158,7 @@ public class DeliveryActivity extends AppCompatActivity {
 
                 String content = data.getStringExtra(CODED_CONTENT);
 
-                Util.showShortToastMessage(DeliveryActivity.this,"扫描结果为："+ content);
+//                Util.showShortToastMessage(DeliveryActivity.this,"扫描结果为："+ content);
                 if(qrcodetextmode==qrcodemode.BAR_CODE){
 
 //                    CheckproductinfoTask checkproductinfoTask=new CheckproductinfoTask(content);
@@ -159,7 +171,7 @@ public class DeliveryActivity extends AppCompatActivity {
                     checklibrarynumTask.execute();
                 }else if(qrcodetextmode==qrcodemode.BATCH_NUMBER){
 //                    mdeliverybatchnumber.setText(content);//
-                    mdeliverybatchnumber.setText("SD20190403-01");//测试数据
+                    mdeliverybatchnumber.setText("SD20190625-01");//测试数据
                     GetforminfoTask getforminfotask=new GetforminfoTask();
                     getforminfotask.execute((Void) null);
                 }
@@ -254,17 +266,24 @@ public class DeliveryActivity extends AppCompatActivity {
                                 for (int i = 0; i < line_data.length(); i++) {
                                     DeliveryBean deliver = new DeliveryBean();
                                     deliver.bar_code = line_data.getJSONObject(i).getString("product_code");
+                                    deliver.product_id = line_data.getJSONObject(i).getString("product_id");
                                     deliver.product_specification = line_data.getJSONObject(i).getString("product_name");
                                     deliver.number_applications = line_data.getJSONObject(i).getString("qty");
                                     deliver.number_boxes = line_data.getJSONObject(i).getString("box_qty");
                                     deliver.numbers = line_data.getJSONObject(i).getString("product_qty");
+
+                                    HashMap<String,String> map=new HashMap<String, String>();
+                                    map.put(deliver.bar_code,deliver.product_id);
+                                    productinfomap.put(deliver.bar_code+"id",map);
+
                                     deliveryBean.add(deliver);
+
                                 }
                             }
                         }
                     }
                 }
-                Print(" return:::"+responsecode);
+//                Print(" return:::"+responsecode);
 
             } catch (Exception e) {
                 // TODO: handle exception
@@ -354,10 +373,17 @@ public class DeliveryActivity extends AppCompatActivity {
                     if(jsonObject!=null) {
                         msg = jsonObject.getString("message");
                         success = jsonObject.getString("success");
-//                        JSONObject data =jsonObject.getJSONObject("data");
-//                        String token =data.getString("token");
-//                        JSONArray rights=data.getJSONArray("rights");//"group_app_mrp_finish_in","group_app_mrp_finish_in_confirm","group_app_mrp_move","group_app_sales_delivery"
 
+                        JSONArray data = jsonObject.getJSONArray("data");
+                        Print(" return:::" + data);
+                        for (int d = 0; d < data.length(); d++) {
+//                        String token =data.getString("line_data");
+                            JSONObject locationdata = data.getJSONObject(d);
+                            String warehouse_id=locationdata.getString("warehouse_id");
+                            String location_id=locationdata.getString("location_id");
+                            locationmap.put("warehouse_id",warehouse_id);
+                            locationmap.put("location_id",location_id);
+                        }
                     }
 //                    ins.close();
                 }
@@ -411,6 +437,7 @@ public class DeliveryActivity extends AppCompatActivity {
 
     }
     public class CheckproductinfoTask extends AsyncTask<Void, Void, Boolean> {
+        String content="";
         String token="";
         String batch_num="";
         String product_code="";
@@ -420,23 +447,34 @@ public class DeliveryActivity extends AppCompatActivity {
         String qty="";
         int responsecode=0;
         CheckproductinfoTask(String content) {
+            this.content=content;
             String productinfo[]=content.split(",");
             for(int i=0;i<productinfo.length;i++){
-               String info= productinfo[i];
+                String info= productinfo[i];
                 if(i==0){
-//                    product_code=info;
-                    product_code="005";
+                    product_code=info;
                 }else if(i==1){
-                    lot_id=info;
+
                 }else if(i==2){
                     qty=info;
-                }else if(i>2){
-                    break;
+                }else if(i==3){
+
+                }else if(i==4){
+                    lot_id=info;
+                }else if(i==5){
+
+                }else if(i==6){
+
+                }else if(i==7){
+
+                }else if(i==8){
+
                 }
             }
 //            product_code=content;
             batch_num=mdeliverybatchnumber.getText().toString();
             token=PreferencesUtils.getString(DeliveryActivity.this,token_key,"");
+
         }
 
         @Override
@@ -497,9 +535,15 @@ public class DeliveryActivity extends AppCompatActivity {
         protected void onPostExecute(final Boolean success) {
             if (success) {
                 Util.showShortToastMessage(DeliveryActivity.this,msg);
-                if(product_code.equals(mdeliverybarcode.getText().toString())){
+
+                if(product_code.equals(mdeliverybarcode.getText().toString())||
+                        "".equals(mdeliverybarcode.getText().toString())){
                     boxnum++;
-                    boxesnum.remove(boxesnum.size()-1);
+                    if(boxesnum.size()>0) {
+                        boxesnum.remove(boxesnum.size() - 1);
+                    }else{
+                        mdeliverybarcode.setText(product_code);
+                    }
                     saveBoxNum(product_code);
                 }else {
                     saveBoxNum(product_code);
@@ -509,9 +553,257 @@ public class DeliveryActivity extends AppCompatActivity {
                 mdeliverynumboxes.setText(boxnum+"");
                 mdeliveryOrdernumber.setText(lot_id);
                 mdeliveryNumberperbox.setText(qty);
+
+                CheckproductlabelTask checkproductlabelTask=new CheckproductlabelTask(content);
+                checkproductlabelTask.execute();
+
+                GetinventoryinfoTask getinventoryinfoTask=new GetinventoryinfoTask();
+                getinventoryinfoTask.execute();
             } else {
                 Util.showShortToastMessage(DeliveryActivity.this,msg);
                 mdeliverybarcode.setError("产品编号有错");
+            }
+        }
+
+        @Override
+        protected void onCancelled() {
+//            mAuthTask = null;
+//            showProgress(false);
+        }
+        private JSONObject parseJson(InputStream ins){
+            byte[] data = new byte[0];   // 把输入流转换成字符数组
+            try {
+                data = readStream(ins);
+
+                String  json = new String(data);        // 把字符数组转换成字符串
+                Print("check forminfo msgmsg:::"+json);
+//            JSONArray array = new JSONArray(json);
+//            for(int i = 0 ; i < array.length() ; i++){
+                JSONObject jsonObject = new JSONObject(json);//array.getJSONObject(i);
+//                String msg=jsonObject.getString("message");
+//                String success=jsonObject.getString("success");
+                return jsonObject;
+//            }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+
+
+    }
+    public class CheckproductlabelTask extends AsyncTask<Void, Void, Boolean> {
+        String token="";
+        String batch_num="";
+        String product_code="";
+        String success="";
+        String msg="";
+        String lot_id="";
+        String lot_name="";
+        String package_name="";
+        String qty="";
+        int responsecode=0;
+        CheckproductlabelTask(String content) {
+            String productinfo[]=content.split(",");
+            for(int i=0;i<productinfo.length;i++){
+                String info= productinfo[i];
+                if(i==0){
+                    product_code=info;
+                }else if(i==1){
+                    lot_id=info;
+                }else if(i==2){
+                    qty=info;
+                }else if(i==3){
+
+                }else if(i==4){
+                    lot_name=info;
+                }else if(i==5){
+                    package_name=info;
+                }else if(i==6){
+
+                }else if(i==7){
+
+                }
+            }
+
+//            product_code=content;
+            batch_num=mdeliverybatchnumber.getText().toString();
+            token=PreferencesUtils.getString(DeliveryActivity.this,token_key,"");
+        }
+
+        @Override
+        protected Boolean doInBackground(Void... params) {
+            // TODO: attempt authentication against a network service.
+
+            try {
+                String url="http://"+PreferencesUtils.getString(DeliveryActivity.this,ip_key,"120.27.2.177")
+                        +":"+PreferencesUtils.getString(DeliveryActivity.this,port_key,"8062")+
+                        IndexConstants.CHECKDELIVERYPRODUCTLABEL+"?product_code="+product_code+
+                        "&lot_no="+lot_name+"&package_name="+package_name+"&token="+token;
+                Print("url:::"+url);
+                URL posturl = new URL(url);
+                HttpURLConnection conn = (HttpURLConnection) posturl.openConnection();
+                conn.setConnectTimeout(10000);
+                //使用Post方式不能使用缓存
+
+                responsecode=conn.getResponseCode();
+                if(responsecode==200) {
+                    InputStream ins = conn.getInputStream();
+                    JSONObject rootjsonObject= parseJson(ins);
+                    JSONObject jsonObject= null;
+                    if (rootjsonObject != null) {
+                        jsonObject = rootjsonObject.getJSONArray("results").getJSONObject(0);
+                    }
+                    if(jsonObject!=null) {
+                        msg = jsonObject.getString("message");
+                        success = jsonObject.getString("success");
+                        if(success.equals("true")) {
+                            HashMap<String,String> map=new HashMap<String, String>();
+                            JSONObject data = jsonObject.getJSONObject("data");
+                            String ownerid=data.getString("owner_id");
+                            String package_name=data.getString("package_name");
+                            String lot_id=data.getString("lot_id");
+                            String package_id=data.getString("package_id");
+                            map.put("owner_id",ownerid);
+                            map.put("package_name",package_name);
+                            map.put("lot_id",lot_id);
+                            map.put("package_id",package_id);
+                            productinfomap.put(product_code,map);
+
+                        }
+                    }
+//                    ins.close();
+                }
+                Print(" return:::"+responsecode);
+
+            } catch (Exception e) {
+                // TODO: handle exception
+                System.err.println("未能获取网络数据");
+                e.printStackTrace();
+            }
+
+
+            // TODO: register the new account here.
+            return success.equals("true");
+        }
+
+        @Override
+        protected void onPostExecute(final Boolean success) {
+//            if (success) {
+//                Util.showShortToastMessage(DeliveryActivity.this,msg);
+//
+//            } else {
+//
+//                Util.showShortToastMessage(DeliveryActivity.this, msg);
+//            }
+        }
+
+        @Override
+        protected void onCancelled() {
+//            mAuthTask = null;
+//            showProgress(false);
+        }
+        private JSONObject parseJson(InputStream ins){
+            byte[] data = new byte[0];   // 把输入流转换成字符数组
+            try {
+                data = readStream(ins);
+
+                String  json = new String(data);        // 把字符数组转换成字符串
+                Print("check forminfo msgmsg:::"+json);
+//            JSONArray array = new JSONArray(json);
+//            for(int i = 0 ; i < array.length() ; i++){
+                JSONObject jsonObject = new JSONObject(json);//array.getJSONObject(i);
+//                String msg=jsonObject.getString("message");
+//                String success=jsonObject.getString("success");
+                return jsonObject;
+//            }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+
+
+    }
+    public class GetinventoryinfoTask extends AsyncTask<Void, Void, Boolean> {
+        String token="";
+        String product_code="";
+        String success="";
+        String msg="";
+        String qty="";//,#数量
+        String box_qty="";// 8#箱数
+        int responsecode=0;
+        GetinventoryinfoTask() {
+            product_code=mdeliverybarcode.getText().toString();
+            token=PreferencesUtils.getString(DeliveryActivity.this,token_key,"");
+
+        }
+
+        @Override
+        protected Boolean doInBackground(Void... params) {
+            // TODO: attempt authentication against a network service.
+
+            try {
+                String url="http://"+PreferencesUtils.getString(DeliveryActivity.this,ip_key,"120.27.2.177")
+                        +":"+PreferencesUtils.getString(DeliveryActivity.this,port_key,"8062")+
+                        IndexConstants.CHECKDELIVERYINVENTORY+"?product_code="+product_code+"&token="+token;
+
+                Print("url:::"+url);
+                URL posturl = new URL(url);
+                HttpURLConnection conn = (HttpURLConnection) posturl.openConnection();
+                conn.setConnectTimeout(10000);
+                //使用Post方式不能使用缓存
+
+                responsecode=conn.getResponseCode();
+                if(responsecode==200) {
+                    InputStream ins = conn.getInputStream();
+
+                    JSONObject rootjsonObject = parseJson(ins);
+                    JSONObject jsonObject = null;
+                    if (rootjsonObject != null) {
+                        jsonObject = rootjsonObject.getJSONArray("results").getJSONObject(0);
+                    }
+                    if (jsonObject != null) {
+                        msg = jsonObject.getString("message");
+                        success = jsonObject.getString("success");
+                        Print("parse submit json:::" + success);
+//                        JSONObject data =jsonObject.getJSONObject("data");
+//                        String token =data.getString("token");
+//                        JSONArray rights=data.getJSONArray("rights");//"group_app_mrp_finish_in","group_app_mrp_finish_in_confirm","group_app_mrp_move","group_app_sales_delivery"
+                        JSONArray data = jsonObject.getJSONArray("data");
+                        Print(" return:::" + data);
+                        for (int d = 0; d < data.length(); d++) {
+//                        String token =data.getString("line_data");
+                            JSONObject numdata = data.getJSONObject(d);
+                            box_qty=numdata.getString("box_qty");
+                            qty=numdata.getString("qty");
+                        }
+                    }
+                }
+                Print(" return:::"+responsecode);
+
+            } catch (Exception e) {
+                // TODO: handle exception
+                System.err.println("未能获取网络数据");
+                e.printStackTrace();
+            }
+
+
+            // TODO: register the new account here.
+            return success.equals("true");
+        }
+
+        @Override
+        protected void onPostExecute(final Boolean success) {
+            if (success) {
+
+                mdeliveryInventoryquantity.setText(qty);
+                mdeliveryInventoryquantityboxes.setText(box_qty);
+//                mdeliveryNumberperbox.setText(qty);
+
+            } else {
+                Util.showShortToastMessage(DeliveryActivity.this,msg);
+//                mdeliverybarcode.setError("产品编号有错");
             }
         }
 
@@ -683,6 +975,8 @@ public class DeliveryActivity extends AppCompatActivity {
         String success="";
         String msg="";
         String warehouse_id="";
+        String owner_id="";
+        String package_id="";
         String location_id="";
         String batch_num="";
         String lot_id="";//批号
@@ -694,13 +988,14 @@ public class DeliveryActivity extends AppCompatActivity {
 
             batch_num=mdeliverybatchnumber.getText().toString();
             barcode=mdeliverybarcode.getText().toString();
-            String Warehouse=mdeliverylibrarynumber.getText().toString();
-            String Warehouseids[]=Warehouse.split("-");
-            warehouse_id=Warehouseids[0];
-            location_id=Warehouseids[1];
+//            String Warehouse=mdeliverylibrarynumber.getText().toString();
+            warehouse_id=locationmap.get("warehouse_id");
+            location_id=locationmap.get("location_id");
             box_qty=mdeliverynumboxes.getText().toString();
             qty=mdeliveryNumberperbox.getText().toString();
-            lot_id=mdeliveryOrdernumber.getText().toString();
+            lot_id=productinfomap.get(barcode).get("lot_id");
+            owner_id=productinfomap.get(barcode).get("owner_id").replace("false","False");
+            package_id=productinfomap.get(barcode).get("package_id");
             token=PreferencesUtils.getString(DeliveryActivity.this,token_key,"");
         }
 
@@ -711,63 +1006,80 @@ public class DeliveryActivity extends AppCompatActivity {
             try {
                 String url="http://"+PreferencesUtils.getString(DeliveryActivity.this,ip_key,"120.27.2.177")
                         +":"+PreferencesUtils.getString(DeliveryActivity.this,port_key,"8062")+
-                        IndexConstants.OUTSTOCK+ "token="+PreferencesUtils.getString(DeliveryActivity.this,token_key,"");
+                        IndexConstants.OUTSTOCK+"?";//+ "token="+PreferencesUtils.getString(DeliveryActivity.this,token_key,"");
 //                "login:","登录帐号","Password":"密码"
-                Map<String,Map<String,HashMap<String,String>>> mparams=new HashMap<String,Map<String,HashMap<String,String>>>();
+                Map<String,String> mparams=new HashMap<String,String>();
+                url=url+"delivery_no="+batch_num;
 //                mparams.put("login",PreferencesUtils.getString(DeliveryActivity.this,email_key,"8062"));
 //                Print("boxesnum.size():::"+boxesnum.size());
 //                String mparams="";
+                String jsondata="";
                 for(int i=0;i<boxesnum.size();i++){
                     Print("boxesnum. key:::"+boxesnum.get(i).keySet().toString());
-                    Map<String,HashMap<String,String>> data
-                            =new HashMap<String,HashMap<String,String>>();
+                    Map<String,HashMap<String,Integer>> data
+                            =new HashMap<String,HashMap<String,Integer>>();
                     for(String productkey : boxesnum.get(i).keySet()){
-                        String key="("+productkey+","+warehouse_id+","
-                                +location_id+","+lot_id+","+""+","+""+")";
-                        Print("boxesnum. key:::"+key+"  productkey：："+productkey);
+                        String product_id=productinfomap.get(productkey+"id").get(productkey);
+                        String key="("+product_id+","+warehouse_id+","
+                                +location_id+","+lot_id+","+package_id+","+owner_id+")";
                         String boxnum=boxesnum.get(i).get(productkey);
 //                        String value="{\"qty\"="+boxnum+",\"box_qty\"="+boxnum+"}}";
-                        HashMap<String,String> nummap=new HashMap<String,String>();
-                        nummap.put("qty",boxnum);
-                        nummap.put("box_qty",boxnum);
+                        HashMap<String,Integer> nummap=new HashMap<String,Integer>();
+                        nummap.put("qty",Integer.valueOf(qty));
+                        nummap.put("box_qty",Integer.valueOf(boxnum));
                         data.put(key,nummap);
                     }
-                    mparams.put("data",data);
+                    jsondata=new Gson().toJson(data);
+                    System.out.println("jsondata:::"+jsondata);
+                    mparams.put("data",jsondata);
+                    url=url+"&data="+jsondata;
                 }
 
-                String postparams = new Gson().toJson(mparams);
-                Print("urlpostparams:::"+mparams);
-                postparams= URLEncoder.encode(postparams,"utf-8");
+//              mparams.put("delivery_no",batch_num);
+//              JSONObject testjsonObject = new JSONObject(mparams);
+//              System.out.println("输出的结果是：" + testjsonObject);
 
-//                String postparams ="{"+"login:",mEmail,"Password:",mPassword}//"login:"+mEmail+"&password:"+mPassword;
-                byte[] data = postparams.getBytes();
+//                String postparams = "{\"params\":{\"data\":"+jsondata+","+"\"delivery_no\":\""+batch_num+"\"}}";
+//                Print("urlpostparams:::"+postparams);
+//                postparams= URLEncoder.encode(postparams,"utf-8");
+//
+////                String postparams ="{"+"login:",mEmail,"Password:",mPassword}//"login:"+mEmail+"&password:"+mPassword;
+//                byte[] data = postparams.getBytes();
 //                System.err.println("postparams postparams:::"+postparams+data.length);
 //                url=url+"&"+mparams;
-                Print("url:::"+url);
+                Print("delivery url:::"+url);
                 URL posturl = new URL(url);
                 HttpURLConnection conn = (HttpURLConnection) posturl.openConnection();
                 conn.setConnectTimeout(10000);
-                conn.setDoInput(true);                  //打开输入流，以便从服务器获取数据
-                conn.setDoOutput(true);                 //打开输出流，以便向服务器提交数据
-                conn.setRequestMethod("POST");     //设置以Post方式提交数据
+//                conn.setDoInput(true);                  //打开输入流，以便从服务器获取数据
+//                conn.setDoOutput(true);                 //打开输出流，以便向服务器提交数据
+//                conn.setRequestMethod("POST");     //设置以Post方式提交数据
 //                conn.setUseCaches(false);               //使用Post方式不能使用缓存
 //                //设置请求体的类型是文本类型
-                conn.setRequestProperty("Content-Type", "application/json");
-                conn.setRequestProperty("Content-Length", String.valueOf(data.length)); // 注意是字节长度, 不是字符长度
+//                conn.setRequestProperty("Content-Type", "application/json");
+//                conn.setRequestProperty("Content-Length", String.valueOf(data.length)); // 注意是字节长度, 不是字符长度
 
 //                conn.setDoOutput(true); // 准备写出
-                conn.getOutputStream().write(data);
+//                conn.getOutputStream().write(data);
 
                 responsecode=conn.getResponseCode();
                 if(responsecode==200) {
                     InputStream ins = conn.getInputStream();
-                    JSONObject jsonObject= parseJson(ins);
+                    JSONObject rootjsonObject= parseJson(ins);
+                    JSONObject jsonObject= null;
+                    if (rootjsonObject != null) {
+                        jsonObject = rootjsonObject.getJSONArray("results").getJSONObject(0);
+                    }
                     if(jsonObject!=null) {
                         msg = jsonObject.getString("message");
                         success = jsonObject.getString("success");
+                        Print("parse submit json:::"+success);
+//                        JSONObject data =jsonObject.getJSONObject("data");
+//                        String token =data.getString("token");
+//                        JSONArray rights=data.getJSONArray("rights");//"group_app_mrp_finish_in","group_app_mrp_finish_in_confirm","group_app_mrp_move","group_app_sales_delivery"
+
                     }
-//                    String s = ins.toString();
-//                    System.err.println("sssssssss:::"+s);
+//                    ins.close();
                 }
                 Print(" return:::"+responsecode);
 //                ins.close();
@@ -786,14 +1098,16 @@ public class DeliveryActivity extends AppCompatActivity {
 //            }
 
             // TODO: register the new account here.
-            return success.equals("true");
+            return success.equals("True");
         }
 
         @Override
         protected void onPostExecute(final Boolean success) {
 //            mAuthTask = null;
 //            showProgress(false);
-            Util.showShortToastMessage(DeliveryActivity.this,msg);
+//            if() {
+                Util.showShortToastMessage(DeliveryActivity.this, msg);
+//            }
             if (success) {
 
                  mdeliverybatchnumber.setText("");
@@ -826,7 +1140,6 @@ public class DeliveryActivity extends AppCompatActivity {
                 data = readStream(ins);
 
                 String  json = new String(data);        // 把字符数组转换成字符串
-                Print("parse submit json:::"+json);
 //            JSONArray array = new JSONArray(json);
 //            for(int i = 0 ; i < array.length() ; i++){
                 JSONObject jsonObject = new JSONObject(json);//array.getJSONObject(i);

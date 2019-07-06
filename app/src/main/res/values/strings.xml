@@ -49,7 +49,7 @@
     <string name="net_weight">net weight</string>
     <string name="waste">waste</string>
     <string name="gross_weight">gross_weight</string>
-    <string name="report_num">report number</string>
+    <string name="report_num">report_num</string>
     <string name="container_id">container id</string>
     <string name="action_inspect_cancel">inspect_cancel</string>
     <string name="action_inspect_ng">nspect_ng</string>
@@ -58,4 +58,14 @@
     <string name="action_material_cancel">material_cancel</string>
     <string name="action_report">report</string>
     <string name="action_report_cancel">report_cancel</string>
+    <string name="Inventory_quantity">Inventory_quantity</string>
+    <string name="Inventory_quantity_of_boxes">Inventory_quantity_of_boxes</string>
+    <string name="Number_in">Number_in</string>
+    <string name="order_id">order_id</string>
+    <string name="process_name">process_name</string>
+    <string name="quantity_in">quantity_in</string>
+    <string name="report_number">report_number</string>
+    <string name="report_quantity">report_quantity</string>
+    <string name="product_orderid">work order id</string>
+    <string name="entry_bill_number">entry bill number</string>
 </resources>

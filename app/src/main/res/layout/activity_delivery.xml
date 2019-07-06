@@ -260,6 +260,56 @@
                         android:textColor="@color/black" />
 
                 </LinearLayout>
+                <LinearLayout
+                    android:id="@+id/delivery_inventory_form"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:text="@string/Inventory_quantity" />
+
+                    <EditText
+                        android:id="@+id/delivery_inventory_quantity"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="3"
+                        android:digits="1234567890"
+                        android:inputType="phone|number"
+                        android:maxLines="1"
+                        android:singleLine="true"
+                        android:textColor="@color/black" />
+
+                </LinearLayout>
+                <LinearLayout
+                    android:id="@+id/delivery_inventory_boxes_form"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:text="@string/Inventory_quantity_of_boxes" />
+
+                    <EditText
+                        android:id="@+id/delivery_inventory_boxes"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="3"
+                        android:digits="1234567890"
+                        android:inputType="phone|number"
+                        android:maxLines="1"
+                        android:singleLine="true"
+                        android:textColor="@color/black" />
+
+                </LinearLayout>
                 <Button
                     android:id="@+id/delivery_submit_button"
                     style="?android:textAppearanceSmall"
@@ -321,7 +371,8 @@
                 <ListView
                         android:id="@+id/delivery_infolist"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content">
+                        android:layout_height="wrap_content"
+                    android:background="@color/c_e6e1db">
 
                 </ListView>
                 </LinearLayout>

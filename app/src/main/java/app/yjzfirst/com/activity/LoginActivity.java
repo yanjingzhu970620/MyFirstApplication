@@ -435,7 +435,7 @@ public class LoginActivity extends AppCompatActivity {
         protected void onPostExecute(final Boolean success) {
             mAuthTask = null;
             showProgress(false);
-            Util.showShortToastMessage(LoginActivity.this, msg + "port:::" + PreferencesUtils.getString(LoginActivity.this, port_key, "8062"));
+            Util.showShortToastMessage(LoginActivity.this, msg);
             if (success) {
                 PreferencesUtils.putString(LoginActivity.this, email_key, mEmail);
                 PreferencesUtils.putString(LoginActivity.this, password_key, mPassword);
