@@ -1,13 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">条码管理</string>
+    <string name="app_name">杉岚科技ERP</string>
     <string name="action_settings">设置</string>
     <string name="action_sign_in">登录/注册</string>
     <string name="action_sign_in_short">登录</string>
-    <string name="check_main">报工</string>
-    <string name="report_main">报工</string>
-    <string name="delivery">出库</string>
-    <string name="entry">入库</string>
+    <string name="check_main">生产报工</string>
+    <string name="report_main">生产报工</string>
+    <string name="delivery">销售出库</string>
+    <string name="entry_production">生产入库（生产）</string>
+    <string name="entry_warehouse">生产入库（仓库）</string>
     <string name="error_field_required">This field is required</string>
     <string name="error_incorrect_password">密码错误</string>
     <string name="error_invalid_email">邮箱地址错误</string>
@@ -34,10 +35,10 @@
 
     <string name="order_id">项次</string>
     <string name="process_name">工序</string>
-    <string name="Number_in">领料数量</string>
-    <string name="quantity_in">领料重量</string>
-    <string name="report_number">报工数量</string>
-    <string name="report_quantity">报工重量</string>
+    <string name="Number_in">领料数</string>
+    <string name="quantity_in">领料重</string>
+    <string name="report_number">报工数</string>
+    <string name="report_quantity">报工重</string>
     <string name="Library_number">库位编号</string>
     <string name="report_state">状态</string>
     <string name="Delivery_detail">出库明细</string>
@@ -51,6 +52,8 @@
     <string name="title_activity_delivery">DeliveryActivity</string>
     <string name="title_activity_entry">EntryActivity</string>
     <string name="action_submit">提  交</string>
+    <string name="action_submit_cancle">取消提交</string>
+    <string name="action_warehouse">仓库确认</string>
     <string name="action_inspect_ng">检验ng</string>
     <string name="action_material_cancel">取消领料</string>
     <string name="action_inspect_cancel">取消检验</string>
@@ -63,6 +66,7 @@
     <string name="net_weight">净重</string>
     <string name="gross_weight">毛重</string>
     <string name="waste">损耗</string>
-    <string name="Order_number">产品批号</string>
+    <string name="Order_number">生产批号</string>
     <string name="entry_bill_number">入库单号</string>
+    <string name="entry">入  库</string>
 </resources>

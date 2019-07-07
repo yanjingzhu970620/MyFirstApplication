@@ -43,7 +43,7 @@ public class MainActivity extends AppCompatActivity {
 //    private TextView entrytext;
 //    private TextView entrytext;
 //    private TextView entrytext;
-
+///7 10 12
     public String rights_key="rights";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -101,7 +101,10 @@ public class MainActivity extends AppCompatActivity {
             Intent intent=new Intent(MainActivity.this,DeliveryActivity.class);
             MainActivity.this.startActivity(intent);
         }else if (view.getId() == R.id.entry_main) {
-            Intent intent=new Intent(MainActivity.this,EntryActivity.class);
+            Intent intent=new Intent(MainActivity.this,EntryFormActivity.class);
+            MainActivity.this.startActivity(intent);
+        }else if (view.getId() == R.id.entry_main_warehouse) {
+            Intent intent=new Intent(MainActivity.this,EntryFormActivity.class);
             MainActivity.this.startActivity(intent);
         }else if (view.getId() == R.id.Check_main) {
             Intent intent=new Intent(MainActivity.this,ReportActivity.class);

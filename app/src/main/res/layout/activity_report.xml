@@ -158,7 +158,7 @@
                         android:layout_height="match_parent"
                         android:layout_weight="1"
                         android:gravity="center"
-                        android:text="@string/container_weight" />
+                        android:text="@string/container_id" />
 
                     <EditText
                         android:id="@+id/edittext_container_id"
@@ -217,7 +217,7 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="3"
-                        android:digits="1234567890"
+                        android:digits="1234567890."
                         android:inputType="phone|number"
                         android:maxLines="1"
                         android:singleLine="true"
@@ -243,7 +243,7 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="3"
-                        android:digits="1234567890"
+                        android:digits="1234567890."
                         android:inputType="phone|number"
                         android:maxLines="1"
                         android:singleLine="true"
@@ -269,7 +269,7 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="3"
-                        android:digits="1234567890"
+                        android:digits="1234567890."
                         android:inputType="phone|number"
                         android:maxLines="1"
                         android:singleLine="true"
@@ -295,7 +295,7 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="3"
-                        android:digits="1234567890"
+                        android:digits="1234567890."
                         android:inputType="phone|number"
                         android:maxLines="1"
                         android:singleLine="true"
@@ -321,7 +321,7 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="3"
-                        android:digits="1234567890"
+                        android:digits="1234567890."
                         android:inputType="phone|number"
                         android:maxLines="1"
                         android:singleLine="true"
@@ -431,15 +431,7 @@
                     android:layout_marginTop="5dp"
                     android:orientation="vertical"
                     android:background="@color/transport_int">
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textSize="20sp"
-                        android:text="@string/Delivery_detail"/>
-                    <View
-                        android:layout_width="wrap_content"
-                        android:layout_height="2dp"
-                        android:background="@color/white"/>
+
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -480,7 +472,7 @@
                     </LinearLayout>
                     <ListView
                         android:id="@+id/report_infolist"
-                        android:layout_width="wrap_content"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:background="@color/c_e6e1db">
 

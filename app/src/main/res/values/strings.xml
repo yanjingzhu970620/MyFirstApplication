@@ -68,4 +68,8 @@
     <string name="report_quantity">report_quantity</string>
     <string name="product_orderid">work order id</string>
     <string name="entry_bill_number">entry bill number</string>
+    <string name="action_submit_cancle">submit_cancle</string>
+    <string name="action_warehouse">warehouse ensure</string>
+    <string name="entry_production">entry(production)</string>
+    <string name="entry_warehouse">entry(warehouse)</string>
 </resources>

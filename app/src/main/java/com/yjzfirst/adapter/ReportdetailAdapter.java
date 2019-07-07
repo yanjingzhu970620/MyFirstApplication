@@ -90,7 +90,7 @@ public class ReportdetailAdapter extends BaseAdapter {
 //		RelativeLayout shipcell = (RelativeLayout) convertView
 //				.findViewById(R.id.effectRelativeLayout_details);
 		final ReportProductBean deliveryproduct = ReportProductBeans.get(position);
-		barcode.setText(deliveryproduct.process_id);
+		barcode.setText(deliveryproduct.sequence);
 		product_pecification.setText(deliveryproduct.process_name);
 		number_applications.setText( deliveryproduct.qty_in);
 		number_of_boxes.setText(deliveryproduct.weight_in);

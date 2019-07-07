@@ -19,6 +19,7 @@ public class IndexConstants {
     public static final String CHECKDELIVERYPRODUCT="/app/sale_delivery/check_product";
     public static final String CHECKDELIVERYINVENTORY="/app/stock_inventory/code/get";
 	public static final String CHECKDELIVERYPRODUCTLABEL="/app/product_label/get";
+    public static final String CHECKDELIVERYWAREHOUSE="/app/sale_delivery/done";
     public static final String CHECKLIBRARY="/app/stock_location/get";
 
 
@@ -33,6 +34,7 @@ public class IndexConstants {
 
 
     public static final String CHECKORDERID="/app/mrp_workorder/get";
+    public static final String CHECKENTRYPRODUCTID="/app/product_packaging_together/get";
 
     public static final String INSTOCKCHECKBARCODE="/api/instock/checkbarcode ";
     public static final String OUTSTOCKCHECKBARCODE="/api/outstock/checkbarcode ";

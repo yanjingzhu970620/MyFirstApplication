@@ -14,6 +14,7 @@ import android.widget.EditText;
 import android.widget.ListView;
 
 import com.yjzfirst.adapter.ReportdetailAdapter;
+import com.yjzfirst.bean.ReportFormBean;
 import com.yjzfirst.bean.ReportProductBean;
 import com.yjzfirst.bean.ReportProductBean;
 import com.yjzfirst.util.IndexConstants;
@@ -38,6 +39,7 @@ import java.util.HashMap;
 import static com.yjzfirst.util.IndexConstants.token_key;
 import static com.yjzfirst.util.Util.REQUEST_CODE_SCAN;
 import static com.yjzfirst.util.Util.readStream;
+import static com.yjzfirst.util.Util.setListViewHeightBasedOnChildren;
 import static com.yzq.zxinglibrary.common.Constant.CODED_CONTENT;
 
 public class ReportActivity extends AppCompatActivity {
@@ -118,6 +120,7 @@ public class ReportActivity extends AppCompatActivity {
 		mSimpleDetailList = (ListView) findViewById(R.id.report_infolist);
 		mAdapter = new ReportdetailAdapter(this, ReportProductBeans);
 		mSimpleDetailList.setAdapter(mAdapter);
+		setListViewHeightBasedOnChildren(mSimpleDetailList);
 //        report_submitbutton.setOnClickListener(new View.OnClickListener() {
 //            @Override
 //            public void onClick(View view) {
@@ -243,8 +246,8 @@ public class ReportActivity extends AppCompatActivity {
 	public String ip_key = "ip";
 	public String port_key = "port";
 	private String email_key = "email";
+	ArrayList<ReportFormBean> ReportFormBeans = new ArrayList<ReportFormBean>();
 	ArrayList<ReportProductBean> ReportProductBeans = new ArrayList<ReportProductBean>();
-	//	ArrayList<ReportProductBean> ReportProductBeans = new ArrayList<ReportProductBean>();
 	HashMap<String, String> process_statusmap = new HashMap<String, String>();
 
 	public class CheckCardidTask extends AsyncTask<Void, Void, Boolean> {
@@ -311,6 +314,7 @@ public class ReportActivity extends AppCompatActivity {
 						success = jsonObject.getString("success");
 						Print(" return: ReportProductBeans success::" + success);
 						if (success.equals("true")) {
+							ReportFormBeans = new ArrayList<ReportFormBean>();
 							ReportProductBeans = new ArrayList<ReportProductBean>();
 							parseReportproduct(jsonObject);
 							Print(" return: ReportProductBeans ::" + ReportProductBeans.size());
@@ -452,6 +456,7 @@ public class ReportActivity extends AppCompatActivity {
 						msg = jsonObject.getString("message");
 						success = jsonObject.getString("success");
 						if (success.equals("true")) {
+							ReportFormBeans = new ArrayList<ReportFormBean>();
 							ReportProductBeans = new ArrayList<ReportProductBean>();
 							parseReportproduct(jsonObject);
 						}
@@ -596,6 +601,7 @@ public class ReportActivity extends AppCompatActivity {
 						msg = jsonObject.getString("message");
 						success = jsonObject.getString("success");
 						if (success.equals("true")) {
+							ReportFormBeans = new ArrayList<ReportFormBean>();
 							ReportProductBeans = new ArrayList<ReportProductBean>();
 							parseReportproduct(jsonObject);
 						}
@@ -712,6 +718,7 @@ public class ReportActivity extends AppCompatActivity {
 						msg = jsonObject.getString("message");
 						success = jsonObject.getString("success");
 						if (success.equals("true")) {
+							ReportFormBeans = new ArrayList<ReportFormBean>();
 							ReportProductBeans = new ArrayList<ReportProductBean>();
 							parseReportproduct(jsonObject);
 						}
@@ -828,6 +835,7 @@ public class ReportActivity extends AppCompatActivity {
 						msg = jsonObject.getString("message");
 						success = jsonObject.getString("success");
 						if (success.equals("true")) {
+							ReportFormBeans = new ArrayList<ReportFormBean>();
 							ReportProductBeans = new ArrayList<ReportProductBean>();
 							parseReportproduct(jsonObject);
 						}
@@ -944,6 +952,7 @@ public class ReportActivity extends AppCompatActivity {
 						msg = jsonObject.getString("message");
 						success = jsonObject.getString("success");
 						if (success.equals("true")) {
+							ReportFormBeans = new ArrayList<ReportFormBean>();
 							ReportProductBeans = new ArrayList<ReportProductBean>();
 							parseReportproduct(jsonObject);
 						}
@@ -1062,6 +1071,7 @@ public class ReportActivity extends AppCompatActivity {
 						msg = jsonObject.getString("message");
 						success = jsonObject.getString("success");
 						if (success.equals("true")) {
+							ReportFormBeans = new ArrayList<ReportFormBean>();
 							ReportProductBeans = new ArrayList<ReportProductBean>();
 							parseReportproduct(jsonObject);
 						}
@@ -1180,6 +1190,7 @@ public class ReportActivity extends AppCompatActivity {
 						msg = jsonObject.getString("message");
 						success = jsonObject.getString("success");
 						if (success.equals("true")) {
+							ReportFormBeans = new ArrayList<ReportFormBean>();
 							ReportProductBeans = new ArrayList<ReportProductBean>();
 							parseReportproduct(jsonObject);
 						}
@@ -1254,18 +1265,16 @@ public class ReportActivity extends AppCompatActivity {
 			dataarr = jsonObject.getJSONArray("data");
 			for (int i = 0; i < dataarr.length(); i++) {
 				JSONObject reprotformdataObject = dataarr.getJSONObject(i);
+				ReportFormBean ReportFormBean = beanParseUtility.parse(reprotformdataObject, ReportFormBean.class);
+				ReportFormBeans.add(ReportFormBean);
 				if(reprotformdataObject.has("line_data")) {
 					JSONArray linedataarr = reprotformdataObject.getJSONArray("line_data");
 					for (int j = 0; j < linedataarr.length(); j++) {
 						JSONObject reprotformlinedataObject = linedataarr.getJSONObject(j);
-						ReportProductBean ReportProductlineBean = beanParseUtility.MergeBean(reprotformdataObject,
-								reprotformlinedataObject, ReportProductBean.class);
+						ReportProductBean ReportProductlineBean =
+								beanParseUtility.parse(reprotformlinedataObject, ReportProductBean.class);
 						ReportProductBeans.add(ReportProductlineBean);
 					}
-				}else{
-
-				    ReportProductBean ReportProductBean = beanParseUtility.parse(reprotformdataObject, ReportProductBean.class);
-					ReportProductBeans.add(ReportProductBean);
 				}
 
 			}
@@ -1275,16 +1284,16 @@ public class ReportActivity extends AppCompatActivity {
 	}
 
 	protected void reloadviewText(Boolean success,String msg){
-		if (success&&ReportProductBeans!=null) {
+		if (success&&ReportFormBeans!=null) {
 			Util.showShortToastMessage(ReportActivity.this, msg);
 			Print("ReportProductBeans size::"+ReportProductBeans.size());
-			eCurrentprocess.setText(CheckNullString(ReportProductBeans.get(0).process_name));
-			String process_status = ReportProductBeans.get(0).process_status;
+			eCurrentprocess.setText(CheckNullString(ReportFormBeans.get(0).process_name));
+			String process_status = ReportFormBeans.get(0).process_status;
 			eReportstate.setText(CheckNullString(process_statusmap.get(process_status)));
-			eContainerid.setText(CheckNullString(ReportProductBeans.get(0).container_id));
-			eContainerweight.setText(CheckNullString(ReportProductBeans.get(0).container_weight));
-			eThousandweight.setText(CheckNullString(ReportProductBeans.get(0).unit_weight));
-			eNetweight.setText(CheckNullString(ReportProductBeans.get(0).weight));
+			eContainerid.setText(CheckNullString(ReportFormBeans.get(0).container_id));
+			eContainerweight.setText(CheckNullString(ReportFormBeans.get(0).container_weight));
+			eThousandweight.setText(CheckNullString(ReportFormBeans.get(0).unit_weight));
+			eNetweight.setText(CheckNullString(ReportFormBeans.get(0).weight));
 			if (!eContainerweight.getText().toString().equals("")
 					&& !eNetweight.getText().toString().equals("")) {
 				eGrossweight.setText(Double.valueOf(eContainerweight.getText().toString())
@@ -1292,14 +1301,15 @@ public class ReportActivity extends AppCompatActivity {
 			}
 			if (!eNetweight.getText().toString().equals("")
 					&& !eThousandweight.getText().toString().equals("")
-					&& !ReportProductBeans.get(0).factor.equals("")) {
+					&& !ReportFormBeans.get(0).factor.equals("")) {
 				Long num = Math.round(Double.valueOf(eNetweight.getText().toString()) /
 						Double.valueOf(eThousandweight.getText().toString()) *
-						Double.valueOf(ReportProductBeans.get(0).factor));
+						Double.valueOf(ReportFormBeans.get(0).factor));
 				eReportnum.setText(num + "");
 			}
 			mAdapter = new ReportdetailAdapter(ReportActivity.this, ReportProductBeans);
 			mSimpleDetailList.setAdapter(mAdapter);
+			setListViewHeightBasedOnChildren(mSimpleDetailList);
 //                 eWaste.setText(ReportProductBeans.get(0).);
 //                 eGrossweight.setText(ReportProductBeans.get(0).weight);
 //                 eReportnum.setText(ReportProductBeans.get(0).);
