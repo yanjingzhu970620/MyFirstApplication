@@ -35,6 +35,8 @@ public class IndexConstants {
 
     public static final String CHECKORDERID="/app/mrp_workorder/get";
     public static final String CHECKENTRYPRODUCTID="/app/product_packaging_together/get";
+    public static final String ADDORDERID="/app/mrp_finish_in/add";
+
 
     public static final String INSTOCKCHECKBARCODE="/api/instock/checkbarcode ";
     public static final String OUTSTOCKCHECKBARCODE="/api/outstock/checkbarcode ";

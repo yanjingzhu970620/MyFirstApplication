@@ -50,6 +50,7 @@ public class EntryFormActivity extends AppCompatActivity {
 	};
 	private qrcodemode qrcodetextmode=qrcodemode.WORKORDER_ID;
 	WorkOrderBean ReportProductlineBean;
+	String Productcontent;
 //    private CheckCodeTask mentryTask = null;
     private int boxnum=0;
 	private ArrayList<Map<String,String>> boxesnum=new ArrayList<Map<String,String>>();
@@ -454,15 +455,20 @@ public class EntryFormActivity extends AppCompatActivity {
 		//        String lot_no="";
 		String product_code = "";
 		String packaging_code = "";
+		String num_perbox = "";
+		String batch_number = "";
 		String success = "";
 		String msg = "";
+		String content="";
 		int responsecode = 0;
 
 		CheckProductidTask(String content) {
 			String[] workorderinfo=content.split(",");
 			if(workorderinfo.length>1)
 				product_code = workorderinfo[0];
+			    num_perbox = workorderinfo[2];
 			    packaging_code= workorderinfo[3];
+			    batch_number = workorderinfo[4];
 		}
 
 		@Override
@@ -538,10 +544,143 @@ public class EntryFormActivity extends AppCompatActivity {
 
 		@Override
 		protected void onPostExecute(final Boolean success) {
-//			mCheckTask = null;
-//			reloadviewText(success,msg);
+
 			if(success) {
 				mentryorderid.setText(product_code);
+				mentryOrdernumber.setText(batch_number);
+				mentryNumberperbox.setText(num_perbox);
+				Productcontent=content;
+			}
+		}
+
+		@Override
+		protected void onCancelled() {
+//			mCheckTask = null;
+//            showProgress(false);
+		}
+
+		private JSONObject parseJson(InputStream ins) {
+			byte[] data = new byte[0];   // 把输入流转换成字符数组
+			try {
+				data = readStream(ins);
+
+				String json = new String(data);        // 把字符数组转换成字符串
+//            JSONArray array = new JSONArray(json);
+//            for(int i = 0 ; i < array.length() ; i++){
+				JSONObject jsonObject = new JSONObject(json);//array.getJSONObject(i);
+//                String msg=jsonObject.getString("message");
+//                String success=jsonObject.getString("success");
+				return jsonObject;
+//                Print("login msgmsg:::"+msg);
+//            }
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			return null;
+		}
+
+
+	}
+
+	public class AddOrderidTask extends AsyncTask<Void, Void, Boolean> {
+		//        String lot_no="";
+		String product_code = "";
+		String packaging_code = "";
+		String num_perbox = "";
+		String batch_number = "";
+		String success = "";
+		String msg = "";
+		String content="";
+		int responsecode = 0;
+
+		AddOrderidTask(String content) {
+			String[] workorderinfo=content.split(",");
+			if(workorderinfo.length>1)
+			product_code = workorderinfo[0];
+			num_perbox = workorderinfo[2];
+			packaging_code= workorderinfo[3];
+			batch_number = workorderinfo[4];
+		}
+
+		@Override
+		protected Boolean doInBackground(Void... params) {
+			// TODO: attempt authentication against a network service.
+
+			try {
+				String url = "http://" +
+						PreferencesUtils.getString(EntryFormActivity.this, ip_key, "120.27.2.177")
+						+ ":" + PreferencesUtils.getString(EntryFormActivity.this, port_key, "8062") +
+						IndexConstants.ADDORDERID + "?token=" +
+						PreferencesUtils.getString(EntryFormActivity.this, token_key, "")
+						+ "&product_code=" + product_code+ "&packaging_code=" + packaging_code;
+//                "login:","登录帐号","Password":"密码"
+				Print("workorder_no url:::" + url);
+//                Map<String,String> mparams=new HashMap<String,String>();
+//                mparams.put("login",PreferencesUtils.getString(ReportActivity.this,email_key,"8062"));
+//                mparams.put("lot_no",lot_no);
+//                mparams.put("barcode",barcode);
+//                mparams.put("location",location);
+
+
+//                String postparams = new Gson().toJson(mparams);
+//                postparams=URLEncoder.encode(postparams,"utf-8");
+
+//                String postparams ="{"+"login:",mEmail,"Password:",mPassword}//"login:"+mEmail+"&password:"+mPassword;
+//                byte[] data = postparams.getBytes();
+//                System.err.println("postparams postparams:::"+postparams+data.length);
+				URL posturl = new URL(url);
+				HttpURLConnection conn = (HttpURLConnection) posturl.openConnection();
+				conn.setConnectTimeout(10000);
+//                conn.setDoInput(true);                  //打开输入流，以便从服务器获取数据
+//                conn.setDoOutput(true);                 //打开输出流，以便向服务器提交数据
+//                conn.setRequestMethod("POST");     //设置以Post方式提交数据
+//                conn.setUseCaches(false);               //使用Post方式不能使用缓存
+//                //设置请求体的类型是文本类型
+//                conn.setRequestProperty("Content-Type", "application/json");
+//                conn.setRequestProperty("Content-Length", String.valueOf(data.length)); // 注意是字节长度, 不是字符长度
+//
+////                conn.setDoOutput(true); // 准备写出
+//                conn.getOutputStream().write(data);
+
+				responsecode = conn.getResponseCode();
+				if (responsecode == 200) {
+					InputStream ins = conn.getInputStream();
+					JSONObject rootjsonObject = parseJson(ins);
+					JSONObject jsonObject = null;
+					if (rootjsonObject != null) {
+						jsonObject = rootjsonObject.getJSONArray("results").getJSONObject(0);
+					}
+					if (jsonObject != null) {
+//						Print(" return:::" + jsonObject);
+						msg = jsonObject.getString("message");
+						success = jsonObject.getString("success");
+						Print(" return: ReportProductBeans success::" + success);
+						if (success.equals("true")) {
+							productBean=parseEntryproductbean(jsonObject);
+						}
+					}
+//                    String s = ins.toString();
+//                    System.err.println("sssssssss:::"+s);
+				}
+
+			} catch (Exception e) {
+				// TODO: handle exception
+				System.err.println("未能获取网络数据");
+				e.printStackTrace();
+			}
+
+			// TODO: register the new account here.
+			return success.equals("true");
+		}
+
+		@Override
+		protected void onPostExecute(final Boolean success) {
+
+			if(success) {
+				mentryorderid.setText(product_code);
+				mentryOrdernumber.setText(batch_number);
+				mentryNumberperbox.setText(num_perbox);
+				Productcontent=content;
 			}
 		}
 

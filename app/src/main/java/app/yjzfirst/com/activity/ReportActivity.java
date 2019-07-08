@@ -12,6 +12,7 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.yjzfirst.adapter.ReportdetailAdapter;
 import com.yjzfirst.bean.ReportFormBean;
@@ -54,6 +55,8 @@ public class ReportActivity extends AppCompatActivity {
 	EditText eWaste;
 	EditText eGrossweight;
 	EditText eReportnum;
+
+	TextView Errortext;
 //    EditText mcheckbatchnumber;
 
 	Button report_submitbutton;
@@ -107,7 +110,7 @@ public class ReportActivity extends AppCompatActivity {
 		eWaste = (EditText) findViewById(R.id.edit_waste);
 		eGrossweight = (EditText) findViewById(R.id.edit_gross_weight);
 		eReportnum = (EditText) findViewById(R.id.edit_report_num);
-//
+		Errortext = (TextView) findViewById(R.id.report_errmsg);
 		report_submitbutton = (Button) findViewById(R.id.report_submit_button);
 		reportcancel_submitbutton = (Button) findViewById(R.id.report_cancel_submitbutton);
 		reportinspect_submitbutton = (Button) findViewById(R.id.report_inspect_submit_button);
@@ -148,6 +151,7 @@ public class ReportActivity extends AppCompatActivity {
 	}
 
 	public void onClick(View view) {
+		Errortext.setVisibility(View.GONE);
 		if (view.getId() == R.id.report_back) {
 			finish();
 		} else if (view.getId() == R.id.report_card_id_button) {
@@ -198,7 +202,7 @@ public class ReportActivity extends AppCompatActivity {
 
 				String content = data.getStringExtra(CODED_CONTENT);
 				eCardid.setText(content);
-				Util.showShortToastMessage(ReportActivity.this, "扫描结果为：" + content);
+				Util.showToastMessage(ReportActivity.this, "扫描结果为：" + content);
 				attemptCheck();
 			}
 
@@ -231,7 +235,7 @@ public class ReportActivity extends AppCompatActivity {
 //            // There was an error; don't attempt login and focus the first
 //            // form field with an error.
 //            focusView.requestFocus();
-			Util.showShortToastMessage(ReportActivity.this, "请先扫描所有条目");
+			Util.showToastMessage(ReportActivity.this, "请先扫描所有条目");
 		} else {
 //            // Show a progress spinner, and kick off a background task to
 //            // perform the user login attempt.
@@ -316,7 +320,7 @@ public class ReportActivity extends AppCompatActivity {
 						if (success.equals("true")) {
 							ReportFormBeans = new ArrayList<ReportFormBean>();
 							ReportProductBeans = new ArrayList<ReportProductBean>();
-							parseReportproduct(jsonObject);
+							parseReportid(jsonObject);
 							Print(" return: ReportProductBeans ::" + ReportProductBeans.size());
 						}
 					}
@@ -458,7 +462,7 @@ public class ReportActivity extends AppCompatActivity {
 						if (success.equals("true")) {
 							ReportFormBeans = new ArrayList<ReportFormBean>();
 							ReportProductBeans = new ArrayList<ReportProductBean>();
-							parseReportproduct(jsonObject);
+//							parseReportproduct(jsonObject);
 						}
 					}
 //                    String s = ins.toString();
@@ -603,7 +607,7 @@ public class ReportActivity extends AppCompatActivity {
 						if (success.equals("true")) {
 							ReportFormBeans = new ArrayList<ReportFormBean>();
 							ReportProductBeans = new ArrayList<ReportProductBean>();
-							parseReportproduct(jsonObject);
+//							parseReportproduct(jsonObject);
 						}
 					}
 //                    String s = ins.toString();
@@ -720,7 +724,7 @@ public class ReportActivity extends AppCompatActivity {
 						if (success.equals("true")) {
 							ReportFormBeans = new ArrayList<ReportFormBean>();
 							ReportProductBeans = new ArrayList<ReportProductBean>();
-							parseReportproduct(jsonObject);
+//							parseReportproduct(jsonObject);
 						}
 					}
 //                    String s = ins.toString();
@@ -837,7 +841,7 @@ public class ReportActivity extends AppCompatActivity {
 						if (success.equals("true")) {
 							ReportFormBeans = new ArrayList<ReportFormBean>();
 							ReportProductBeans = new ArrayList<ReportProductBean>();
-							parseReportproduct(jsonObject);
+//							parseReportproduct(jsonObject);
 						}
 					}
 //                    String s = ins.toString();
@@ -954,7 +958,7 @@ public class ReportActivity extends AppCompatActivity {
 						if (success.equals("true")) {
 							ReportFormBeans = new ArrayList<ReportFormBean>();
 							ReportProductBeans = new ArrayList<ReportProductBean>();
-							parseReportproduct(jsonObject);
+//							parseReportproduct(jsonObject);
 						}
 					}
 //                    String s = ins.toString();
@@ -1073,7 +1077,7 @@ public class ReportActivity extends AppCompatActivity {
 						if (success.equals("true")) {
 							ReportFormBeans = new ArrayList<ReportFormBean>();
 							ReportProductBeans = new ArrayList<ReportProductBean>();
-							parseReportproduct(jsonObject);
+//							parseReportproduct(jsonObject);
 						}
 					}
 //                    String s = ins.toString();
@@ -1192,7 +1196,7 @@ public class ReportActivity extends AppCompatActivity {
 						if (success.equals("true")) {
 							ReportFormBeans = new ArrayList<ReportFormBean>();
 							ReportProductBeans = new ArrayList<ReportProductBean>();
-							parseReportproduct(jsonObject);
+//							parseReportproduct(jsonObject);
 						}
 					}
 //                    String s = ins.toString();
@@ -1259,7 +1263,7 @@ public class ReportActivity extends AppCompatActivity {
 		}
 	}
 
-	protected void parseReportproduct(JSONObject jsonObject) {
+	protected void parseReportid(JSONObject jsonObject) {
 		JSONArray dataarr = null;
 		try {
 			dataarr = jsonObject.getJSONArray("data");
@@ -1283,52 +1287,96 @@ public class ReportActivity extends AppCompatActivity {
 		}
 	}
 
+	protected void parseReportproduct(JSONObject jsonObject) {
+		JSONArray dataarr = null;
+		try {
+			dataarr = jsonObject.getJSONArray("data");
+			for (int i = 0; i < dataarr.length(); i++) {
+				JSONObject reprotformdataObject = dataarr.getJSONObject(i);
+//				ReportFormBean ReportFormBean = beanParseUtility.parse(reprotformdataObject, ReportFormBean.class);
+//				ReportFormBeans.add(ReportFormBean);
+				ReportProductBean ReportProductdataBean =
+						beanParseUtility.parse(reprotformdataObject, ReportProductBean.class);
+				ReportProductBeans.add(ReportProductdataBean);
+//				if(reprotformdataObject.has("line_data")) {
+//					JSONArray linedataarr = reprotformdataObject.getJSONArray("line_data");
+//					for (int j = 0; j < linedataarr.length(); j++) {
+//						JSONObject reprotformlinedataObject = linedataarr.getJSONObject(j);
+//						ReportProductBean ReportProductlineBean =
+//								beanParseUtility.parse(reprotformlinedataObject, ReportProductBean.class);
+//						ReportProductBeans.add(ReportProductlineBean);
+//					}
+//				}
+
+			}
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+	}
 	protected void reloadviewText(Boolean success,String msg){
 		if (success&&ReportFormBeans!=null) {
-			Util.showShortToastMessage(ReportActivity.this, msg);
+			Util.showToastMessage(ReportActivity.this, msg);
 			Print("ReportProductBeans size::"+ReportProductBeans.size());
-			eCurrentprocess.setText(CheckNullString(ReportFormBeans.get(0).process_name));
-			String process_status = ReportFormBeans.get(0).process_status;
-			eReportstate.setText(CheckNullString(process_statusmap.get(process_status)));
-			eContainerid.setText(CheckNullString(ReportFormBeans.get(0).container_id));
-			eContainerweight.setText(CheckNullString(ReportFormBeans.get(0).container_weight));
-			eThousandweight.setText(CheckNullString(ReportFormBeans.get(0).unit_weight));
-			eNetweight.setText(CheckNullString(ReportFormBeans.get(0).weight));
-			if (!eContainerweight.getText().toString().equals("")
-					&& !eNetweight.getText().toString().equals("")) {
-				eGrossweight.setText(Double.valueOf(eContainerweight.getText().toString())
-						+ Double.valueOf(eNetweight.getText().toString()) + "");
-			}
-			if (!eNetweight.getText().toString().equals("")
-					&& !eThousandweight.getText().toString().equals("")
-					&& !ReportFormBeans.get(0).factor.equals("")) {
-				Long num = Math.round(Double.valueOf(eNetweight.getText().toString()) /
-						Double.valueOf(eThousandweight.getText().toString()) *
-						Double.valueOf(ReportFormBeans.get(0).factor));
-				eReportnum.setText(num + "");
-			}
-			mAdapter = new ReportdetailAdapter(ReportActivity.this, ReportProductBeans);
-			mSimpleDetailList.setAdapter(mAdapter);
-			setListViewHeightBasedOnChildren(mSimpleDetailList);
+			if(ReportFormBeans.size()>0) {
+				eCurrentprocess.setText(CheckNullString(ReportFormBeans.get(0).process_name));
+				String process_status = ReportFormBeans.get(0).process_status;
+				eReportstate.setText(CheckNullString(process_statusmap.get(process_status)));
+				eContainerid.setText(CheckNullString(ReportFormBeans.get(0).container_id));
+				eContainerweight.setText(CheckNullString(ReportFormBeans.get(0).container_weight));
+				eThousandweight.setText(CheckNullString(ReportFormBeans.get(0).unit_weight));
+				eNetweight.setText(CheckNullString(ReportFormBeans.get(0).weight));
+				if (!eContainerweight.getText().toString().equals("")
+						&& !eNetweight.getText().toString().equals("")) {
+					eGrossweight.setText(Double.valueOf(eContainerweight.getText().toString())
+							+ Double.valueOf(eNetweight.getText().toString()) + "");
+				}
+				if (!eNetweight.getText().toString().equals("")
+						&& !eThousandweight.getText().toString().equals("")
+						&& !ReportFormBeans.get(0).factor.equals("")) {
+					Long num = Math.round(Double.valueOf(eNetweight.getText().toString()) /
+							Double.valueOf(eThousandweight.getText().toString()) *
+							Double.valueOf(ReportFormBeans.get(0).factor));
+					eReportnum.setText(num + "");
+				}
+
+
 //                 eWaste.setText(ReportProductBeans.get(0).);
 //                 eGrossweight.setText(ReportProductBeans.get(0).weight);
 //                 eReportnum.setText(ReportProductBeans.get(0).);
 //				String process_status = ReportProductBeans.get(0).process_status;
 //				{
-			if (process_status.equals("to_report")) {
-				report_submitbutton.setVisibility(View.VISIBLE);
-				reportmaterialcancel_submitbutton.setVisibility(View.VISIBLE);
-			} else if (process_status.equals("to_inspect")) {
-				reportinspect_submitbutton.setVisibility(View.VISIBLE);
-				reportinspect_ng_submitbutton.setVisibility(View.VISIBLE);
-				reportcancel_submitbutton.setVisibility(View.VISIBLE);
-			} else if (process_status.equals("to_material")) {
-				reportmaterial_submitbutton.setVisibility(View.VISIBLE);
-				reportinspectcancel_submitbutton.setVisibility(View.VISIBLE);
+				if (process_status.equals("to_report")) {
+					report_submitbutton.setVisibility(View.VISIBLE);
+					reportmaterialcancel_submitbutton.setVisibility(View.VISIBLE);
+				} else if (process_status.equals("to_inspect")) {
+					reportinspect_submitbutton.setVisibility(View.VISIBLE);
+					reportinspect_ng_submitbutton.setVisibility(View.VISIBLE);
+					reportcancel_submitbutton.setVisibility(View.VISIBLE);
+				} else if (process_status.equals("to_material")) {
+					reportmaterial_submitbutton.setVisibility(View.VISIBLE);
+					reportinspectcancel_submitbutton.setVisibility(View.VISIBLE);
+				}
+			}else{
+				eCardid.setText("");
+				eCurrentprocess.setText("");
+				eReportstate.setText("");
+				eContainerid.setText("");
+				eContainerweight.setText("");
+				eThousandweight.setText("");
+				eNetweight.setText("");
+				eGrossweight.setText("");
+				eReportnum.setText("");
+
 			}
+			mAdapter = new ReportdetailAdapter(ReportActivity.this, ReportProductBeans);
+			mSimpleDetailList.setAdapter(mAdapter);
+			setListViewHeightBasedOnChildren(mSimpleDetailList);
 //				}
 		} else {
-			Util.showShortToastMessage(ReportActivity.this, msg);
+			Util.showToastMessage(ReportActivity.this, msg);
+			Errortext.setVisibility(View.VISIBLE);
+			Errortext.setText("数据错误"+msg);
+//			eReportnum.setError(msg);
 //                mPasswordView.setError(getString(R.string.error_incorrect_password));
 //                mPasswordView.requestFocus();
 		}

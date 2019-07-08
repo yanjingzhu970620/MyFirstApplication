@@ -230,10 +230,10 @@ public class DeliveryActivity extends AppCompatActivity {
     }
     private void cancleALLdata(){
          mdeliverybatchnumber.setText("");
-         mdeliverybarcode.setText("");
-         mdeliverylibrarynumber.setText("");
-         mdeliveryNumberperbox.setText("");
-         mdeliverynumboxes.setText("");
+//         mdeliverybarcode.setText("");
+//         mdeliverylibrarynumber.setText("");
+//         mdeliveryNumberperbox.setText("");
+//         mdeliverynumboxes.setText("");
          mdeliverystocknumboxes.setText("");
          mdeliveryInventoryquantity.setText("");
          mdeliveryInventoryquantityboxes.setText("");
