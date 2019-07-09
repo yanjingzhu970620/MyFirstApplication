@@ -236,31 +236,6 @@
 
                 </LinearLayout>
                 <LinearLayout
-                    android:id="@+id/delivery_stocknum_boxes_form"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:visibility="gone"
-                    android:orientation="horizontal">
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:gravity="center"
-                        android:layout_weight="1"
-                        android:text="@string/Number_of_boxes"/>
-
-                    <EditText
-                        android:id="@+id/delivery_stocknum_boxes"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:maxLines="1"
-                        android:digits="1234567890"
-                        android:inputType="phone|number"
-                        android:layout_weight="3"
-                        android:singleLine="true"
-                        android:textColor="@color/black" />
-
-                </LinearLayout>
-                <LinearLayout
                     android:id="@+id/delivery_inventory_form"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -326,7 +301,7 @@
                     android:text="@string/action_submit"
                     android:textStyle="bold" />
                 <Button
-                    android:id="@+id/delivery_submit_cancle_button"
+                    android:id="@+id/delivery_submitcancle_button"
                     style="?android:textAppearanceSmall"
                     android:onClick="onClick"
                     android:background="@color/colorbarbackground"
@@ -334,7 +309,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="16dp"
                     android:layout_weight="1"
-                    android:text="@string/action_submit_cancle"
+                    android:text="@string/action_scan_cancle"
                     android:textStyle="bold" />
                 <Button
                     android:id="@+id/delivery_warehouse_button"

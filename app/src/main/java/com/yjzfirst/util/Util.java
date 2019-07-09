@@ -88,4 +88,12 @@ public class Util {
         listView.setLayoutParams(params);
     }
 
+    public static String CheckNullString(String s) {
+
+        if (s == null || s.equals("null")) {
+            return "";
+        } else {
+            return s;
+        }
+    }
 }

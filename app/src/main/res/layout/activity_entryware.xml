@@ -19,12 +19,12 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
-                android:text="@string/report_main"
+                android:text="@string/entry_warehouse"
                 android:textColor="#4f92ed"
                 android:textSize="20sp" />
 
             <LinearLayout
-                android:id="@+id/report_back"
+                android:id="@+id/entryform_back"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
@@ -52,22 +52,22 @@
         <include layout="@layout/include_line" />
 
         <ScrollView
-            android:id="@+id/report_form"
+            android:id="@+id/entryform_form"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:paddingBottom="@dimen/activity_vertical_margin"
             android:paddingLeft="@dimen/activity_horizontal_margin"
-            android:paddingTop="@dimen/activity_vertical_margin"
             android:paddingRight="@dimen/activity_horizontal_margin"
-            android:paddingBottom="@dimen/activity_vertical_margin">
+            android:paddingTop="@dimen/activity_vertical_margin">
 
             <LinearLayout
-                android:id="@+id/report_content_card"
+                android:id="@+id/entryform_content_form"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
 
                 <LinearLayout
-                    android:id="@+id/report_card_id_layout"
+                    android:id="@+id/entryform_orderid_form"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal">
@@ -77,30 +77,28 @@
                         android:layout_height="match_parent"
                         android:layout_weight="1"
                         android:gravity="center"
-                        android:text="@string/report_cardid" />
+                        android:text="@string/entryin_orderid" />
 
                     <EditText
-                        android:id="@+id/edittext_report_card_id"
+                        android:id="@+id/entryform_orderid"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="3"
                         android:maxLines="1"
                         android:singleLine="true"
                         android:textColor="@color/black" />
-
                     <ImageView
-                        android:id="@+id/report_card_id_button"
+                        android:id="@+id/entryform_orderid_button"
                         android:layout_width="25dp"
                         android:layout_height="25dp"
                         android:layout_gravity="bottom"
                         android:layout_marginBottom="@dimen/erqode_vertical_margin"
-                        android:background="@mipmap/ercode"
                         android:clickable="true"
-                        android:onClick="onClick" />
+                        android:onClick="onClick"
+                        android:background="@mipmap/ercode" />
                 </LinearLayout>
-
                 <LinearLayout
-                    android:id="@+id/current_process_layout"
+                    android:id="@+id/entryform_warehouse_code_form"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal">
@@ -110,10 +108,73 @@
                         android:layout_height="match_parent"
                         android:layout_weight="1"
                         android:gravity="center"
-                        android:text="@string/current_process" />
+                        android:text="@string/entry_warehouse_code" />
 
                     <EditText
-                        android:id="@+id/edittext_current_process"
+                        android:id="@+id/entryform_warehouse_code"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="3"
+                        android:maxLines="1"
+                        android:singleLine="true"
+                        android:textColor="@color/black" />
+                    <ImageView
+                        android:id="@+id/entryform_warehouse_code_button"
+                        android:layout_width="25dp"
+                        android:layout_height="25dp"
+                        android:layout_gravity="bottom"
+                        android:layout_marginBottom="@dimen/erqode_vertical_margin"
+                        android:clickable="true"
+                        android:onClick="onClick"
+                        android:background="@mipmap/ercode" />
+                </LinearLayout>
+                <LinearLayout
+                    android:id="@+id/entryform_Bar_code_form"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:text="@string/Bar_code" />
+
+                    <EditText
+                        android:id="@+id/entryform_bar_code"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="3"
+                        android:maxLines="1"
+                        android:singleLine="true"
+                        android:textColor="@color/black" />
+                    <ImageView
+                        android:id="@+id/entryform_bar_code_button"
+                        android:layout_width="25dp"
+                        android:layout_height="25dp"
+                        android:layout_gravity="bottom"
+                        android:layout_marginBottom="@dimen/erqode_vertical_margin"
+                        android:clickable="true"
+                        android:onClick="onClick"
+                        android:background="@mipmap/ercode" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/entryform_Order_number_form"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:text="@string/Order_number" />
+
+                    <EditText
+                        android:id="@+id/entryform_order_number"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="3"
@@ -124,7 +185,7 @@
                 </LinearLayout>
 
                 <LinearLayout
-                    android:id="@+id/report_state_layout"
+                    android:id="@+id/entryform_Number_per_box_form"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal">
@@ -134,136 +195,10 @@
                         android:layout_height="match_parent"
                         android:layout_weight="1"
                         android:gravity="center"
-                        android:text="@string/report_state" />
+                        android:text="@string/Number_per_box" />
 
                     <EditText
-                        android:id="@+id/edittext_report_state"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="3"
-                        android:maxLines="1"
-                        android:singleLine="true"
-                        android:textColor="@color/black" />
-
-                </LinearLayout>
-
-                <LinearLayout
-                    android:id="@+id/container_id_layout"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal">
-
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1"
-                        android:gravity="center"
-                        android:text="@string/container_id" />
-
-                    <EditText
-                        android:id="@+id/edittext_container_id"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="3"
-                        android:digits="1234567890."
-                        android:inputType="phone|number"
-                        android:maxLines="1"
-                        android:singleLine="true"
-                        android:textColor="@color/black" />
-
-                </LinearLayout>
-
-                <LinearLayout
-                    android:id="@+id/container_weight_layout"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal">
-
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1"
-                        android:gravity="center"
-                        android:text="@string/container_weight" />
-
-                    <EditText
-                        android:id="@+id/edittext_container_weight"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="3"
-                        android:digits="1234567890."
-                        android:inputType="phone|number"
-                        android:maxLines="1"
-                        android:singleLine="true"
-                        android:textColor="@color/black" />
-
-                </LinearLayout>
-
-                <LinearLayout
-                    android:id="@+id/report_thousand_weight_layout"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal">
-
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1"
-                        android:gravity="center"
-                        android:text="@string/report_thousand_weight" />
-
-                    <EditText
-                        android:id="@+id/edit_thousand_weight"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="3"
-                        android:digits="1234567890."
-                        android:inputType="phone|number"
-                        android:maxLines="1"
-                        android:singleLine="true"
-                        android:textColor="@color/black" />
-
-                </LinearLayout>
-                <LinearLayout
-                    android:id="@+id/report_gross_weight_layout"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal">
-
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1"
-                        android:gravity="center"
-                        android:text="@string/gross_weight" />
-
-                    <EditText
-                        android:id="@+id/edit_gross_weight"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="3"
-                        android:digits="1234567890."
-                        android:inputType="phone|number"
-                        android:maxLines="1"
-                        android:singleLine="true"
-                        android:textColor="@color/black" />
-
-                </LinearLayout>
-                <LinearLayout
-                    android:id="@+id/report_waste_layout"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal">
-
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1"
-                        android:gravity="center"
-                        android:text="@string/waste" />
-
-                    <EditText
-                        android:id="@+id/edit_waste"
+                        android:id="@+id/entryform_Number_per_box"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="3"
@@ -276,7 +211,7 @@
                 </LinearLayout>
 
                 <LinearLayout
-                    android:id="@+id/report_net_weight_layout"
+                    android:id="@+id/entryform_num_boxes_form"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal">
@@ -286,14 +221,14 @@
                         android:layout_height="match_parent"
                         android:layout_weight="1"
                         android:gravity="center"
-                        android:text="@string/net_weight" />
+                        android:text="@string/Number_of_boxes" />
 
                     <EditText
-                        android:id="@+id/edit_net_weight"
+                        android:id="@+id/entryform_num_boxes"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="3"
-                        android:digits="1234567890."
+                        android:digits="1234567890"
                         android:inputType="phone|number"
                         android:maxLines="1"
                         android:singleLine="true"
@@ -302,7 +237,7 @@
                 </LinearLayout>
 
                 <LinearLayout
-                    android:id="@+id/report_number_layout"
+                    android:id="@+id/entryform_finalbox_form"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal">
@@ -312,18 +247,13 @@
                         android:layout_height="match_parent"
                         android:layout_weight="1"
                         android:gravity="center"
-                        android:text="@string/report_num" />
+                        android:text="@string/entry_isfinalbox" />
 
-                    <EditText
-                        android:id="@+id/edit_report_num"
+                    <CheckBox
+                        android:id="@+id/entryform_finalbox"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_weight="3"
-                        android:digits="1234567890."
-                        android:inputType="phone|number"
-                        android:maxLines="1"
-                        android:singleLine="true"
-                        android:textColor="@color/black" />
+                        android:layout_weight="3" />
 
                 </LinearLayout>
 
@@ -331,98 +261,41 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:orientation="horizontal">
-
                     <Button
-                        android:id="@+id/report_submit_button"
+                        android:id="@+id/entryform_scan"
                         style="?android:textAppearanceSmall"
-                        android:visibility="gone"
+                        android:onClick="onClick"
+                        android:background="@color/colorbarbackground"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="16dp"
                         android:layout_weight="1"
-                        android:background="@color/colorbarbackground"
-                        android:onClick="onClick"
-                        android:text="@string/action_report"
+                        android:text="@string/action_scan"
                         android:textStyle="bold" />
-
                     <Button
-                        android:id="@+id/report_inspect_submit_button"
-                        android:visibility="gone"
+                        android:id="@+id/entryform_canclescan"
                         style="?android:textAppearanceSmall"
+                        android:onClick="onClick"
+                        android:background="@color/colorbarbackground"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="16dp"
                         android:layout_weight="1"
-                        android:background="@color/colorbarbackground"
-                        android:onClick="onClick"
-                        android:text="@string/action_inspect_pass"
+                        android:text="@string/action_scan_cancle"
                         android:textStyle="bold" />
-
                     <Button
-                        android:id="@+id/report_material_submit_button"
-                        android:visibility="gone"
+                        android:id="@+id/entryform_submit_button"
                         style="?android:textAppearanceSmall"
+                        android:onClick="onClick"
+                        android:background="@color/colorbarbackground"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="16dp"
                         android:layout_weight="1"
-                        android:background="@color/colorbarbackground"
-                        android:onClick="onClick"
-                        android:text="@string/action_material"
-                        android:textStyle="bold" />
-
-                    <Button
-                        android:id="@+id/report_cancel_submitbutton"
-                        android:visibility="gone"
-                        style="?android:textAppearanceSmall"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="16dp"
-                        android:layout_weight="1"
-                        android:background="@color/colorbarbackground"
-                        android:onClick="onClick"
-                        android:text="@string/action_report_cancel"
-                        android:textStyle="bold" />
-
-                    <Button
-                        android:id="@+id/report_inspect_cancel_submitbutton"
-                        android:visibility="gone"
-                        style="?android:textAppearanceSmall"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="16dp"
-                        android:layout_weight="1"
-                        android:background="@color/colorbarbackground"
-                        android:onClick="onClick"
-                        android:text="@string/action_inspect_cancel"
-                        android:textStyle="bold" />
-
-                    <Button
-                        android:id="@+id/report_material_cancel_submitbutton"
-                        android:visibility="gone"
-                        style="?android:textAppearanceSmall"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="16dp"
-                        android:layout_weight="1"
-                        android:background="@color/colorbarbackground"
-                        android:onClick="onClick"
-                        android:text="@string/action_material_cancel"
-                        android:textStyle="bold" />
-
-                    <Button
-                        android:id="@+id/report_inspect_ng_submitbutton"
-                        android:visibility="gone"
-                        style="?android:textAppearanceSmall"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="16dp"
-                        android:layout_weight="1"
-                        android:background="@color/colorbarbackground"
-                        android:onClick="onClick"
-                        android:text="@string/action_inspect_ng"
+                        android:text="@string/entry_action_submit"
                         android:textStyle="bold" />
                 </LinearLayout>
+
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -430,7 +303,7 @@
                     android:orientation="vertical"
                     android:background="@color/transport_int">
                     <TextView
-                        android:id="@+id/report_errmsg"
+                        android:id="@+id/entry_errmsg"
                         android:textColor="@color/red"
                         android:visibility="gone"
                         android:textSize="20sp"
@@ -448,34 +321,28 @@
                         <TextView
                             android:layout_width="0dp"
                             android:layout_height="match_parent"
-                            android:text="@string/process_name"
+                            android:text="@string/product_item"
                             android:layout_weight="1"/>
                         <TextView
                             android:layout_width="0dp"
                             android:layout_height="match_parent"
-                            android:text="@string/Number_in"
-                            android:layout_weight="1"/>
-                        <TextView
-                            android:layout_width="0dp"
-                            android:layout_height="match_parent"
-                            android:layout_gravity="center_horizontal"
-                            android:text="@string/quantity_in"
+                            android:text="@string/report_num"
                             android:layout_weight="1"/>
                         <TextView
                             android:layout_width="0dp"
                             android:layout_height="match_parent"
                             android:layout_gravity="center_horizontal"
-                            android:text="@string/report_number"
+                            android:text="@string/Number_of_boxes"
                             android:layout_weight="1"/>
                         <TextView
                             android:layout_width="0dp"
                             android:layout_height="match_parent"
                             android:layout_gravity="center_horizontal"
-                            android:text="@string/report_quantity"
+                            android:text="@string/Final_box"
                             android:layout_weight="1"/>
                     </LinearLayout>
                     <ListView
-                        android:id="@+id/report_infolist"
+                        android:id="@+id/entry_infolist"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:background="@color/c_e6e1db">
@@ -483,6 +350,7 @@
                     </ListView>
                 </LinearLayout>
             </LinearLayout>
+
         </ScrollView>
     </LinearLayout>
 

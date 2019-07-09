@@ -87,14 +87,15 @@
                         android:maxLines="1"
                         android:singleLine="true"
                         android:textColor="@color/black" />
-                    <Button
+                    <ImageView
                         android:id="@+id/entryform_orderid_button"
-                        android:layout_width="30dp"
-                        android:layout_height="30dp"
-                        android:layout_marginStart="2dp"
-                        android:layout_marginBottom="10dp"
+                        android:layout_width="25dp"
+                        android:layout_height="25dp"
+                        android:layout_gravity="bottom"
+                        android:layout_marginBottom="@dimen/erqode_vertical_margin"
+                        android:clickable="true"
+                        android:onClick="onClick"
                         android:background="@mipmap/ercode" />
-
                 </LinearLayout>
 
                 <LinearLayout
@@ -118,12 +119,14 @@
                         android:maxLines="1"
                         android:singleLine="true"
                         android:textColor="@color/black" />
-                    <Button
+                    <ImageView
                         android:id="@+id/entryform_bar_code_button"
-                        android:layout_width="30dp"
-                        android:layout_height="30dp"
-                        android:layout_marginStart="2dp"
-                        android:layout_marginBottom="10dp"
+                        android:layout_width="25dp"
+                        android:layout_height="25dp"
+                        android:layout_gravity="bottom"
+                        android:layout_marginBottom="@dimen/erqode_vertical_margin"
+                        android:clickable="true"
+                        android:onClick="onClick"
                         android:background="@mipmap/ercode" />
                 </LinearLayout>
 
@@ -202,7 +205,6 @@
                         android:textColor="@color/black" />
 
                 </LinearLayout>
-
                 <LinearLayout
                     android:id="@+id/entryform_billnumber_form"
                     android:layout_width="match_parent"
@@ -228,18 +230,122 @@
                         android:textColor="@color/black" />
 
                 </LinearLayout>
-                <Button
-                    android:id="@+id/entryform_submit_button"
-                    style="?android:textAppearanceSmall"
-                    android:onClick="onClick"
-                    android:background="@color/colorbarbackground"
+
+                <LinearLayout
+                    android:id="@+id/entryform_finalbox_form"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="16dp"
-                    android:layout_weight="1"
-                    android:text="@string/action_submit"
-                    android:textStyle="bold" />
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:text="@string/entry_isfinalbox" />
+
+                    <CheckBox
+                        android:id="@+id/entryform_finalbox"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="3" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal">
+                    <Button
+                        android:id="@+id/entryform_scan"
+                        style="?android:textAppearanceSmall"
+                        android:onClick="onClick"
+                        android:background="@color/colorbarbackground"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="16dp"
+                        android:layout_weight="1"
+                        android:text="@string/action_scan"
+                        android:textStyle="bold" />
+                    <Button
+                        android:id="@+id/entryform_canclescan"
+                        style="?android:textAppearanceSmall"
+                        android:onClick="onClick"
+                        android:background="@color/colorbarbackground"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="16dp"
+                        android:layout_weight="1"
+                        android:text="@string/action_scan_cancle"
+                        android:textStyle="bold" />
+                    <Button
+                        android:id="@+id/entryform_submit_button"
+                        style="?android:textAppearanceSmall"
+                        android:onClick="onClick"
+                        android:background="@color/colorbarbackground"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="16dp"
+                        android:layout_weight="1"
+                        android:text="@string/entry_action_submit"
+                        android:textStyle="bold" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:orientation="vertical"
+                    android:background="@color/transport_int">
+                    <TextView
+                        android:id="@+id/entry_errmsg"
+                        android:textColor="@color/red"
+                        android:visibility="gone"
+                        android:textSize="20sp"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"/>
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:text="@string/order_id"
+                            android:layout_weight="1"/>
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:text="@string/product_item"
+                            android:layout_weight="1"/>
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:text="@string/report_num"
+                            android:layout_weight="1"/>
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_gravity="center_horizontal"
+                            android:text="@string/Number_of_boxes"
+                            android:layout_weight="1"/>
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_gravity="center_horizontal"
+                            android:text="@string/Final_box"
+                            android:layout_weight="1"/>
+                    </LinearLayout>
+                    <ListView
+                        android:id="@+id/entry_infolist"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@color/c_e6e1db">
+
+                    </ListView>
+                </LinearLayout>
             </LinearLayout>
+
         </ScrollView>
     </LinearLayout>
 

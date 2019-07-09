@@ -1,19 +1,21 @@
 package com.yjzfirst.adapter;
 
+import android.app.Activity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
-import com.google.gson.annotations.Until;
-import com.yjzfirst.bean.ReportProductBean;
+import com.yjzfirst.bean.EntryProductinfoBean;
+import com.yjzfirst.bean.EntryProductinfoBean;
 import com.yjzfirst.util.Util;
 
 import java.util.List;
 
-import app.yjzfirst.com.activity.ReportActivity;
+import app.yjzfirst.com.activity.EntryWarehouseActivity;
 import app.yjzfirst.com.activity.R;
+import app.yjzfirst.com.activity.EntryFormActivity;
 
 /**
  * @{# WeatherStationsAdapter.java Create on 2015年5月26日 下午6:50:23
@@ -23,24 +25,23 @@ import app.yjzfirst.com.activity.R;
  * @description
  *
  */
-public class ReportdetailAdapter extends BaseAdapter {
-	private ReportActivity context;
-	private List<ReportProductBean> ReportProductBeans;
+public class EntrydetailAdapter extends BaseAdapter {
+	private Activity context;
+	private List<EntryProductinfoBean> EntryProductinfoBeans;
 	/*
 	 * (non-Javadoc)
 	 *
 	 * @see android.widget.Adapter#getCount()
 	 */
 
-	public ReportdetailAdapter(ReportActivity context, List<ReportProductBean> deliveryBean) {
+	public EntrydetailAdapter(Activity context, List<EntryProductinfoBean> deliveryBean) {
 		this.context = context;
-		this.ReportProductBeans = deliveryBean;
+		this.EntryProductinfoBeans = deliveryBean;
 	}
-
 	@Override
 	public int getCount() {
 		// TODO Auto-generated method stub
-		return ReportProductBeans.size();
+		return EntryProductinfoBeans.size();
 	}
 
 	/*
@@ -51,7 +52,7 @@ public class ReportdetailAdapter extends BaseAdapter {
 	@Override
 	public Object getItem(int position) {
 		// TODO Auto-generated method stub
-		return ReportProductBeans.get(position);
+		return EntryProductinfoBeans.get(position);
 	}
 
 	/*
@@ -88,16 +89,23 @@ public class ReportdetailAdapter extends BaseAdapter {
 				.findViewById(R.id.text_numbers);
 		TextView listtext_weight = (TextView) convertView
 				.findViewById(R.id.listtext_weight);
-		listtext_weight.setVisibility(View.VISIBLE);
+		listtext_weight.setVisibility(View.GONE);
 //		RelativeLayout shipcell = (RelativeLayout) convertView
 //				.findViewById(R.id.effectRelativeLayout_details);
-		final ReportProductBean deliveryproduct = ReportProductBeans.get(position);
+		final EntryProductinfoBean deliveryproduct = EntryProductinfoBeans.get(position);
 		barcode.setText(Util.CheckNullString(deliveryproduct.sequence));
-		product_pecification.setText(Util.CheckNullString(deliveryproduct.process_name));
-		number_applications.setText(Util.CheckNullString( deliveryproduct.qty_in));
-		number_of_boxes.setText(Util.CheckNullString(deliveryproduct.weight_in));
-		numbers.setText(Util.CheckNullString(deliveryproduct.qty));
-		listtext_weight.setText(Util.CheckNullString(deliveryproduct.weight));
+		product_pecification.setText(Util.CheckNullString(deliveryproduct.product_code));
+		number_applications.setText( Util.CheckNullString(deliveryproduct.qty));
+		number_of_boxes.setText(Util.CheckNullString(deliveryproduct.apply_box_qty));
+		if(deliveryproduct.is_tail_box!=null) {
+			if (deliveryproduct.is_tail_box.equals("true")) {
+				numbers.setText("是");
+			} else if (deliveryproduct.is_tail_box.equals("false")) {
+				numbers.setText("否");
+			} else {
+				numbers.setText(Util.CheckNullString(deliveryproduct.is_tail_box));
+			}
+		}
 		return convertView;
 	}
 }

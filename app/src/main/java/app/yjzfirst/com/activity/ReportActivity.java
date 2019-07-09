@@ -6,6 +6,8 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -34,6 +36,8 @@ import java.net.URL;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 
@@ -107,6 +111,7 @@ public class ReportActivity extends AppCompatActivity {
 		eThousandweight = (EditText) findViewById(R.id.edit_thousand_weight);
 //        mchecknumboxes.addTextChangedListener(shipsWatcher);
 		eNetweight = (EditText) findViewById(R.id.edit_net_weight);
+
 		eWaste = (EditText) findViewById(R.id.edit_waste);
 		eGrossweight = (EditText) findViewById(R.id.edit_gross_weight);
 		eReportnum = (EditText) findViewById(R.id.edit_report_num);
@@ -118,13 +123,13 @@ public class ReportActivity extends AppCompatActivity {
 		reportinspectcancel_submitbutton = (Button) findViewById(R.id.report_inspect_cancel_submitbutton);
 		reportmaterial_submitbutton = (Button) findViewById(R.id.report_material_submit_button);
 		reportmaterialcancel_submitbutton = (Button) findViewById(R.id.report_material_cancel_submitbutton);
-
+		addTextWatcher();
 
 		mSimpleDetailList = (ListView) findViewById(R.id.report_infolist);
 		mAdapter = new ReportdetailAdapter(this, ReportProductBeans);
 		mSimpleDetailList.setAdapter(mAdapter);
 		setListViewHeightBasedOnChildren(mSimpleDetailList);
-//        report_submitbutton.setOnClickListener(new View.OnClickListener() {
+//      report_submitbutton.setOnClickListener(new View.OnClickListener() {
 //            @Override
 //            public void onClick(View view) {
 //
@@ -210,6 +215,62 @@ public class ReportActivity extends AppCompatActivity {
 
 	}
 
+	public void addTextWatcher(){
+		eNetweight.addTextChangedListener(new TextWatcher() {
+			@Override
+			public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+			}
+
+			@Override
+			public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+			}
+
+			@Override
+			public void afterTextChanged(Editable s) {
+//				if (!eContainerweight.getText().toString().equals("")
+//						&& !eNetweight.getText().toString().equals("")) {
+//					eGrossweight.setText(Double.valueOf(eContainerweight.getText().toString())
+//							+ Double.valueOf(eNetweight.getText().toString()) + "");
+//				}
+				if (!eNetweight.getText().toString().equals("")
+						&& !eThousandweight.getText().toString().equals("")
+						&&ReportFormBeans!=null &&ReportFormBeans.size()>0
+						&& !ReportFormBeans.get(0).factor.equals("")) {
+					long num = Math.round(Double.valueOf(eNetweight.getText().toString()) /
+							Double.valueOf(eThousandweight.getText().toString()) *
+							Double.valueOf(ReportFormBeans.get(0).factor));
+					eReportnum.setText(num + "");
+				}
+
+			}
+		});
+		eReportnum.addTextChangedListener(new TextWatcher() {
+			@Override
+			public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+			}
+
+			@Override
+			public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+			}
+
+			@Override
+			public void afterTextChanged(Editable s) {
+				if (!eReportnum.getText().toString().equals("")
+						&& !eThousandweight.getText().toString().equals("")
+						&&ReportFormBeans!=null &&ReportFormBeans.size()>0
+						&& !ReportFormBeans.get(0).factor.equals("")) {
+					long num = Math.round(Double.valueOf(eReportnum.getText().toString()) *
+							Double.valueOf(eThousandweight.getText().toString()) /
+							Double.valueOf(ReportFormBeans.get(0).factor));
+					eNetweight.setText(num + "");
+				}
+			}
+		});
+	}
 	private void attemptCheck() {
 		if (mCheckTask != null) {
 			return;
@@ -1314,8 +1375,8 @@ public class ReportActivity extends AppCompatActivity {
 		}
 	}
 	protected void reloadviewText(Boolean success,String msg){
+		Util.showToastMessage(ReportActivity.this, msg);
 		if (success&&ReportFormBeans!=null) {
-			Util.showToastMessage(ReportActivity.this, msg);
 			Print("ReportProductBeans size::"+ReportProductBeans.size());
 			if(ReportFormBeans.size()>0) {
 				eCurrentprocess.setText(CheckNullString(ReportFormBeans.get(0).process_name));
@@ -1325,19 +1386,19 @@ public class ReportActivity extends AppCompatActivity {
 				eContainerweight.setText(CheckNullString(ReportFormBeans.get(0).container_weight));
 				eThousandweight.setText(CheckNullString(ReportFormBeans.get(0).unit_weight));
 				eNetweight.setText(CheckNullString(ReportFormBeans.get(0).weight));
-				if (!eContainerweight.getText().toString().equals("")
-						&& !eNetweight.getText().toString().equals("")) {
-					eGrossweight.setText(Double.valueOf(eContainerweight.getText().toString())
-							+ Double.valueOf(eNetweight.getText().toString()) + "");
-				}
-				if (!eNetweight.getText().toString().equals("")
-						&& !eThousandweight.getText().toString().equals("")
-						&& !ReportFormBeans.get(0).factor.equals("")) {
-					Long num = Math.round(Double.valueOf(eNetweight.getText().toString()) /
-							Double.valueOf(eThousandweight.getText().toString()) *
-							Double.valueOf(ReportFormBeans.get(0).factor));
-					eReportnum.setText(num + "");
-				}
+				eGrossweight.setText(ReportFormBeans.get(0).gross_weight);
+				eReportnum.setText( ReportFormBeans.get(0).qty);
+
+//				EditText eCardid;
+//				EditText eCurrentprocess;
+//				EditText eReportstate;
+//				EditText eContainerid;
+//				EditText eContainerweight;
+//				EditText eThousandweight;
+//				EditText eNetweight;
+//				EditText eWaste;
+//				EditText eGrossweight;
+//				EditText eReportnum;
 
 
 //                 eWaste.setText(ReportProductBeans.get(0).);
@@ -1366,14 +1427,15 @@ public class ReportActivity extends AppCompatActivity {
 				eNetweight.setText("");
 				eGrossweight.setText("");
 				eReportnum.setText("");
+				eWaste.setText("");
 
 			}
+			Collections.sort(ReportProductBeans,idComparator);
 			mAdapter = new ReportdetailAdapter(ReportActivity.this, ReportProductBeans);
 			mSimpleDetailList.setAdapter(mAdapter);
 			setListViewHeightBasedOnChildren(mSimpleDetailList);
 //				}
 		} else {
-			Util.showToastMessage(ReportActivity.this, msg);
 			Errortext.setVisibility(View.VISIBLE);
 			Errortext.setText("数据错误"+msg);
 //			eReportnum.setError(msg);
@@ -1381,4 +1443,11 @@ public class ReportActivity extends AppCompatActivity {
 //                mPasswordView.requestFocus();
 		}
 	}
+
+	public static Comparator idComparator = new Comparator() {
+		@Override
+		public int compare(Object o1, Object o2) {
+			return (Integer.compare(Integer.parseInt(((ReportProductBean) o1).sequence), Integer.parseInt(((ReportProductBean) o2).sequence)));
+		}
+	};
 }

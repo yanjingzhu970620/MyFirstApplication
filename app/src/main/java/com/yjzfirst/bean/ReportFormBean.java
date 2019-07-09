@@ -22,6 +22,7 @@ public class ReportFormBean {
 	public String process_status ;// "to_report",#状态
 	public String qty ;// null,#数量
 	public String weight ;// null, #重量
+	public String gross_weight ;// 毛重
 	public String factor ;// 1000,#转换率
 	public String line_data ;// [#明细数据
 //	{

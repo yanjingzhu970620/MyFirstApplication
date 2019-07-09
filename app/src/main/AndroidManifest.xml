@@ -47,6 +47,11 @@
             android:label="@string/title_activity_entry"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
+            android:name="app.yjzfirst.com.activity.EntryWarehouseActivity"
+            android:label="@string/title_activity_entry"
+            android:theme="@style/AppTheme.NoActionBar" />
+
+        <activity
             android:name="app.yjzfirst.com.activity.CheckActivity"
             android:label="@string/title_activity_check"
             android:theme="@style/AppTheme.NoActionBar"/>

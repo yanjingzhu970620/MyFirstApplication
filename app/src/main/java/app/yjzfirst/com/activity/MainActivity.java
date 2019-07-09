@@ -83,7 +83,7 @@ public class MainActivity extends AppCompatActivity {
         Date nowdate=new Date();
         Date expiredate=new Date();;
         try {
-            expiredate=sdf.parse("20191001");
+            expiredate=sdf.parse("20190901");
         } catch (ParseException e) {
             e.printStackTrace();
         }
@@ -104,7 +104,7 @@ public class MainActivity extends AppCompatActivity {
             Intent intent=new Intent(MainActivity.this,EntryFormActivity.class);
             MainActivity.this.startActivity(intent);
         }else if (view.getId() == R.id.entry_main_warehouse) {
-            Intent intent=new Intent(MainActivity.this,EntryFormActivity.class);
+            Intent intent=new Intent(MainActivity.this,EntryWarehouseActivity.class);
             MainActivity.this.startActivity(intent);
         }else if (view.getId() == R.id.Check_main) {
             Intent intent=new Intent(MainActivity.this,ReportActivity.class);

@@ -25,16 +25,19 @@
     <string name="prompt_port">端口</string>
     <string name="product_batch_number">出货单号</string>
     <string name="product_orderid">作业计划号</string>
+    <string name="entryin_orderid">入库单号</string>
     <string name="report_cardid">流程卡号</string>
     <string name="Number_per_box">每箱数量</string>
     <string name="container_weight">容器重量</string>
     <string name="container_id">容器编号</string>
     <string name="Number_of_boxes">箱  数</string>
+    <string name="Final_box">是尾箱</string>
     <string name="Inventory_quantity_of_boxes">库存箱数</string>
     <string name="Inventory_quantity">库存数量</string>
 
     <string name="order_id">项次</string>
     <string name="process_name">工序</string>
+    <string name="product_item">产品</string>
     <string name="Number_in">领料数</string>
     <string name="quantity_in">领料重</string>
     <string name="report_number">报工数</string>
@@ -52,6 +55,9 @@
     <string name="title_activity_delivery">DeliveryActivity</string>
     <string name="title_activity_entry">EntryActivity</string>
     <string name="action_submit">提  交</string>
+    <string name="entry_action_submit">申请提交</string>
+    <string name="action_scan">确认扫描</string>
+    <string name="action_scan_cancle">取消扫描</string>
     <string name="action_submit_cancle">取消提交</string>
     <string name="action_warehouse">仓库确认</string>
     <string name="action_inspect_ng">检验ng</string>
@@ -68,5 +74,7 @@
     <string name="waste">损耗</string>
     <string name="Order_number">生产批号</string>
     <string name="entry_bill_number">入库单号</string>
+    <string name="entry_isfinalbox">是尾箱</string>
     <string name="entry">入  库</string>
+    <string name="entry_warehouse_code">库位号</string>
 </resources>

@@ -9,6 +9,7 @@ import android.widget.TextView;
 
 
 import com.yjzfirst.bean.DeliveryBean;
+import com.yjzfirst.util.Util;
 
 import java.util.List;
 
@@ -89,11 +90,11 @@ public class ChooseShipAdapter extends BaseAdapter {
 //		RelativeLayout shipcell = (RelativeLayout) convertView
 //				.findViewById(R.id.effectRelativeLayout_details);
 		final DeliveryBean deliveryproduct = mdeliveryBean.get(position);
-		barcode.setText(deliveryproduct.bar_code);
-		product_pecification.setText(deliveryproduct.product_specification);
-		number_applications.setText( deliveryproduct.number_applications);
-		number_of_boxes.setText(deliveryproduct.number_boxes);
-		numbers.setText(deliveryproduct.numbers);
+		barcode.setText(Util.CheckNullString(deliveryproduct.bar_code));
+		product_pecification.setText(Util.CheckNullString(deliveryproduct.product_specification));
+		number_applications.setText( Util.CheckNullString(deliveryproduct.number_applications));
+		number_of_boxes.setText(Util.CheckNullString(deliveryproduct.number_boxes));
+		numbers.setText(Util.CheckNullString(deliveryproduct.numbers));
 
 		return convertView;
 	}

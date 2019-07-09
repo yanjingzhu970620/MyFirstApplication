@@ -68,8 +68,16 @@
     <string name="report_quantity">report_quantity</string>
     <string name="product_orderid">work order id</string>
     <string name="entry_bill_number">entry bill number</string>
-    <string name="action_submit_cancle">submit_cancle</string>
-    <string name="action_warehouse">warehouse ensure</string>
-    <string name="entry_production">entry(production)</string>
-    <string name="entry_warehouse">entry(warehouse)</string>
+    <string name="entry_action_submit">submit</string>
+    <string name="action_scan">scan</string>
+    <string name="action_scan_cancle">cancle scan</string>
+    <string name="action_submit_cancle">action_submit_cancle</string>
+    <string name="action_warehouse">action_warehouse</string>
+    <string name="entry_production">entry_production</string>
+    <string name="entry_warehouse">entry_warehouse</string>
+    <string name="Final_box">Final_box</string>
+    <string name="entry_isfinalbox">entry_isfinalbox</string>
+    <string name="entry_warehouse_code">warehouse_code</string>
+    <string name="entryin_orderid">entryin_orderid</string>
+    <string name="product_item">product</string>
 </resources>
