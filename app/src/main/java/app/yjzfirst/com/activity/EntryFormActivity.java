@@ -280,6 +280,11 @@ public class EntryFormActivity extends AppCompatActivity {
 //		mentrybillnumber.setText("");
 		finalbox.setChecked(false);
 
+		mentrybarcode.setError(null, null);
+		mentryorderid.setError(null, null);
+		mentrybillnumber.setError(null, null);
+
+		mentrybarcode.requestFocus();
 		boxnum = 0;
 		productBean = null;
 		ReportProductBean = null;
@@ -292,12 +297,33 @@ public class EntryFormActivity extends AppCompatActivity {
 	}
 
 	private void saveBoxNum(String code, String num) {
+		for (int i = 0; i < boxesnum.size(); i++) {
+
+			for (String contentkey : boxesnum.get(i).keySet()) {
+				if (code.equals(contentkey)) {
+					String oldnumstr = boxesnum.get(i).get(contentkey);
+					try {
+						int oldnum=Integer.valueOf(oldnumstr);
+						int newnum=Integer.valueOf(num);
+						int nownum=oldnum+newnum;
+						System.err.println("oldnum "+oldnum+"newnum"+newnum+" now "+nownum);
+						Map<String, String> map = new HashMap<String, String>();
+						map.put(code, nownum+"");
+						boxesnum.remove(i);
+						boxesnum.add(map);//存起每个产品的数量 提交使用
+						return;
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+				}
+			}
+
+		}
+
 		Map<String, String> map = new HashMap<String, String>();
 		map.put(code, num);
 		boxesnum.add(map);//存起每个产品的数量 提交使用
-
-
-		Print("code::"+code+"   num::"+num);
+		return;
 	}
 
 	//    private void attemptCheck() {

@@ -117,8 +117,13 @@ public class ReportActivity extends AppCompatActivity {
 		eCardid = (EditText) findViewById(R.id.edittext_report_card_id);
 //        mcheckbatchnumber.addTextChangedListener(shipsWatcher);
 		eCurrentprocess = (EditText) findViewById(R.id.edittext_current_process);
+		eCurrentprocess.setFocusableInTouchMode(false);//不可编辑
+		eCurrentprocess.setFocusable(false);//不可编辑
+
 //        mcheckbarcode.addTextChangedListener(shipsWatcher);
 		eReportstate = (EditText) findViewById(R.id.edittext_report_state);
+		eReportstate.setFocusableInTouchMode(false);//不可编辑
+		eReportstate.setFocusable(false);//不可编辑
 //        mchecklibrarynumber.addTextChangedListener(shipsWatcher);
 		eContainerid = (EditText) findViewById(R.id.edittext_container_id);
 		eContainerweight = (EditText) findViewById(R.id.edittext_container_weight);
