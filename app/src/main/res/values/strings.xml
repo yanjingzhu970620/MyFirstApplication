@@ -80,4 +80,8 @@
     <string name="entry_warehouse_code">warehouse_code</string>
     <string name="entryin_orderid">entryin_orderid</string>
     <string name="product_item">product</string>
+    <string name="prompt_db">database</string>
+    <string name="entrychoice_num">choice num</string>
+    <string name="Num_of_boxes">Num_of_boxes</string>
+    <string name="entry_time">entry_time</string>
 </resources>

@@ -7,6 +7,9 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -17,6 +20,7 @@ import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.yjzfirst.adapter.ChooseShipAdapter;
 import com.yjzfirst.bean.DeliveryBean;
+import com.yjzfirst.bean.ReportProductBean;
 import com.yjzfirst.util.IndexConstants;
 import com.yjzfirst.util.PreferencesUtils;
 import com.yjzfirst.util.Util;
@@ -32,6 +36,8 @@ import java.net.URL;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -57,6 +63,7 @@ public class DeliveryActivity extends AppCompatActivity {
 	EditText mdeliveryOrdernumber;
 	ListView mSimpleDetailList;
 	ChooseShipAdapter mAdapter;
+	String lastproduct_content = "";
 	List<DeliveryBean> deliveryBean = new ArrayList<DeliveryBean>();
 	private OutStockTask mdeliveryTask = null;
 
@@ -68,8 +75,11 @@ public class DeliveryActivity extends AppCompatActivity {
 	private qrcodemode qrcodetextmode = qrcodemode.BAR_CODE;
 	private int boxnum = 0;
 	private HashMap<String, HashMap<String, String>> productinfomap = new HashMap<String, HashMap<String, String>>();
-	private HashMap<String, String> locationmap = new HashMap<String, String>();
-	//    private HashMap<String,String> locationmap=new HashMap<String, String>();
+	private HashMap<String, HashMap<String, String>> productidmap = new HashMap<String, HashMap<String, String>>();
+
+	private HashMap<String, HashMap<String, String>> locationmap = new HashMap<String, HashMap<String, String>>();
+	private HashMap<String, String> librarymap = new HashMap<String, String>();
+
 	private ArrayList<Map<String, String>> boxesnum = new ArrayList<Map<String, String>>();
 
 	@Override
@@ -106,10 +116,11 @@ public class DeliveryActivity extends AppCompatActivity {
 //        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
 		mdeliveryOrdernumber = (EditText) findViewById(R.id.delivery_Order_number);
 
+		addTextWatcher();
+
 		mSimpleDetailList = (ListView) findViewById(R.id.delivery_infolist);
-		mAdapter = new ChooseShipAdapter(this, deliveryBean);
-		mSimpleDetailList.setAdapter(mAdapter);
-		setListViewHeightBasedOnChildren(mSimpleDetailList);
+		refreshdatalist();
+
 //        Button mdeliverybarcodebtn = (Button) findViewById(R.id.delivery_bar_code_button);
 //        Button mdeliverylibrarynumberbtn = (Button) findViewById(R.id.delivery_library_number_button);
 //        Button mdeliverybatchnumberbtn = (Button) findViewById(R.id.delivery_batch_number_button);
@@ -124,7 +135,92 @@ public class DeliveryActivity extends AppCompatActivity {
 //            }
 //        });
 	}
+	public void refreshdatalist(){
+		Collections.sort(deliveryBean,idComparator);
+		mAdapter = new ChooseShipAdapter(DeliveryActivity.this, deliveryBean);
+		mSimpleDetailList.setAdapter(mAdapter);
+		setListViewHeightBasedOnChildren(mSimpleDetailList);
+	}
 
+	public void addTextWatcher(){
+		mdeliverybatchnumber.addTextChangedListener(new TextWatcher() {
+			@Override
+			public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+			}
+
+			@Override
+			public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+			}
+
+			@Override
+			public void afterTextChanged(Editable s) {
+
+				if(!mdeliverybatchnumber.getText().toString().equals("")) {
+					GetforminfoTask getforminfotask = new GetforminfoTask();
+					getforminfotask.execute((Void) null);
+				}
+			}
+		});
+		mdeliverylibrarynumber.addTextChangedListener(new TextWatcher() {
+			@Override
+			public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+			}
+
+			@Override
+			public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+			}
+
+			@Override
+			public void afterTextChanged(Editable s) {
+//				mdeliverylibrarynumber.removeTextChangedListener(this);
+				if(!mdeliverybatchnumber.getText().toString().equals("")) {
+					CheckLibrarynumTask checklibrarynumTask = new CheckLibrarynumTask();
+					checklibrarynumTask.execute();
+				}
+//				mdeliverylibrarynumber.addTextChangedListener(this);
+			}
+		});
+		mdeliverybarcode.addTextChangedListener(new TextWatcher() {
+			@Override
+			public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+			}
+
+			@Override
+			public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+			}
+
+			@Override
+			public void afterTextChanged(Editable s) {
+				String content=mdeliverybarcode.getText().toString();
+
+				if(!content.equals("")) {
+					mdeliverybarcode.removeTextChangedListener(this);
+//					String product_code="";
+//					try {
+//						String productinfo[] = content.split(",");
+//						for (int i = 0; i < productinfo.length; i++) {
+//							String info = productinfo[i];
+//							if (i == 0) {
+//								product_code = info;
+//							}
+//						}
+//					}catch (Exception e){
+//						e.printStackTrace();
+//					}
+//					mdeliverybarcode.setText(product_code);
+//					mdeliverybarcode.addTextChangedListener(this);
+					CheckproductinfoTask checkproductinfoTask = new CheckproductinfoTask(content, this);
+					checkproductinfoTask.execute();
+				}
+			}
+		});
+	}
 	public void onClick(View view) {
 		if (view.getId() == R.id.delivery_back) {
 			finish();
@@ -171,20 +267,20 @@ public class DeliveryActivity extends AppCompatActivity {
 
 //                Util.showShortToastMessage(DeliveryActivity.this,"扫描结果为："+ content);
 				if (qrcodetextmode == qrcodemode.BAR_CODE) {
-
+					mdeliverybarcode.setText(content);
 //                    CheckproductinfoTask checkproductinfoTask=new CheckproductinfoTask(content);
-					CheckproductinfoTask checkproductinfoTask = new CheckproductinfoTask(content);
-					checkproductinfoTask.execute();
+//					CheckproductinfoTask checkproductinfoTask = new CheckproductinfoTask(content);
+//					checkproductinfoTask.execute();
 				} else if (qrcodetextmode == qrcodemode.LIBRARY_NUMBER) {
 					mdeliverylibrarynumber.setText(content);
 //                    mdeliverylibrarynumber.setText("9995-0001");
-					CheckLibrarynumTask checklibrarynumTask = new CheckLibrarynumTask();
-					checklibrarynumTask.execute();
+//					CheckLibrarynumTask checklibrarynumTask = new CheckLibrarynumTask();
+//					checklibrarynumTask.execute();//监听了
 				} else if (qrcodetextmode == qrcodemode.BATCH_NUMBER) {
 					mdeliverybatchnumber.setText(content);//
 //                    mdeliverybatchnumber.setText("SD20190625-01");//测试数据
-					GetforminfoTask getforminfotask = new GetforminfoTask();
-					getforminfotask.execute((Void) null);
+//					GetforminfoTask getforminfotask = new GetforminfoTask();
+//					getforminfotask.execute((Void) null);//监听了
 				}
 			}
 
@@ -303,6 +399,7 @@ public class DeliveryActivity extends AppCompatActivity {
 								JSONArray line_data = data.getJSONObject(d).getJSONArray("line_data");
 								for (int i = 0; i < line_data.length(); i++) {
 									DeliveryBean deliver = new DeliveryBean();
+									deliver.sequence = line_data.getJSONObject(i).getString("sequence");
 									deliver.bar_code = line_data.getJSONObject(i).getString("product_code");
 									deliver.product_id = line_data.getJSONObject(i).getString("product_id");
 									deliver.product_specification = line_data.getJSONObject(i).getString("product_name");
@@ -312,7 +409,7 @@ public class DeliveryActivity extends AppCompatActivity {
 
 									HashMap<String, String> map = new HashMap<String, String>();
 									map.put(deliver.bar_code, deliver.product_id);
-									productinfomap.put(deliver.bar_code + "id", map);
+									productidmap.put(deliver.bar_code + "id", map);
 
 									deliveryBean.add(deliver);
 
@@ -339,12 +436,12 @@ public class DeliveryActivity extends AppCompatActivity {
 			if (success) {
 				Util.showShortToastMessage(DeliveryActivity.this, msg);
 				mdeliverylibrarynumber.requestFocus();
-				mAdapter = new ChooseShipAdapter(DeliveryActivity.this, deliveryBean);
-				mSimpleDetailList.setAdapter(mAdapter);
-				setListViewHeightBasedOnChildren(mSimpleDetailList);
+
+				refreshdatalist();
 				mdeliverybatchnumber.setError(null, null);//焦点聚焦时去除错误图标
 			} else {
 				Util.showShortToastMessage(DeliveryActivity.this, msg);
+				mdeliverybatchnumber.requestFocus();
 				mdeliverybatchnumber.setError("出货单号有错");
 			}
 		}
@@ -377,6 +474,13 @@ public class DeliveryActivity extends AppCompatActivity {
 
 
 	}
+
+	public static Comparator idComparator = new Comparator() {
+		@Override
+		public int compare(Object o1, Object o2) {
+			return (Integer.compare(Integer.parseInt(((DeliveryBean) o1).sequence), Integer.parseInt(((DeliveryBean) o2).sequence)));
+		}
+	};
 
 	public class CheckLibrarynumTask extends AsyncTask<Void, Void, Boolean> {
 		String token = "";
@@ -424,8 +528,10 @@ public class DeliveryActivity extends AppCompatActivity {
 							JSONObject locationdata = data.getJSONObject(d);
 							String warehouse_id = locationdata.getString("warehouse_id");
 							String location_id = locationdata.getString("location_id");
-							locationmap.put("warehouse_id", warehouse_id);
-							locationmap.put("location_id", location_id);
+							HashMap<String,String> map=new HashMap<>();
+							map.put("warehouse_id", warehouse_id);
+							map.put("location_id", location_id);
+							locationmap.put(library_num ,map);
 						}
 					}
 //                    ins.close();
@@ -450,6 +556,7 @@ public class DeliveryActivity extends AppCompatActivity {
 				mdeliverylibrarynumber.setError(null, null);//焦点聚焦时去除错误图标
 			} else {
 				Util.showShortToastMessage(DeliveryActivity.this, msg);
+				mdeliverylibrarynumber.requestFocus();
 				mdeliverylibrarynumber.setError("库位编号有错");
 			}
 		}
@@ -486,15 +593,18 @@ public class DeliveryActivity extends AppCompatActivity {
 		String content = "";
 		String token = "";
 		String batch_num = "";
+		String librarynum="";
 		String product_code = "";
 		String success = "";
 		String msg = "";
 		String lot_id = "";
 		String qty = "";
+		TextWatcher textwatcher;
 		int responsecode = 0;
 
-		CheckproductinfoTask(String content) {
+		CheckproductinfoTask(String content,TextWatcher textwatcher) {
 			this.content = content;
+			this.textwatcher=textwatcher;
 			String productinfo[] = content.split(",");
 			for (int i = 0; i < productinfo.length; i++) {
 				String info = productinfo[i];
@@ -519,6 +629,7 @@ public class DeliveryActivity extends AppCompatActivity {
 				}
 			}
 //            product_code=content;
+			librarynum=mdeliverylibrarynumber.getText().toString();
 			batch_num = mdeliverybatchnumber.getText().toString();
 			token = PreferencesUtils.getString(DeliveryActivity.this, token_key, "");
 
@@ -582,21 +693,23 @@ public class DeliveryActivity extends AppCompatActivity {
 		protected void onPostExecute(final Boolean success) {
 			if (success) {
 				Util.showShortToastMessage(DeliveryActivity.this, msg);
+				librarymap.put(this.content,librarynum);
 
-				if (product_code.equals(mdeliverybarcode.getText().toString()) ||
-						"".equals(mdeliverybarcode.getText().toString())) {
+				if (this.content.equals(lastproduct_content) ||
+						boxnum==0) {
 					boxnum++;
 					if (boxesnum.size() > 0) {
 						boxesnum.remove(boxesnum.size() - 1);
 					}
 					mdeliverybarcode.setText(product_code);
 
-					saveBoxNum(product_code, boxnum + "");
+					saveBoxNum(this.content, boxnum + "");
 				} else {
-					saveBoxNum(product_code, boxnum + "");
 					mdeliverybarcode.setText(product_code);
 					boxnum = 1;
+					saveBoxNum(this.content, boxnum + "");
 				}
+				lastproduct_content=this.content;
 				mdeliverynumboxes.setText(boxnum + "");
 				mdeliveryOrdernumber.setText(lot_id);
 				mdeliveryNumberperbox.setText(qty);
@@ -611,6 +724,7 @@ public class DeliveryActivity extends AppCompatActivity {
 				mdeliveryInventoryquantityboxes.setFocusableInTouchMode(false);
 
 				mdeliverybarcode.setError(null, null);//焦点聚焦时去除错误图标
+
 				CheckproductlabelTask checkproductlabelTask = new CheckproductlabelTask(content);
 				checkproductlabelTask.execute();
 
@@ -618,8 +732,10 @@ public class DeliveryActivity extends AppCompatActivity {
 				getinventoryinfoTask.execute();
 			} else {
 				Util.showShortToastMessage(DeliveryActivity.this, msg);
-				mdeliverybarcode.setError("产品编号有错");
+				mdeliverybarcode.requestFocus();
+				mdeliverybarcode.setError(msg);
 			}
+			mdeliverybarcode.addTextChangedListener(textwatcher);
 		}
 
 		@Override
@@ -661,6 +777,7 @@ public class DeliveryActivity extends AppCompatActivity {
 		String lot_name = "";
 		String package_name = "";
 		String qty = "";
+		String content="";
 		int responsecode = 0;
 
 		CheckproductlabelTask(String content) {
@@ -686,6 +803,7 @@ public class DeliveryActivity extends AppCompatActivity {
 				}
 			}
 
+			this.content=content;
 //            product_code=content;
 			batch_num = mdeliverybatchnumber.getText().toString();
 			token = PreferencesUtils.getString(DeliveryActivity.this, token_key, "");
@@ -728,7 +846,7 @@ public class DeliveryActivity extends AppCompatActivity {
 							map.put("package_name", package_name);
 							map.put("lot_id", lot_id);
 							map.put("package_id", package_id);
-							productinfomap.put(product_code, map);
+							productinfomap.put(content, map);
 
 						}
 					}
@@ -749,13 +867,14 @@ public class DeliveryActivity extends AppCompatActivity {
 
 		@Override
 		protected void onPostExecute(final Boolean success) {
-//            if (success) {
+            if (success) {
 //                Util.showShortToastMessage(DeliveryActivity.this,msg);
-//
-//            } else {
-//
-//                Util.showShortToastMessage(DeliveryActivity.this, msg);
-//            }
+                mdeliverybatchnumber.setError(null,null);
+            } else {
+	            mdeliverybatchnumber.requestFocus();
+	            mdeliverybatchnumber.setError(msg);
+                Util.showShortToastMessage(DeliveryActivity.this, msg);
+            }
 		}
 
 		@Override
@@ -1002,7 +1121,6 @@ public class DeliveryActivity extends AppCompatActivity {
 		Map<String, String> map = new HashMap<String, String>();
 		map.put(code, num);
 		boxesnum.add(map);//存起每个产品的数量 提交使用
-
 	}
 
 	public class CheckCodeTask extends AsyncTask<Void, Void, Boolean> {
@@ -1142,14 +1260,12 @@ public class DeliveryActivity extends AppCompatActivity {
 		String barcode = "";
 		String success = "";
 		String msg = "";
-		String warehouse_id = "";
 		String owner_id = "";
-		String package_id = "";
-		String location_id = "";
+//		String package_id = "";
 		String batch_num = "";
-		String lot_id = "";//批号
-		String qty = "";//数量
-		String box_qty = "";//箱数
+//		String lot_id = "";//批号
+//		String qty = "";//数量
+//		String box_qty = "";//箱数
 		String token = "";//token
 		int responsecode = 0;
 
@@ -1159,13 +1275,10 @@ public class DeliveryActivity extends AppCompatActivity {
 			batch_num = mdeliverybatchnumber.getText().toString();
 			barcode = mdeliverybarcode.getText().toString();
 //            String Warehouse=mdeliverylibrarynumber.getText().toString();
-			warehouse_id = locationmap.get("warehouse_id");
-			location_id = locationmap.get("location_id");
-			box_qty = mdeliverynumboxes.getText().toString();
-			qty = mdeliveryNumberperbox.getText().toString();
-			lot_id = productinfomap.get(barcode).get("lot_id");
-			owner_id = productinfomap.get(barcode).get("owner_id").replace("false", "False");
-			package_id = productinfomap.get(barcode).get("package_id");
+
+//			box_qty = mdeliverynumboxes.getText().toString();
+//			qty = mdeliveryNumberperbox.getText().toString();
+
 			token = PreferencesUtils.getString(DeliveryActivity.this, token_key, "");
 
 
@@ -1174,7 +1287,7 @@ public class DeliveryActivity extends AppCompatActivity {
 				if (boxesnum.size() > 0) {
 					boxesnum.remove(boxesnum.size() - 1);
 				}
-				saveBoxNum(barcode, mdeliverynumboxes.getText().toString());
+				saveBoxNum(lastproduct_content, mdeliverynumboxes.getText().toString());
 			}
 
 		}
@@ -1188,33 +1301,76 @@ public class DeliveryActivity extends AppCompatActivity {
 						+ ":" + PreferencesUtils.getString(DeliveryActivity.this, port_key, "8062") +
 						IndexConstants.OUTSTOCK + "?";//+ "token="+PreferencesUtils.getString(DeliveryActivity.this,token_key,"");
 //                "login:","登录帐号","Password":"密码"
-				Map<String, String> mparams = new HashMap<String, String>();
+//				Map<String, String> mparams = new HashMap<String, String>();
 				url = url + "delivery_no=" + batch_num;
 //                mparams.put("login",PreferencesUtils.getString(DeliveryActivity.this,email_key,"8062"));
 //                Print("boxesnum.size():::"+boxesnum.size());
 //                String mparams="";
-				String jsondata = "";
+				String jsondata = "{";
+				String parajsondata = "";
+				String productkey="";
 				for (int i = 0; i < boxesnum.size(); i++) {
-					Print("boxesnum. key:::" + boxesnum.get(i).keySet().toString());
+					Print("productinfomap. key:::" + locationmap.size()+"   "+productinfomap.keySet());
 					Map<String, HashMap<String, Integer>> data
 							= new HashMap<String, HashMap<String, Integer>>();
-					for (String productkey : boxesnum.get(i).keySet()) {
-						String product_id = productinfomap.get(productkey + "id").get(productkey);
+					for (String contentkey : boxesnum.get(i).keySet()) {
+						String qty="";
+						String lot_id = "";
+						String location_id = "";
+						String warehouse_id = "";
+						String package_id = "";
+						String productinfo[] = contentkey.split(",");
+						for (int j = 0; j< productinfo.length; j++) {
+							String info = productinfo[j];
+							if (j == 0) {
+								productkey = info;
+							} else if (j == 1) {
+
+							} else if (j == 2) {
+								qty = info;
+							} else if (j == 3) {
+
+							} else if (j == 4) {
+								lot_id = info;
+							} else if (j == 5) {
+
+							} else if (j == 6) {
+
+							} else if (j == 7) {
+
+							} else if (j == 8) {
+
+							}
+						}
+						warehouse_id = locationmap.get(librarymap.get(contentkey)).get("warehouse_id");
+						location_id = locationmap.get(librarymap.get(contentkey)).get("location_id");
+						lot_id = productinfomap.get(contentkey).get("lot_id");
+						owner_id = productinfomap.get(contentkey).get("owner_id").replace("false", "False");
+						package_id = productinfomap.get(contentkey).get("package_id");
+						HashMap<String,String> produntinfo=productidmap.get(productkey + "id");
+						String product_id = produntinfo.get(productkey);
 						String key = "(" + product_id + "," + warehouse_id + ","
 								+ location_id + "," + lot_id + "," + package_id + "," + owner_id + ")";
-						String boxnum = boxesnum.get(i).get(productkey);
+						String boxnum = boxesnum.get(i).get(contentkey);
 //                        String value="{\"qty\"="+boxnum+",\"box_qty\"="+boxnum+"}}";
 						HashMap<String, Integer> nummap = new HashMap<String, Integer>();
 						nummap.put("qty", Integer.valueOf(qty));
 						nummap.put("box_qty", Integer.valueOf(boxnum));
 						data.put(key, nummap);
 					}
-					jsondata = new Gson().toJson(data);
+					parajsondata = new Gson().toJson(data);
+					parajsondata=parajsondata.substring(1,parajsondata.length()-1);
+					jsondata = jsondata+parajsondata;
+					if(i==(boxesnum.size()-1)){
+						jsondata=jsondata+"}";
+					}else{
+						jsondata=jsondata+",";
+					}
 					System.out.println("jsondata:::" + jsondata);
-					mparams.put("data", jsondata);
-					url = url + "&data=" + jsondata;
+//					mparams.put("data", jsondata);
+//					url = url + "&data=" + jsondata;
 				}
-
+				url = url + "&data=" + jsondata;
 //              mparams.put("delivery_no",batch_num);
 //              JSONObject testjsonObject = new JSONObject(mparams);
 //              System.out.println("输出的结果是：" + testjsonObject);
@@ -1254,10 +1410,32 @@ public class DeliveryActivity extends AppCompatActivity {
 						msg = jsonObject.getString("message");
 						success = jsonObject.getString("success");
 						Print("parse submit json:::" + success);
-//                        JSONObject data =jsonObject.getJSONObject("data");
-//                        String token =data.getString("token");
-//                        JSONArray rights=data.getJSONArray("rights");//"group_app_mrp_finish_in","group_app_mrp_finish_in_confirm","group_app_mrp_move","group_app_sales_delivery"
+						if (success.equals("true")) {
+							deliveryBean= new ArrayList<DeliveryBean>();
+							JSONObject data = jsonObject.getJSONObject("data");
+//							Print(" return:::" + data);
+//							for (int d = 0; d < data.length(); d++) {
+////                        String token =data.getString("line_data");
+								JSONArray line_data = data.getJSONArray("line_data");//data.getJSONObject(d).getJSONArray("line_data");
+								for (int i = 0; i < line_data.length(); i++) {
+									DeliveryBean deliver = new DeliveryBean();
+									deliver.sequence = line_data.getJSONObject(i).getString("sequence");
+									deliver.bar_code = line_data.getJSONObject(i).getString("product_code");
+									deliver.product_id = line_data.getJSONObject(i).getString("product_id");
+									deliver.product_specification = line_data.getJSONObject(i).getString("product_name");
+									deliver.number_applications = line_data.getJSONObject(i).getString("qty");
+									deliver.number_boxes = line_data.getJSONObject(i).getString("box_qty");
+									deliver.numbers = line_data.getJSONObject(i).getString("product_qty");
 
+//									HashMap<String, String> map = new HashMap<String, String>();
+//									map.put(deliver.bar_code, deliver.product_id);
+//									productidmap.put(deliver.bar_code + "id", map);
+
+									deliveryBean.add(deliver);
+
+								}
+//							}
+						}
 					}
 //                    ins.close();
 				}
@@ -1278,7 +1456,7 @@ public class DeliveryActivity extends AppCompatActivity {
 //            }
 
 			// TODO: register the new account here.
-			return success.equals("True");
+			return success.equals("true");
 		}
 
 		@Override
@@ -1294,10 +1472,11 @@ public class DeliveryActivity extends AppCompatActivity {
 //                Intent intent=new Intent(DeliveryActivity.this,MainActivity.class);
 //                DeliveryActivity.this.startActivity(intent);
 //                finish();
-				GetforminfoTask getforminfotask = new GetforminfoTask();
-				getforminfotask.execute((Void) null);
-
-				boxnum = 0;
+//				GetforminfoTask getforminfotask = new GetforminfoTask();
+//				getforminfotask.execute((Void) null);
+				cancleALLdata();
+				refreshdatalist();
+//				boxnum = 0;
 //				mdeliverybatchnumber.setText("");
 //				mdeliverybarcode.setText("");
 //				mdeliverylibrarynumber.setText("");
@@ -1342,7 +1521,21 @@ public class DeliveryActivity extends AppCompatActivity {
 
 
 	}
-
+	@Override
+	public boolean onKeyDown(int keyCode, KeyEvent event) {
+//		Util.showShortToastMessage(EntryWarehouseActivity.this,"keycode:"+keyCode);
+//		mentrynumboxes.setError(boxnum+"keyCode:"+keyCode);
+		if(keyCode==301) {
+			if (mdeliverybatchnumber.isFocused()) {
+				mdeliverybatchnumber.setText("");
+			}else if(mdeliverybarcode.isFocused()){
+				mdeliverybarcode.setText("");
+			}else if(mdeliverylibrarynumber.isFocused()){
+				mdeliverylibrarynumber.setText("");
+			}
+		}
+		return super.onKeyDown(keyCode, event);
+	}
 	String TAG = "Deliveryactivity::";
 
 	public void Print(String s) {

@@ -3,61 +3,76 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/effectRelativeLayout_details"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+            android:gravity="center">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+            android:gravity="center"
         android:layout_marginBottom="5dip"
         android:layout_marginTop="5dip"
         android:orientation="horizontal" >
 
         <TextView
             android:id="@+id/text_barcode"
-            android:layout_width="0dp"
-            android:layout_weight="1"
+            android:layout_width="40dp"
             android:layout_height="wrap_content"
+            android:gravity="center"
             android:textColor="#000000"
             android:textSize="16sp" />
 
         <TextView
             android:id="@+id/text_product_pecification"
             android:layout_width="0dp"
-            android:layout_weight="1"
+            android:layout_weight="2"
             android:layout_height="wrap_content"
+            android:gravity="center"
             android:textColor="#000000"
             android:textSize="16sp" />
 
         <TextView
             android:id="@+id/text_number_applications"
             android:layout_width="0dp"
-            android:layout_weight="1"
+            android:layout_weight="2"
             android:layout_height="wrap_content"
+            android:gravity="center"
             android:textColor="#000000"
             android:textSize="16sp" />
 
         <TextView
             android:id="@+id/text_number_of_boxes"
             android:layout_width="0dp"
-            android:layout_weight="1"
+            android:layout_weight="2"
             android:layout_height="wrap_content"
+            android:gravity="center"
+            android:textColor="#000000"
+            android:textSize="16sp" />
+        <TextView
+            android:id="@+id/listtext_weight"
+            android:layout_width="0dp"
+            android:layout_weight="2"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:textColor="#000000"
+            android:textSize="16sp" />
+        <TextView
+            android:id="@+id/text_box_ware"
+            android:layout_width="0dp"
+            android:layout_weight="2"
+            android:layout_height="wrap_content"
+            android:gravity="center"
             android:textColor="#000000"
             android:textSize="16sp" />
         <TextView
             android:id="@+id/text_numbers"
             android:layout_width="0dp"
-            android:layout_weight="1"
+            android:layout_weight="2"
             android:layout_height="wrap_content"
+            android:gravity="center"
             android:textColor="#000000"
             android:textSize="16sp" />
-        <TextView
-            android:id="@+id/listtext_weight"
-            android:visibility="gone"
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:layout_height="wrap_content"
-            android:textColor="#000000"
-            android:textSize="16sp" />
+
     </LinearLayout>
 
 </RelativeLayout>

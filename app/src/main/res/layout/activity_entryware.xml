@@ -251,6 +251,7 @@
 
                     <CheckBox
                         android:id="@+id/entryform_finalbox"
+                        android:onClick="onClick"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="3" />
@@ -292,7 +293,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="16dp"
                         android:layout_weight="1"
-                        android:text="@string/entry_action_submit"
+                        android:text="@string/action_warehouse"
                         android:textStyle="bold" />
                 </LinearLayout>
 
@@ -314,10 +315,9 @@
                         android:layout_height="wrap_content"
                         android:orientation="horizontal">
                         <TextView
-                            android:layout_width="0dp"
+                            android:layout_width="40dp"
                             android:layout_height="match_parent"
-                            android:text="@string/order_id"
-                            android:layout_weight="1"/>
+                            android:text="@string/order_id"/>
                         <TextView
                             android:layout_width="0dp"
                             android:layout_height="match_parent"
@@ -326,17 +326,33 @@
                         <TextView
                             android:layout_width="0dp"
                             android:layout_height="match_parent"
-                            android:text="@string/report_num"
+                            android:gravity="center"
+                            android:text="@string/number_applications"
                             android:layout_weight="1"/>
                         <TextView
                             android:layout_width="0dp"
                             android:layout_height="match_parent"
                             android:layout_gravity="center_horizontal"
-                            android:text="@string/Number_of_boxes"
+                            android:gravity="center"
+                            android:text="@string/Num_of_boxes"
                             android:layout_weight="1"/>
                         <TextView
                             android:layout_width="0dp"
                             android:layout_height="match_parent"
+                            android:gravity="center"
+                            android:text="@string/entrychoice_num"
+                            android:layout_weight="1"/>
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_gravity="center_horizontal"
+                            android:gravity="center"
+                            android:text="@string/Num_of_boxes"
+                            android:layout_weight="1"/>
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:gravity="center"
                             android:layout_gravity="center_horizontal"
                             android:text="@string/Final_box"
                             android:layout_weight="1"/>

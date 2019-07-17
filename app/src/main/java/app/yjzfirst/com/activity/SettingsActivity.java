@@ -11,13 +11,14 @@ import android.widget.EditText;
 
 import com.yjzfirst.util.PreferencesUtils;
 
+import static com.yjzfirst.util.IndexConstants.db_key;
 import static com.yjzfirst.util.IndexConstants.ip_key;
 import static com.yjzfirst.util.IndexConstants.port_key;
 
 public class SettingsActivity extends AppCompatActivity {
     EditText eip;
     EditText eport;
-
+    EditText edatabase;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -38,7 +39,9 @@ public class SettingsActivity extends AppCompatActivity {
         eip.setText(PreferencesUtils.getString(SettingsActivity.this, ip_key, "120.27.2.177"));
         eport = (EditText) findViewById(R.id.port_edit);
         eport.setText(PreferencesUtils.getString(SettingsActivity.this, port_key, "8062"));
-    }
+        edatabase = (EditText) findViewById(R.id.database_edit);
+        edatabase.setText(PreferencesUtils.getString(SettingsActivity.this, db_key, "demo-efasten"));
+}
 
     public void onClick(View view) {
         if (view.getId() == R.id.settings_back) {
@@ -46,6 +49,7 @@ public class SettingsActivity extends AppCompatActivity {
         } else if (view.getId() == R.id.set_ipport_button) {
             PreferencesUtils.putString(SettingsActivity.this, ip_key, eip.getText().toString());
             PreferencesUtils.putString(SettingsActivity.this, port_key, eport.getText().toString());
+            PreferencesUtils.putString(SettingsActivity.this, db_key, edatabase.getText().toString());
             finish();
         }
     }

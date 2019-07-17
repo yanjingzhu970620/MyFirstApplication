@@ -87,11 +87,17 @@ public class ChooseShipAdapter extends BaseAdapter {
 				.findViewById(R.id.text_number_of_boxes);
 		TextView numbers = (TextView) convertView
 				.findViewById(R.id.text_numbers);
+		TextView text_box_ware = (TextView) convertView
+				.findViewById(R.id.text_box_ware);
+		text_box_ware.setVisibility(View.GONE);
+		TextView listtext_weight = (TextView) convertView
+				.findViewById(R.id.listtext_weight);
+		listtext_weight.setVisibility(View.GONE);
 //		RelativeLayout shipcell = (RelativeLayout) convertView
 //				.findViewById(R.id.effectRelativeLayout_details);
 		final DeliveryBean deliveryproduct = mdeliveryBean.get(position);
-		barcode.setText(Util.CheckNullString(deliveryproduct.bar_code));
-		product_pecification.setText(Util.CheckNullString(deliveryproduct.product_specification));
+		barcode.setText(Util.CheckNullString(deliveryproduct.sequence));
+		product_pecification.setText(Util.CheckNullString(deliveryproduct.bar_code));
 		number_applications.setText( Util.CheckNullString(deliveryproduct.number_applications));
 		number_of_boxes.setText(Util.CheckNullString(deliveryproduct.number_boxes));
 		numbers.setText(Util.CheckNullString(deliveryproduct.numbers));

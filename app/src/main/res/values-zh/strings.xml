@@ -7,8 +7,8 @@
     <string name="check_main">生产报工</string>
     <string name="report_main">生产报工</string>
     <string name="delivery">销售出库</string>
-    <string name="entry_production">生产入库（生产）</string>
-    <string name="entry_warehouse">生产入库（仓库）</string>
+    <string name="entry_production">生产入库(生产)</string>
+    <string name="entry_warehouse">生产入库(仓库)</string>
     <string name="error_field_required">This field is required</string>
     <string name="error_incorrect_password">密码错误</string>
     <string name="error_invalid_email">邮箱地址错误</string>
@@ -23,6 +23,7 @@
     <string name="activity_back">返回</string>
     <string name="prompt_ip">IP</string>
     <string name="prompt_port">端口</string>
+    <string name="prompt_db">数据库</string>
     <string name="product_batch_number">出货单号</string>
     <string name="product_orderid">作业计划号</string>
     <string name="entryin_orderid">入库单号</string>
@@ -30,7 +31,6 @@
     <string name="Number_per_box">每箱数量</string>
     <string name="container_weight">容器重量</string>
     <string name="container_id">容器编号</string>
-    <string name="Number_of_boxes">箱  数</string>
     <string name="Final_box">是尾箱</string>
     <string name="Inventory_quantity_of_boxes">库存箱数</string>
     <string name="Inventory_quantity">库存数量</string>
@@ -47,10 +47,11 @@
     <string name="Delivery_detail">出库明细</string>
     <string name="Bar_code">产品编码</string>
     <string name="current_process">当前工序</string>
-    <string name="number_applications">申请数量</string>
+    <string name="number_applications">申请数</string>
     <string name="Product_Specification">产品规格</string>
-    <string name="numbers">已选数量</string>
+    <string name="numbers">数量</string>
     <string name="report_num">数量</string>
+    <string name="entrychoice_num">已选数</string>
     <string name="title_activity_check">CheckActivity</string>
     <string name="title_activity_delivery">DeliveryActivity</string>
     <string name="title_activity_entry">EntryActivity</string>
@@ -77,4 +78,7 @@
     <string name="entry_isfinalbox">是尾箱</string>
     <string name="entry">入  库</string>
     <string name="entry_warehouse_code">库位号</string>
+    <string name="Num_of_boxes">箱数</string>
+    <string name="Number_of_boxes">已选箱数</string>
+    <string name="entry_time">入库时间</string>
 </resources>

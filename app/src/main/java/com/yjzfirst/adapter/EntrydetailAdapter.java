@@ -28,15 +28,17 @@ import app.yjzfirst.com.activity.EntryFormActivity;
 public class EntrydetailAdapter extends BaseAdapter {
 	private Activity context;
 	private List<EntryProductinfoBean> EntryProductinfoBeans;
+	private String from;
 	/*
 	 * (non-Javadoc)
 	 *
 	 * @see android.widget.Adapter#getCount()
 	 */
 
-	public EntrydetailAdapter(Activity context, List<EntryProductinfoBean> deliveryBean) {
+	public EntrydetailAdapter(Activity context, List<EntryProductinfoBean> deliveryBean,String from) {
 		this.context = context;
 		this.EntryProductinfoBeans = deliveryBean;
+		this.from=from;
 	}
 	@Override
 	public int getCount() {
@@ -89,14 +91,30 @@ public class EntrydetailAdapter extends BaseAdapter {
 				.findViewById(R.id.text_numbers);
 		TextView listtext_weight = (TextView) convertView
 				.findViewById(R.id.listtext_weight);
-		listtext_weight.setVisibility(View.GONE);
+		TextView text_box_ware = (TextView) convertView
+				.findViewById(R.id.text_box_ware);
+
 //		RelativeLayout shipcell = (RelativeLayout) convertView
 //				.findViewById(R.id.effectRelativeLayout_details);
 		final EntryProductinfoBean deliveryproduct = EntryProductinfoBeans.get(position);
 		barcode.setText(Util.CheckNullString(deliveryproduct.sequence));
 		product_pecification.setText(Util.CheckNullString(deliveryproduct.product_code));
-		number_applications.setText( Util.CheckNullString(deliveryproduct.qty));
-		number_of_boxes.setText(Util.CheckNullString(deliveryproduct.apply_box_qty));
+		if(from.equals("EntryFormActivity")) {
+			number_applications.setText(Util.CheckNullString(deliveryproduct.qty));
+			number_of_boxes.setText(Util.CheckNullString(deliveryproduct.apply_box_qty));
+			listtext_weight.setVisibility(View.GONE);
+			text_box_ware.setVisibility(View.GONE);
+		}else if(from.equals("EntryWarehouseActivity")) {
+			number_applications.setText(Util.CheckNullString(deliveryproduct.qty));
+			number_of_boxes.setText(Util.CheckNullString(deliveryproduct.apply_box_qty));
+			listtext_weight.setText(Util.CheckNullString(deliveryproduct.product_qty));
+			text_box_ware.setText(Util.CheckNullString(deliveryproduct.box_qty));
+		}else {
+			number_applications.setText(Util.CheckNullString(deliveryproduct.qty));
+			number_of_boxes.setText(Util.CheckNullString(deliveryproduct.apply_box_qty));
+			listtext_weight.setVisibility(View.GONE);
+			text_box_ware.setVisibility(View.GONE);
+		}
 		if(deliveryproduct.is_tail_box!=null) {
 			if (deliveryproduct.is_tail_box.equals("true")) {
 				numbers.setText("是");

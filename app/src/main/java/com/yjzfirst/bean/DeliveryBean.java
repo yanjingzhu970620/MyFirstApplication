@@ -2,6 +2,7 @@ package com.yjzfirst.bean;
 
 public class DeliveryBean {
 
+	public String sequence;
 public String bar_code;
 public String product_id;
 public String product_specification;

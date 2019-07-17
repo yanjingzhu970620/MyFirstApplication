@@ -1,17 +1,23 @@
 package app.yjzfirst.com.activity;
 
+import android.app.AlertDialog;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.google.gson.annotations.Until;
@@ -23,6 +29,7 @@ import com.yjzfirst.bean.EntryProductinfoBean;
 import com.yjzfirst.bean.ReportFormBean;
 import com.yjzfirst.bean.ReportProductBean;
 import com.yjzfirst.bean.WorkOrderBean;
+import com.yjzfirst.util.DateTimePickerDialog;
 import com.yjzfirst.util.IndexConstants;
 import com.yjzfirst.util.PreferencesUtils;
 import com.yjzfirst.util.Util;
@@ -38,6 +45,8 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -49,155 +58,249 @@ import static com.yjzfirst.util.Util.setListViewHeightBasedOnChildren;
 import static com.yzq.zxinglibrary.common.Constant.CODED_CONTENT;
 
 public class EntryFormActivity extends AppCompatActivity {
-    EditText mentryorderid;
-    EditText mentrybarcode;
-    EditText mentryOrdernumber;
-    EditText mentryNumberperbox;
-    EditText mentrynumboxes;
-    EditText mentrybillnumber;
+	EditText mentryorderid;
+	EditText mentrybarcode;
+	EditText mentryOrdernumber;
+	EditText mentryNumberperbox;
+	EditText mentrynumboxes;
+	EditText mentrybillnumber;
+	TextView text_entrytime;
 	CheckBox finalbox;
 	EntryProductBean productBean;
-	enum qrcodemode  {
+
+	enum qrcodemode {
 		WORKORDER_ID, PRODUCT_CODE
-	};
-	private qrcodemode qrcodetextmode=qrcodemode.WORKORDER_ID;
+	}
+
+	;
+	private qrcodemode qrcodetextmode = qrcodemode.WORKORDER_ID;
 	WorkOrderBean ReportProductBean;
-	String Productcontent="";
-	String Ordername="";
+	String Productcontent = "";
+	String Ordername = "";
+	String startTime = "";
 	ListView mSimpleDetailList;
 	EntrydetailAdapter mAdapter;
-	private HashMap<String,HashMap<String,EntryProductBean>> productinfomap
-			=new HashMap<String, HashMap<String,EntryProductBean>>();
+	private HashMap<String, HashMap<String, EntryProductBean>> productinfomap
+			= new HashMap<String, HashMap<String, EntryProductBean>>();
 	ArrayList<EntryProductinfoBean> EntryProductinfoBeans = new ArrayList<EntryProductinfoBean>();
-//    private CheckCodeTask mentryTask = null;
-    private int boxnum=0;
-	private ArrayList<Map<String,String>> boxesnum=new ArrayList<Map<String,String>>();
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_entryform);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+	//    private CheckCodeTask mentryTask = null;
+	private int boxnum = 0;
+	private ArrayList<Map<String, String>> boxesnum = new ArrayList<Map<String, String>>();
 
-            Window window = EntryFormActivity.this.getWindow();
+	@Override
+	protected void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		setContentView(R.layout.activity_entryform);
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
 
-            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+			Window window = EntryFormActivity.this.getWindow();
 
-            window.setStatusBarColor(Color.BLACK);
+			window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+
+			window.setStatusBarColor(Color.BLACK);
 
 
+			//底部导航栏
 
-            //底部导航栏
+			//window.setNavigationBarColor(activity.getResources().getColor(colorResId));
 
-            //window.setNavigationBarColor(activity.getResources().getColor(colorResId));
-
-        }
-        mentryorderid = (EditText) findViewById(R.id.entryform_orderid);
+		}
+		mentryorderid = (EditText) findViewById(R.id.entryform_orderid);
 //        mentrybatchnumber.addTextChangedListener(shipsWatcher);
-        mentrybarcode = (EditText) findViewById(R.id.entryform_bar_code);
+		mentrybarcode = (EditText) findViewById(R.id.entryform_bar_code);
 //        mentrybarcode.addTextChangedListener(shipsWatcher);
-        mentryOrdernumber = (EditText) findViewById(R.id.entryform_order_number);
+		mentryOrdernumber = (EditText) findViewById(R.id.entryform_order_number);
 //        mentrylibrarynumber.addTextChangedListener(shipsWatcher);
-        mentryNumberperbox = (EditText) findViewById(R.id.entryform_Number_per_box);
-	    mentryNumberperbox.setFocusable(false);
-	    mentryNumberperbox.setFocusableInTouchMode(false);
+		mentryNumberperbox = (EditText) findViewById(R.id.entryform_Number_per_box);
+		mentryNumberperbox.setFocusable(false);
+		mentryNumberperbox.setFocusableInTouchMode(false);
 //        mentryNumberperbox.addTextChangedListener(shipsWatcher);
-        mentrynumboxes = (EditText) findViewById(R.id.entryform_num_boxes);
+		mentrynumboxes = (EditText) findViewById(R.id.entryform_num_boxes);
 //        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        mentrybillnumber = (EditText) findViewById(R.id.entryform_billnumber);
-        finalbox= (CheckBox) findViewById(R.id.entryform_finalbox);
-	    finalbox.setClickable(false);
-	    mSimpleDetailList = (ListView) findViewById(R.id.entry_infolist);
-	    mAdapter = new EntrydetailAdapter(this, EntryProductinfoBeans);
-	    mSimpleDetailList.setAdapter(mAdapter);
-	    setListViewHeightBasedOnChildren(mSimpleDetailList);
-    }
+		text_entrytime = (TextView) findViewById(R.id.text_entryform_time);
+		startTime = getStringDate(System.currentTimeMillis());
+		text_entrytime.setText(startTime);
 
-    public void onClick(View view) {
-        if (view.getId() == R.id.entryform_back) {
-            finish();
-        }else if (view.getId() == R.id.entryform_orderid_button) {
-			qrcodetextmode=qrcodemode.WORKORDER_ID;
-            Util.startQrCode(EntryFormActivity.this);
-//            attemptCheck();
-        }else if(view.getId() == R.id.entryform_bar_code_button){
-			qrcodetextmode=qrcodemode.PRODUCT_CODE;
-			Util.startQrCode(EntryFormActivity.this);
-		}else if(view.getId() == R.id.entryform_scan){
-        	if(!Productcontent.equals("")) {
-		        AddOrderidTask addorderidTask = new AddOrderidTask(Productcontent);
-		        addorderidTask.execute();
-	        }else{
-		        Util.showShortToastMessage(EntryFormActivity.this,"请先扫描产品二维码");
-	        }
-        }else if(view.getId() == R.id.entryform_canclescan){
-	        cancleALLdata();
-        }else if(view.getId() == R.id.entryform_submit_button){
-	        if(!Productcontent.equals("")) {
-		        SubmitOrderTask submitorderTask = new SubmitOrderTask();
-		        submitorderTask.execute();
-	        }else{
-		        Util.showShortToastMessage(EntryFormActivity.this,"请先扫描产品二维码");
-	        }
-        }
-    }
+		addTextWatcher();
 
-    @Override
+		mentrybillnumber = (EditText) findViewById(R.id.entryform_billnumber);
+		finalbox = (CheckBox) findViewById(R.id.entryform_finalbox);
+		finalbox.setClickable(false);
+		mSimpleDetailList = (ListView) findViewById(R.id.entry_infolist);
+		refreshdatalist();
+	}
 
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+	public void addTextWatcher() {
+		mentryorderid.addTextChangedListener(new TextWatcher() {
+			@Override
+			public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
-        super.onActivityResult(requestCode, resultCode, data);
+			}
 
+			@Override
+			public void onTextChanged(CharSequence s, int start, int before, int count) {
 
+			}
 
-        // 扫描二维码/条码回传
-
-        if (requestCode == REQUEST_CODE_SCAN && resultCode == RESULT_OK) {
-
-            if (data != null) {
-
-                String content = data.getStringExtra(CODED_CONTENT);
-
-                Util.showShortToastMessage(EntryFormActivity.this,"扫描结果为："+ content);
-				if(qrcodetextmode==qrcodemode.WORKORDER_ID){
-
-//                    CheckproductinfoTask checkproductinfoTask=new CheckproductinfoTask(content);
-					CheckOrderidTask checkorderidTask=new CheckOrderidTask(content);
+			@Override
+			public void afterTextChanged(Editable s) {
+				String content = mentryorderid.getText().toString();
+				if(!content.equals("")) {
+					mentryorderid.removeTextChangedListener(this);
+					CheckOrderidTask checkorderidTask = new CheckOrderidTask(content, this);
 					checkorderidTask.execute();
-				}else if(qrcodetextmode==qrcodemode.PRODUCT_CODE){
-					CheckProductidTask checkprodyctidTask=new CheckProductidTask(content);
+				}
+
+			}
+		});
+
+		mentrybarcode.addTextChangedListener(new TextWatcher() {
+			@Override
+			public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+			}
+
+			@Override
+			public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+			}
+
+			@Override
+			public void afterTextChanged(Editable s) {
+				String content = mentrybarcode.getText().toString();
+				if(!content.equals("")) {
+					mentrybarcode.removeTextChangedListener(this);
+					CheckProductidTask checkprodyctidTask = new CheckProductidTask(content, this);
 					checkprodyctidTask.execute();
 				}
-            }
+			}
+		});
+	}
 
-        }
+	public void refreshdatalist() {
+		Collections.sort(EntryProductinfoBeans, idComparator);
+		mAdapter = new EntrydetailAdapter(this, EntryProductinfoBeans, "EntryFormActivity");
+		mSimpleDetailList.setAdapter(mAdapter);
+		setListViewHeightBasedOnChildren(mSimpleDetailList);
+	}
 
-    }
+	public void onClick(View view) {
+		if (view.getId() == R.id.entryform_back) {
+			finish();
+		} else if (view.getId() == R.id.entryform_orderid_button) {
+			qrcodetextmode = qrcodemode.WORKORDER_ID;
+			Util.startQrCode(EntryFormActivity.this);
+//            attemptCheck();
+		} else if (view.getId() == R.id.entryform_bar_code_button) {
+			qrcodetextmode = qrcodemode.PRODUCT_CODE;
+			Util.startQrCode(EntryFormActivity.this);
+		} else if (view.getId() == R.id.entry_form_time) {
+			showDateDialog("入库时间", 1);
+		} else if (view.getId() == R.id.entryform_scan) {
+			if (!Productcontent.equals("")) {
+				AddOrderidTask addorderidTask = new AddOrderidTask(Productcontent);
+				addorderidTask.execute();
+			} else {
+				Util.showShortToastMessage(EntryFormActivity.this, "请先扫描产品二维码");
+			}
+		} else if (view.getId() == R.id.entryform_canclescan) {
+			cancleALLdata();
+		} else if (view.getId() == R.id.entryform_submit_button) {
+			if (!mentryorderid.getText().toString().equals("")) {
+				SubmitOrderTask submitorderTask = new SubmitOrderTask();
+				submitorderTask.execute();
+			} else {
+				Util.showShortToastMessage(EntryFormActivity.this, "请先扫描作业计划号");
+			}
+		}
+//        else if(view.getId() == R.id.entryform_finalbox){
+//	        finalbox.setChecked(!finalbox.isChecked());
+//	        if(boxesnum.size()>0) {
+//		        Map<String,String> map=boxesnum.get(boxesnum.size()-1);
+//		        String content="";
+//		        for(String key :map.keySet()) {
+//			        String[] workorderinfo=key.split(",");
+//			        if(workorderinfo.length>7) {
+//				        String checkfinalbox="";
+//				        if(finalbox.isChecked()){
+//					        checkfinalbox="true";
+//				        }else{
+//					        checkfinalbox="false";
+//				        }
+//				        content=workorderinfo[0]+","+workorderinfo[1]+","+workorderinfo[2]
+//						        +","+workorderinfo[3]+","+workorderinfo[4]
+//						        +","+workorderinfo[5]+","+workorderinfo[6]+","+checkfinalbox;
+//			        }
+//		        }
+//		        boxesnum.remove(boxesnum.size() - 1);
+//		        saveBoxNum(content,mentrynumboxes.getText().toString());
+//	        }
+//        }
+	}
 
-	private void cancleALLdata(){
+	@Override
 
-		mentryorderid.setText("");
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+
+		super.onActivityResult(requestCode, resultCode, data);
+
+
+		// 扫描二维码/条码回传
+
+		if (requestCode == REQUEST_CODE_SCAN && resultCode == RESULT_OK) {
+
+			if (data != null) {
+
+				String content = data.getStringExtra(CODED_CONTENT);
+
+				Util.showShortToastMessage(EntryFormActivity.this, "扫描结果为：" + content);
+				if (qrcodetextmode == qrcodemode.WORKORDER_ID) {
+					mentryorderid.setText(content);
+//                    CheckproductinfoTask checkproductinfoTask=new CheckproductinfoTask(content);
+//					CheckOrderidTask checkorderidTask = new CheckOrderidTask(content);
+//					checkorderidTask.execute();
+				} else if (qrcodetextmode == qrcodemode.PRODUCT_CODE) {
+					mentrybarcode.setText(content);
+//					CheckProductidTask checkprodyctidTask = new CheckProductidTask(content);
+//					checkprodyctidTask.execute();
+				}
+			}
+
+		}
+
+	}
+
+	private void cancleALLdata() {
+
+//		mentryorderid.setText("");
 		mentrybarcode.setText("");
 		mentryOrdernumber.setText("");
 		mentryNumberperbox.setText("");
 		mentrynumboxes.setText("");
-		mentrybillnumber.setText("");
-		boxnum=0;
-		productBean=null;
-		ReportProductBean=null;
-		Productcontent="";
+//		mentrybillnumber.setText("");
+		finalbox.setChecked(false);
+
+		boxnum = 0;
+		productBean = null;
+		ReportProductBean = null;
+		Productcontent = "";
 		productinfomap
-				=new HashMap<String, HashMap<String,EntryProductBean>>();
-		boxesnum=new ArrayList<Map<String,String>>();
+				= new HashMap<String, HashMap<String, EntryProductBean>>();
+		boxesnum = new ArrayList<Map<String, String>>();
 		EntryProductinfoBeans = new ArrayList<EntryProductinfoBean>();
+
 	}
 
-	private void saveBoxNum(String code,String num){
-		Map<String,String> map=new HashMap<String,String>();
-		map.put(code,num);
+	private void saveBoxNum(String code, String num) {
+		Map<String, String> map = new HashMap<String, String>();
+		map.put(code, num);
 		boxesnum.add(map);//存起每个产品的数量 提交使用
 
+
+		Print("code::"+code+"   num::"+num);
 	}
-//    private void attemptCheck() {
+
+	//    private void attemptCheck() {
 //        if (mentryTask != null) {
 //            return;
 //        }
@@ -240,10 +343,11 @@ public class EntryFormActivity extends AppCompatActivity {
 //
 //
 //    }
-    public String ip_key="ip";
-    public String port_key="port";
-    private String email_key = "email";
-//    public class CheckCodeTask extends AsyncTask<Void, Void, Boolean> {
+	public String ip_key = "ip";
+	public String port_key = "port";
+	private String email_key = "email";
+
+	//    public class CheckCodeTask extends AsyncTask<Void, Void, Boolean> {
 //        //        String lot_no="";
 //        String location="";
 //        String barcode="";
@@ -394,11 +498,12 @@ public class EntryFormActivity extends AppCompatActivity {
 		String success = "";
 		String msg = "";
 		int responsecode = 0;
-
-		CheckOrderidTask(String content) {
-			String[] workorderinfo=content.split(",");
-			if(workorderinfo.length>1)
-			orderid =  workorderinfo[0];
+		TextWatcher textWatcher;
+		CheckOrderidTask(String content,TextWatcher textWatcher) {
+			this.textWatcher=textWatcher;
+			String[] workorderinfo = content.split(",");
+			if (workorderinfo.length > 1)
+				orderid = workorderinfo[0];
 		}
 
 		@Override
@@ -414,19 +519,6 @@ public class EntryFormActivity extends AppCompatActivity {
 						+ "&workorder_no=" + orderid;
 //                "login:","登录帐号","Password":"密码"
 				Print("workorder_no url:::" + url);
-//                Map<String,String> mparams=new HashMap<String,String>();
-//                mparams.put("login",PreferencesUtils.getString(ReportActivity.this,email_key,"8062"));
-//                mparams.put("lot_no",lot_no);
-//                mparams.put("barcode",barcode);
-//                mparams.put("location",location);
-
-
-//                String postparams = new Gson().toJson(mparams);
-//                postparams=URLEncoder.encode(postparams,"utf-8");
-
-//                String postparams ="{"+"login:",mEmail,"Password:",mPassword}//"login:"+mEmail+"&password:"+mPassword;
-//                byte[] data = postparams.getBytes();
-//                System.err.println("postparams postparams:::"+postparams+data.length);
 				URL posturl = new URL(url);
 				HttpURLConnection conn = (HttpURLConnection) posturl.openConnection();
 				conn.setConnectTimeout(10000);
@@ -476,15 +568,18 @@ public class EntryFormActivity extends AppCompatActivity {
 		protected void onPostExecute(final Boolean success) {
 //			mCheckTask = null;
 //			reloadviewText(success,msg);
-			Util.showShortToastMessage(EntryFormActivity.this,"id验证："+msg);
-			if(success) {
-				mentryorderid.setError(null,null);
+			Util.showShortToastMessage(EntryFormActivity.this, "id验证：" + msg);
+			if (success) {
+				mentrybarcode.requestFocus();
+				mentryorderid.setError(null, null);
 				mentryorderid.setText(orderid);
-				mentryorderid.setFocusable(false);
-				mentryorderid.setFocusableInTouchMode(false);
-			}else{
+//				mentryorderid.setFocusable(false);
+//				mentryorderid.setFocusableInTouchMode(false);
+			} else {
+				mentryorderid.requestFocus();
 				mentryorderid.setError(msg);
 			}
+			mentryorderid.addTextChangedListener(textWatcher);
 		}
 
 		@Override
@@ -524,22 +619,27 @@ public class EntryFormActivity extends AppCompatActivity {
 		String batch_number = "";
 		String success = "";
 		String msg = "";
-		String content="";
-		boolean isfinalbox=false;
+		String content = "";
+		boolean isfinalbox = false;
 		int responsecode = 0;
-
-		CheckProductidTask(String content) {
-			this.content=content;
-			String[] workorderinfo=content.split(",");
-			if(workorderinfo.length>7)
+		TextWatcher textWatcher;
+		CheckProductidTask(String content,TextWatcher textWatcher) {
+			this.textWatcher=textWatcher;
+			String[] workorderinfo = content.split(",");
+			if (workorderinfo.length > 7) {
 				product_code = workorderinfo[0];
-			    num_perbox = workorderinfo[2];
-			    packaging_code= workorderinfo[3];
-			    batch_number = workorderinfo[4];
-			    String checkfinalbox = workorderinfo[7];
-			    if(checkfinalbox.equals("true")){
-				    isfinalbox=true;
-			    }
+				num_perbox = workorderinfo[2];
+				packaging_code = workorderinfo[3];
+				batch_number = workorderinfo[4];
+				String checkfinalbox = workorderinfo[7];
+				if (checkfinalbox.equals("true")) {
+					isfinalbox = true;
+				}
+
+				this.content = workorderinfo[0] + "," + workorderinfo[1] + "," + workorderinfo[2]
+						+ "," + workorderinfo[3] + "," + workorderinfo[4]
+						+ "," + workorderinfo[5] + "," + workorderinfo[6] + "," + checkfinalbox;
+			}
 		}
 
 		@Override
@@ -552,7 +652,7 @@ public class EntryFormActivity extends AppCompatActivity {
 						+ ":" + PreferencesUtils.getString(EntryFormActivity.this, port_key, "8062") +
 						IndexConstants.CHECKENTRYPRODUCTID + "?token=" +
 						PreferencesUtils.getString(EntryFormActivity.this, token_key, "")
-						+ "&product_code=" + product_code+ "&packaging_code=" + packaging_code;
+						+ "&product_code=" + product_code + "&packaging_code=" + packaging_code;
 //                "login:","登录帐号","Password":"密码"
 				Print("workorder_no url:::" + url);
 //                Map<String,String> mparams=new HashMap<String,String>();
@@ -596,10 +696,10 @@ public class EntryFormActivity extends AppCompatActivity {
 						success = jsonObject.getString("success");
 						Print(" return: ReportProductBeans success::" + success);
 						if (success.equals("true")) {
-							productBean=parseEntryproductbean(jsonObject);
-							HashMap<String,EntryProductBean> map=new HashMap<String, EntryProductBean>();
-							map.put(productBean.product_code,productBean);
-							productinfomap.put(productBean.product_code+"id",map);
+							productBean = parseEntryproductbean(jsonObject);
+							HashMap<String, EntryProductBean> map = new HashMap<String, EntryProductBean>();
+							map.put(content, productBean);
+							productinfomap.put(content + "id", map);
 						}
 					}
 //                    String s = ins.toString();
@@ -618,35 +718,37 @@ public class EntryFormActivity extends AppCompatActivity {
 
 		@Override
 		protected void onPostExecute(final Boolean success) {
-			Util.showShortToastMessage(EntryFormActivity.this,msg);
-			if(success) {
-				mentrybarcode.setError(null,null);
-				if(product_code.equals(mentrybarcode.getText().toString())||
-						"".equals(mentrybarcode.getText().toString())){
+			Util.showShortToastMessage(EntryFormActivity.this, msg);
+			if (success) {
+				mentrybarcode.setError(null, null);
+				if (boxnum == 0 || Productcontent.equals(content)) {
 					boxnum++;
-					if(boxesnum.size()>0) {
+					if (boxesnum.size() > 0) {
 						boxesnum.remove(boxesnum.size() - 1);
-					}else{
-						mentrybarcode.setText(product_code);
 					}
-					saveBoxNum(product_code,boxnum+"");
-				}else {
-					saveBoxNum(product_code,boxnum+"");
+						mentrybarcode.setText(product_code);
+
+					saveBoxNum(content, boxnum + "");
+				} else {
 					mentrybarcode.setText(product_code);
-					boxnum=1;
+					boxnum = 1;
+					saveBoxNum(content, boxnum + "");
 				}
 
-				mentrynumboxes.setText(boxnum+"");
+				mentrynumboxes.setText(boxnum + "");
 
 				mentryOrdernumber.setText(batch_number);
 				mentryOrdernumber.setFocusable(false);
 				mentryOrdernumber.setFocusableInTouchMode(false);
 				mentryNumberperbox.setText(num_perbox);
 				finalbox.setChecked(isfinalbox);
-				Productcontent=content;
-			}else{
+				Productcontent = content;
+				Print("Productcontent"+Productcontent);
+			} else {
+				mentrybarcode.requestFocus();
 				mentrybarcode.setError(msg);
 			}
+			mentrybarcode.addTextChangedListener(textWatcher);
 		}
 
 		@Override
@@ -679,45 +781,47 @@ public class EntryFormActivity extends AppCompatActivity {
 	}
 
 	public class AddOrderidTask extends AsyncTask<Void, Void, Boolean> {
-		String orderid="";
-		String date="";
+		String orderid = "";
+		String date = "";
 		String product_code = "";
-//		String packaging_code = "";
-        String packaging_code_id = "";
+		//		String packaging_code = "";
+		String packaging_code_id = "";
 		String num_perbox = "";
 		String batch_number = "";
-		String product_number ="";
+		String product_number = "";
 		String packaging_id = "";
 		String success = "";
 		String isfinal = "false";
 		String msg = "";
-		String content="";
+		String content = "";
 		int responsecode = 0;
-		SimpleDateFormat sdf = new SimpleDateFormat(
-				"yyyy-MM-dd");
-		AddOrderidTask(String content) {
-			orderid=mentryorderid.getText().toString();
-			date=sdf.format(System.currentTimeMillis());
-			////data={"(产品id, 包装数量, 包装方案id, 批号合并名称, 序列号名称, 包装条码id)":{"qty":7000, "box_qty":10},}
-			String[] workorderinfo=content.split(",");
-			//二维码内容：产品编码+产品批次+包装数量+包装方案编码+批号合并名称+序列号名称+包装条码id+是尾箱  中间分隔符分开
-			if(workorderinfo.length>1) {
-				product_code = workorderinfo[0];
-				num_perbox = workorderinfo[2];
-//				packaging_code = workorderinfo[3];
-				batch_number = workorderinfo[4];
-				product_number = workorderinfo[5];
-				packaging_code_id = workorderinfo[6];
-				if(finalbox.isChecked()){
-					isfinal="true";
-				}
-			}
-			if(!(boxnum+"").equals(mentrynumboxes.getText().toString())){
 
-				if(boxesnum.size()>0) {
+		AddOrderidTask(String content) {
+			orderid = mentryorderid.getText().toString();
+			date = startTime;
+			////data={"(产品id, 包装数量, 包装方案id, 批号合并名称, 序列号名称, 包装条码id)":{"qty":7000, "box_qty":10},}
+			String[] workorderinfo = content.split(",");
+			//二维码内容：产品编码+产品批次+包装数量+包装方案编码+批号合并名称+序列号名称+包装条码id+是尾箱  中间分隔符分开
+			if (workorderinfo.length > 7) {
+				product_code = workorderinfo[0];
+//				num_perbox = workorderinfo[2];
+//				packaging_code = workorderinfo[3];
+//				batch_number = workorderinfo[4];
+//				product_number = workorderinfo[5];
+//				packaging_code_id = workorderinfo[6];
+				if (finalbox.isChecked()) {
+					isfinal = "true";
+				}
+				this.content = workorderinfo[0] + "," + workorderinfo[1] + "," + workorderinfo[2]
+						+ "," + workorderinfo[3] + "," + workorderinfo[4]
+						+ "," + workorderinfo[5] + "," + workorderinfo[6] + "," + isfinal;
+			}
+			if (!(boxnum + "").equals(mentrynumboxes.getText().toString())) {
+
+				if (boxesnum.size() > 0) {
 					boxesnum.remove(boxesnum.size() - 1);
 				}
-				saveBoxNum(product_code,mentrynumboxes.getText().toString());
+				saveBoxNum(this.content, mentrynumboxes.getText().toString());
 			}
 		}
 
@@ -731,39 +835,67 @@ public class EntryFormActivity extends AppCompatActivity {
 						+ ":" + PreferencesUtils.getString(EntryFormActivity.this, port_key, "8062") +
 						IndexConstants.ADDORDERID + "?token=" +
 						PreferencesUtils.getString(EntryFormActivity.this, token_key, "")
-						+ "&workorder_no=" + orderid+ "&date=" + date;
-//                "login:","登录帐号","Password":"密码"
+						+ "&workorder_no=" + orderid + "&date=" + date;
 
-				Map<String,String> mparams=new HashMap<String,String>();
 //				url=url+"workorder_no="+batch_num;
 //                mparams.put("login",PreferencesUtils.getString(DeliveryActivity.this,email_key,"8062"));
 //                Print("boxesnum.size():::"+boxesnum.size());
 //                String mparams="";
 				//data={"(产品id, 包装数量, 包装方案id, 批号合并名称, 序列号名称, 包装条码id)":{"qty":7000, "box_qty":10},}
-				String jsondata="";
-				for(int i=0;i<boxesnum.size();i++){
-					Print("boxesnum. key:::"+boxesnum.get(i).keySet().toString());
-					Map<String,HashMap<String,Integer>> data
-							=new HashMap<String,HashMap<String,Integer>>();
-					for(String productkey : boxesnum.get(i).keySet()){
-						String product_id=productinfomap.get(productkey+"id").get(productkey).product_id;
-						packaging_id=productinfomap.get(productkey+"id").get(productkey).packaging_id;
-						String key="("+product_id+","+num_perbox+","
-								+packaging_id+",\""+batch_number+"\",\""+product_number+"\","+packaging_code_id+",\""+isfinal+"\""+")";
-						String boxnum=boxesnum.get(i).get(productkey);
+				String jsondata = "{";
+				String parajsondata = "";
+				for (int i = 0; i < boxesnum.size(); i++) {
+					Map<String, HashMap<String, Integer>> data
+							= new HashMap<String, HashMap<String, Integer>>();
+					for (String contentkey : boxesnum.get(i).keySet()) {
+						String productkey = "";
+						String checkfinalbox = "false";
+						String num_perbox="";
+						String batch_number="";
+						String packaging_id="";
+						String product_number="";
+						String packaging_code_id="";
+						String[] workorderinfo = contentkey.split(",");
+						//二维码内容：产品编码+产品批次+包装数量+包装方案编码+批号合并名称+序列号名称+包装条码id+是尾箱  中间分隔符分开
+						if (workorderinfo.length > 7) {
+							productkey = workorderinfo[0];
+							num_perbox = workorderinfo[2];
+							batch_number = workorderinfo[4];
+							product_number= workorderinfo[5];
+							packaging_code_id = workorderinfo[6];
+							checkfinalbox = workorderinfo[7];
+//							if (checkfinalbox.equals("true")) {
+//								isfinalbox = true;
+//							}
+						}
+						Print("productinfomap. key:::" + productinfomap.keySet().toString());
+						HashMap<String, EntryProductBean> productinfo = productinfomap.get(contentkey + "id");
+						String product_id = productinfo.get(contentkey).product_id;
+						packaging_id = productinfo.get(contentkey).packaging_id;
+						String key = "(" + product_id + "," + num_perbox + ","
+								+ packaging_id + ",\"" + batch_number + "\",\"" + product_number + "\"," + packaging_code_id + ",\"" + checkfinalbox + "\"" + ")";
+						String boxnum = boxesnum.get(i).get(contentkey);
 //                        String value="{\"qty\"="+boxnum+",\"box_qty\"="+boxnum+"}}";
-						HashMap<String,Integer> nummap=new HashMap<String,Integer>();
-						nummap.put("qty",Integer.valueOf(num_perbox));
-						nummap.put("box_qty",Integer.valueOf(boxnum));
-						data.put(key,nummap);
+						System.out.println("num_perbox::" + num_perbox + " boxnum:::" + boxnum);
+						HashMap<String, Integer> nummap = new HashMap<String, Integer>();
+						nummap.put("qty", Integer.valueOf(num_perbox));
+						nummap.put("box_qty", Integer.valueOf(boxnum));
+						data.put(key, nummap);
 					}
-					jsondata=new Gson().toJson(data);
-					System.out.println("jsondata:::"+jsondata);
-					mparams.put("data",jsondata);
-					url=url+"&data="+jsondata;
-				}
+					parajsondata = new Gson().toJson(data);
+					parajsondata = parajsondata.substring(1, parajsondata.length() - 1);
+					jsondata = jsondata + parajsondata;
+					if (i == (boxesnum.size() - 1)) {
+						jsondata = jsondata + "}";
+					} else {
+						jsondata = jsondata + ",";
+					}
 
-				Print("workorder_no url:::" + url);
+
+				}
+				Print("jsondata url:::" + url);
+				url = url + "&data=" + jsondata;
+				Print("addorderid url:::" + url);
 				URL posturl = new URL(url);
 				HttpURLConnection conn = (HttpURLConnection) posturl.openConnection();
 				conn.setConnectTimeout(10000);
@@ -794,7 +926,7 @@ public class EntryFormActivity extends AppCompatActivity {
 						if (success.equals("true")) {
 							Ordername = parseEntryordername(jsonObject);
 							EntryProductinfoBeans = new ArrayList<EntryProductinfoBean>();
-							parseReportproduct(jsonObject);
+							parsescanSuccessproduct(jsonObject);
 						}
 					}
 //                    String s = ins.toString();
@@ -813,21 +945,21 @@ public class EntryFormActivity extends AppCompatActivity {
 
 		@Override
 		protected void onPostExecute(final Boolean success) {
-			Util.showShortToastMessage(EntryFormActivity.this,msg);
-			if(success) {
-				boxnum=0;
-				boxesnum=new ArrayList<Map<String,String>>();
-				mentrybillnumber.setError(null,null);
+			Util.showShortToastMessage(EntryFormActivity.this, msg);
+			if (success) {
+				boxnum = 0;
+				boxesnum = new ArrayList<Map<String, String>>();
+				mentrybillnumber.setError(null, null);
 				mentrybillnumber.setText(Ordername);
 
-				mAdapter = new EntrydetailAdapter(EntryFormActivity.this, EntryProductinfoBeans);
-				mSimpleDetailList.setAdapter(mAdapter);
-				setListViewHeightBasedOnChildren(mSimpleDetailList);
+				refreshdatalist();
+				cancleALLdata();
 //				mentryorderid.setText(product_code);
 //				mentryOrdernumber.setText(batch_number);
 //				mentryNumberperbox.setText(num_perbox);
 //				Productcontent=content;
-			}else{
+			} else {
+				mentrybillnumber.requestFocus();
 				mentrybillnumber.setError(msg);
 			}
 		}
@@ -862,7 +994,7 @@ public class EntryFormActivity extends AppCompatActivity {
 	}
 
 	public class SubmitOrderTask extends AsyncTask<Void, Void, Boolean> {
-//		String orderid="";
+		//		String orderid="";
 //		String date="";
 //		String product_code = "";
 //		//		String packaging_code = "";
@@ -873,10 +1005,11 @@ public class EntryFormActivity extends AppCompatActivity {
 //		String packaging_id = "";
 		String success = "";
 		String msg = "";
-		String content="";
+		String content = "";
 		int responsecode = 0;
 		SimpleDateFormat sdf = new SimpleDateFormat(
 				"yyyy-mm-dd");
+
 		SubmitOrderTask() {
 //			orderid=mentryorderid.getText().toString();
 //			date=sdf.format(new Date());
@@ -944,6 +1077,8 @@ public class EntryFormActivity extends AppCompatActivity {
 						Print(" return: ReportProductBeans success::" + success);
 						if (success.equals("true")) {
 //							productBean=parseEntryproductbean(jsonObject);
+							EntryProductinfoBeans = new ArrayList<EntryProductinfoBean>();
+							parseSuccessproduct(jsonObject);
 						}
 					}
 //                    String s = ins.toString();
@@ -962,16 +1097,16 @@ public class EntryFormActivity extends AppCompatActivity {
 
 		@Override
 		protected void onPostExecute(final Boolean success) {
-			Util.showShortToastMessage(EntryFormActivity.this,msg);
-			if(success) {
+			Util.showShortToastMessage(EntryFormActivity.this, msg);
+			if (success) {
 //				cancleALLdata();
 //				mentryorderid.setText(product_code);
 //				mentryOrdernumber.setText(batch_number);
 //				mentryNumberperbox.setText(num_perbox);
 //				Productcontent=content;
 
-				GetOrderinfoTask getinfoTask = new GetOrderinfoTask(mentrybillnumber.getText().toString());
-				getinfoTask.execute();
+//				GetOrderinfoTask getinfoTask = new GetOrderinfoTask(mentrybillnumber.getText().toString());
+//				getinfoTask.execute();
 
 				cancleALLdata();
 			}
@@ -1012,8 +1147,24 @@ public class EntryFormActivity extends AppCompatActivity {
 			dataarr = jsonObject.getJSONArray("data");
 			for (int i = 0; i < dataarr.length(); i++) {
 				JSONObject reprotformdataObject = dataarr.getJSONObject(i);
-				String name=reprotformdataObject.getString("name");
-				return name;
+//				ReportFormBean ReportFormBean = beanParseUtility.parse(reprotformdataObject, ReportFormBean.class);
+//				ReportFormBeans.add(ReportFormBean);
+//				ReportProductBean ReportProductdataBean =
+//						beanParseUtility.parse(reprotformdataObject, ReportProductBean.class);
+//				ReportProductBeans.add(ReportProductdataBean);
+				if(reprotformdataObject.has("line_data")) {
+					JSONArray linedataarr = reprotformdataObject.getJSONArray("line_data");
+					for (int j = 0; j < linedataarr.length(); j++) {
+						JSONObject reprotformlinedataObject = linedataarr.getJSONObject(j);
+						String name = reprotformlinedataObject.getString("name");
+						return name;
+					}
+				}
+//				if(reprotformdataObject.has("line_data")) {
+////					JSONObject reprotformdataObject = dataarr.getJSONObject(i);
+//					String name = reprotformdataObject.getString("name");
+//					return name;
+//				}
 //				ReportFormBean ReportFormBean = beanParseUtility.parse(reprotformdataObject, ReportFormBean.class);
 //				ReportFormBeans.add(ReportFormBean);
 //				if(reprotformdataObject.has("line_data")) {
@@ -1032,7 +1183,6 @@ public class EntryFormActivity extends AppCompatActivity {
 		}
 		return"";
 	}
-
 	public class GetOrderinfoTask extends AsyncTask<Void, Void, Boolean> {
 		//        String lot_no="";
 		String orderid = "";
@@ -1041,7 +1191,7 @@ public class EntryFormActivity extends AppCompatActivity {
 		int responsecode = 0;
 
 		GetOrderinfoTask(String content) {
-			orderid =  content;
+			orderid = content;
 		}
 
 		@Override
@@ -1121,18 +1271,16 @@ public class EntryFormActivity extends AppCompatActivity {
 		protected void onPostExecute(final Boolean success) {
 //			mCheckTask = null;
 //			reloadviewText(success,msg);
-			Util.showShortToastMessage(EntryFormActivity.this,msg);
-			if(success) {
-				mentrybillnumber.setError(null,null);
+			Util.showShortToastMessage(EntryFormActivity.this, msg);
+			if (success) {
+				mentrybillnumber.setError(null, null);
 //				mentrybillnumber.setText(orderid);
 //				mentryorderid.setFocusable(false);
 //				mentryorderid.setFocusableInTouchMode(false);
 
-
-				mAdapter = new EntrydetailAdapter(EntryFormActivity.this, EntryProductinfoBeans);
-				mSimpleDetailList.setAdapter(mAdapter);
-				setListViewHeightBasedOnChildren(mSimpleDetailList);
-			}else{
+				refreshdatalist();
+			} else {
+				mentrybillnumber.requestFocus();
 				mentrybillnumber.setError(msg);
 			}
 		}
@@ -1343,8 +1491,8 @@ public class EntryFormActivity extends AppCompatActivity {
 		JSONObject dataobj = null;
 		try {
 			dataobj = jsonObject.getJSONObject("data");
-				EntryProductBean ReportProductBean = beanParseUtility.parse(dataobj, EntryProductBean.class);
-				return ReportProductBean;
+			EntryProductBean ReportProductBean = beanParseUtility.parse(dataobj, EntryProductBean.class);
+			return ReportProductBean;
 
 		} catch (JSONException e) {
 			e.printStackTrace();
@@ -1363,7 +1511,7 @@ public class EntryFormActivity extends AppCompatActivity {
 //				ReportProductBean ReportProductdataBean =
 //						beanParseUtility.parse(reprotformdataObject, ReportProductBean.class);
 //				ReportProductBeans.add(ReportProductdataBean);
-				if(reprotformdataObject.has("line_data")) {
+				if (reprotformdataObject.has("line_data")) {
 					JSONArray linedataarr = reprotformdataObject.getJSONArray("line_data");
 					for (int j = 0; j < linedataarr.length(); j++) {
 						JSONObject reprotformlinedataObject = linedataarr.getJSONObject(j);
@@ -1378,8 +1526,112 @@ public class EntryFormActivity extends AppCompatActivity {
 			e.printStackTrace();
 		}
 	}
-    String TAG="Entryactivity::";
-    public void Print(String s){
-        System.out.println(TAG+s);
-    }
+
+
+	protected void parsescanSuccessproduct(JSONObject jsonObject) {
+		JSONArray dataarr = null;
+		try {
+			dataarr = jsonObject.getJSONArray("data");
+			for (int i = 0; i < dataarr.length(); i++) {
+				JSONObject reprotformdataObject = dataarr.getJSONObject(i);
+//				ReportFormBean ReportFormBean = beanParseUtility.parse(reprotformdataObject, ReportFormBean.class);
+//				ReportFormBeans.add(ReportFormBean);
+//				ReportProductBean ReportProductdataBean =
+//						beanParseUtility.parse(reprotformdataObject, ReportProductBean.class);
+//				ReportProductBeans.add(ReportProductdataBean);
+//				if(reprotformdataObject.has("line_data")) {
+			JSONArray linedataarr = reprotformdataObject.getJSONArray("line_data");
+			for (int j = 0; j < linedataarr.length(); j++) {
+				JSONObject reprotformlinedataObject = linedataarr.getJSONObject(j);
+				EntryProductinfoBean ReportProductlineBean =
+						beanParseUtility.parse(reprotformlinedataObject, EntryProductinfoBean.class);
+				EntryProductinfoBeans.add(ReportProductlineBean);
+			}
+
+
+			}
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+	}
+
+	protected void parseSuccessproduct(JSONObject jsonObject) {
+//		JSONArray dataarr = null;
+		try {
+//			dataarr = jsonObject.getJSONArray("data");
+//			for (int i = 0; i < dataarr.length(); i++) {
+			JSONObject reprotformdataObject = jsonObject.getJSONObject("data");
+//				ReportFormBean ReportFormBean = beanParseUtility.parse(reprotformdataObject, ReportFormBean.class);
+//				ReportFormBeans.add(ReportFormBean);
+//				ReportProductBean ReportProductdataBean =
+//						beanParseUtility.parse(reprotformdataObject, ReportProductBean.class);
+//				ReportProductBeans.add(ReportProductdataBean);
+//				if(reprotformdataObject.has("line_data")) {
+			JSONArray linedataarr = reprotformdataObject.getJSONArray("line_data");
+			for (int j = 0; j < linedataarr.length(); j++) {
+				JSONObject reprotformlinedataObject = linedataarr.getJSONObject(j);
+				EntryProductinfoBean ReportProductlineBean =
+						beanParseUtility.parse(reprotformlinedataObject, EntryProductinfoBean.class);
+				EntryProductinfoBeans.add(ReportProductlineBean);
+			}
+
+
+//			}
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+	}
+	String TAG = "Entryactivity::";
+
+	public void Print(String s) {
+		System.out.println(TAG + s);
+	}
+
+	public static Comparator idComparator = new Comparator() {
+		@Override
+		public int compare(Object o1, Object o2) {
+			return (Integer.compare(Integer.parseInt(((EntryProductinfoBean) o1).sequence), Integer.parseInt(((EntryProductinfoBean) o2).sequence)));
+		}
+	};
+
+	public void showDateDialog(final String tip, final int i) {
+		DateTimePickerDialog dialog = new DateTimePickerDialog(this,
+				System.currentTimeMillis());
+		dialog.setOnDateTimeSetListener(new DateTimePickerDialog.OnDateTimeSetListener() {
+			public void OnDateTimeSet(AlertDialog dialog, long date) {
+				Toast.makeText(EntryFormActivity.this,
+						tip + getStringDate(date), Toast.LENGTH_LONG).show();
+				switch (i) {
+					case 1:
+						startTime = getStringDate(date);
+						text_entrytime.setText(startTime);
+						break;
+					case 2:
+//						endTime = getStringDate(date);
+//						mTextEndTime.setText(endTime);
+						break;
+				}
+			}
+		});
+		dialog.show();
+	}
+
+	public static String getStringDate(Long date) {
+		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+		String dateString = formatter.format(date);
+		return dateString;
+	}
+	@Override
+	public boolean onKeyDown(int keyCode, KeyEvent event) {
+//		Util.showShortToastMessage(EntryWarehouseActivity.this,"keycode:"+keyCode);
+//		mentrynumboxes.setError(boxnum+"keyCode:"+keyCode);
+		if(keyCode==301) {
+			if (mentryorderid.isFocused()) {
+				mentryorderid.setText("");
+			}  else if (mentrybarcode.isFocused()) {
+				mentrybarcode.setText("");
+			}
+		}
+		return super.onKeyDown(keyCode, event);
+	}
 }

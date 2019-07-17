@@ -76,7 +76,10 @@
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
                         android:layout_weight="1"
-                        android:gravity="center"
+                        android:gravity="right"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginEnd="3dp"
+                        android:layout_marginTop="10dp"
                         android:text="@string/report_cardid" />
 
                     <EditText
@@ -109,7 +112,10 @@
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
                         android:layout_weight="1"
-                        android:gravity="center"
+                        android:gravity="right"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginEnd="3dp"
+                        android:layout_marginTop="10dp"
                         android:text="@string/current_process" />
 
                     <EditText
@@ -133,7 +139,10 @@
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
                         android:layout_weight="1"
-                        android:gravity="center"
+                        android:gravity="right"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginEnd="3dp"
+                        android:layout_marginTop="10dp"
                         android:text="@string/report_state" />
 
                     <EditText
@@ -157,14 +166,25 @@
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
                         android:layout_weight="1"
-                        android:gravity="center"
+                        android:gravity="right"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginEnd="3dp"
+                        android:layout_marginTop="10dp"
                         android:text="@string/container_id" />
-
+                    <TextView
+                        android:id="@+id/text_container_id"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:gravity="right"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginEnd="3dp"
+                        android:layout_marginTop="10dp"/>
                     <EditText
                         android:id="@+id/edittext_container_id"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_weight="3"
+                        android:layout_weight="2"
                         android:digits="1234567890."
                         android:inputType="phone|number"
                         android:maxLines="1"
@@ -183,14 +203,25 @@
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
                         android:layout_weight="1"
-                        android:gravity="center"
+                        android:gravity="right"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginEnd="3dp"
+                        android:layout_marginTop="10dp"
                         android:text="@string/container_weight" />
-
+                    <TextView
+                        android:id="@+id/text_container_weight"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:gravity="right"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginEnd="3dp"
+                        android:layout_marginTop="10dp"/>
                     <EditText
                         android:id="@+id/edittext_container_weight"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_weight="3"
+                        android:layout_weight="2"
                         android:digits="1234567890."
                         android:inputType="phone|number"
                         android:maxLines="1"
@@ -209,14 +240,25 @@
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
                         android:layout_weight="1"
-                        android:gravity="center"
+                        android:gravity="right"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginEnd="3dp"
+                        android:layout_marginTop="10dp"
                         android:text="@string/report_thousand_weight" />
-
+                    <TextView
+                        android:id="@+id/text_thousand_weight"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:gravity="right"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginEnd="3dp"
+                        android:layout_marginTop="10dp"/>
                     <EditText
                         android:id="@+id/edit_thousand_weight"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_weight="3"
+                        android:layout_weight="2"
                         android:digits="1234567890."
                         android:inputType="phone|number"
                         android:maxLines="1"
@@ -234,14 +276,25 @@
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
                         android:layout_weight="1"
-                        android:gravity="center"
+                        android:gravity="right"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginEnd="3dp"
+                        android:layout_marginTop="10dp"
                         android:text="@string/gross_weight" />
-
+                    <TextView
+                        android:id="@+id/text_gross_weight"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:gravity="right"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginEnd="3dp"
+                        android:layout_marginTop="10dp"/>
                     <EditText
                         android:id="@+id/edit_gross_weight"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_weight="3"
+                        android:layout_weight="2"
                         android:digits="1234567890."
                         android:inputType="phone|number"
                         android:maxLines="1"
@@ -259,14 +312,25 @@
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
                         android:layout_weight="1"
-                        android:gravity="center"
+                        android:gravity="right"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginEnd="3dp"
+                        android:layout_marginTop="10dp"
                         android:text="@string/waste" />
-
+                    <TextView
+                        android:id="@+id/text_waste"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:gravity="right"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginEnd="3dp"
+                        android:layout_marginTop="10dp"/>
                     <EditText
                         android:id="@+id/edit_waste"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_weight="3"
+                        android:layout_weight="2"
                         android:digits="1234567890."
                         android:inputType="phone|number"
                         android:maxLines="1"
@@ -285,14 +349,25 @@
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
                         android:layout_weight="1"
-                        android:gravity="center"
+                        android:gravity="right"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginEnd="3dp"
+                        android:layout_marginTop="10dp"
                         android:text="@string/net_weight" />
-
+                    <TextView
+                        android:id="@+id/text_net_weight"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:gravity="right"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginEnd="3dp"
+                        android:layout_marginTop="10dp"/>
                     <EditText
                         android:id="@+id/edit_net_weight"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_weight="3"
+                        android:layout_weight="2"
                         android:digits="1234567890."
                         android:inputType="phone|number"
                         android:maxLines="1"
@@ -311,14 +386,25 @@
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
                         android:layout_weight="1"
-                        android:gravity="center"
+                        android:gravity="right"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginEnd="3dp"
+                        android:layout_marginTop="10dp"
                         android:text="@string/report_num" />
-
+                    <TextView
+                        android:id="@+id/text_report_num"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:gravity="right"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginEnd="3dp"
+                        android:layout_marginTop="10dp"/>
                     <EditText
                         android:id="@+id/edit_report_num"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_weight="3"
+                        android:layout_weight="2"
                         android:digits="1234567890."
                         android:inputType="phone|number"
                         android:maxLines="1"
@@ -441,10 +527,9 @@
                         android:layout_height="wrap_content"
                         android:orientation="horizontal">
                         <TextView
-                            android:layout_width="0dp"
+                            android:layout_width="40dp"
                             android:layout_height="match_parent"
-                            android:text="@string/order_id"
-                            android:layout_weight="1"/>
+                            android:text="@string/order_id"/>
                         <TextView
                             android:layout_width="0dp"
                             android:layout_height="match_parent"

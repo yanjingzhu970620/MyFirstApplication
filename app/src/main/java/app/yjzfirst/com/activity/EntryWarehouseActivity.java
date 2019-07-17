@@ -6,6 +6,9 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -38,6 +41,8 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -108,14 +113,85 @@ public class EntryWarehouseActivity extends AppCompatActivity {
 		mentrynumboxes = (EditText) findViewById(R.id.entryform_num_boxes);
 //        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
 
+		addTextWatcher();
+
 		finalbox= (CheckBox) findViewById(R.id.entryform_finalbox);
 		finalbox.setClickable(false);
 		mSimpleDetailList = (ListView) findViewById(R.id.entry_infolist);
-		mAdapter = new EntrydetailAdapter(this, EntryProductinfoBeans);
+		refreshdatalist();
+	}
+
+	public void addTextWatcher(){
+		mentryorderid.addTextChangedListener(new TextWatcher() {
+			@Override
+			public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+			}
+
+			@Override
+			public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+			}
+
+			@Override
+			public void afterTextChanged(Editable s) {
+				String content=mentryorderid.getText().toString();
+				if(!content.equals("")) {
+					CheckOrderidTask checkorderidTask = new CheckOrderidTask(content, true);
+					checkorderidTask.execute();
+				}
+
+			}
+		});
+		mentrywarenumber.addTextChangedListener(new TextWatcher() {
+			@Override
+			public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+			}
+
+			@Override
+			public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+			}
+
+			@Override
+			public void afterTextChanged(Editable s) {
+				String content=mentrywarenumber.getText().toString();
+				if(!content.equals("")) {
+					CheckLibrarynumTask checkprodyctidTask = new CheckLibrarynumTask(content);
+					checkprodyctidTask.execute();
+				}
+
+			}
+		});
+		mentrybarcode.addTextChangedListener(new TextWatcher() {
+			@Override
+			public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+			}
+
+			@Override
+			public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+			}
+
+			@Override
+			public void afterTextChanged(Editable s) {
+				String content=mentrybarcode.getText().toString();
+				if(!content.equals("")) {
+					mentrybarcode.removeTextChangedListener(this);
+					CheckProductidTask checkprodyctidTask = new CheckProductidTask(content, this);
+					checkprodyctidTask.execute();
+				}
+			}
+		});
+	}
+	public void refreshdatalist(){
+		Collections.sort(EntryProductinfoBeans,idComparator);
+		mAdapter = new EntrydetailAdapter(this, EntryProductinfoBeans,"EntryWarehouseActivity");
 		mSimpleDetailList.setAdapter(mAdapter);
 		setListViewHeightBasedOnChildren(mSimpleDetailList);
 	}
-
 	public void onClick(View view) {
 		if (view.getId() == R.id.entryform_back) {
 			finish();
@@ -140,13 +216,35 @@ public class EntryWarehouseActivity extends AppCompatActivity {
 		}else if(view.getId() == R.id.entryform_canclescan){
 			cancleALLdata();
 		}else if(view.getId() == R.id.entryform_submit_button){
-			if(!Productcontent.equals("")) {
+			if(!mentryorderid.getText().toString().equals("")) {
 				SubmitOrderTask submitorderTask = new SubmitOrderTask();
 				submitorderTask.execute();
 			}else{
-				Util.showShortToastMessage(EntryWarehouseActivity.this,"请先扫描产品二维码");
+				Util.showShortToastMessage(EntryWarehouseActivity.this,"请先扫描单号");
 			}
 		}
+//		else if(view.getId() == R.id.entryform_finalbox){
+//			if(boxesnum.size()>0) {
+//				Map<String,String> map=boxesnum.get(boxesnum.size()-1);
+//				String content="";
+//				for(String key :map.keySet()) {
+//					String[] workorderinfo=key.split(",");
+//					if(workorderinfo.length>7) {
+//						String checkfinalbox="";
+//						if(finalbox.isChecked()){
+//							checkfinalbox="true";
+//						}else{
+//							checkfinalbox="false";
+//						}
+//						content=workorderinfo[0]+","+workorderinfo[1]+","+workorderinfo[2]
+//								+","+workorderinfo[3]+","+workorderinfo[4]
+//								+","+workorderinfo[5]+","+workorderinfo[6]+","+checkfinalbox;
+//					}
+//				}
+//				boxesnum.remove(boxesnum.size() - 1);
+//				saveBoxNum(content,mentrynumboxes.getText().toString());
+//			}
+//		}
 	}
 
 	@Override
@@ -169,15 +267,16 @@ public class EntryWarehouseActivity extends AppCompatActivity {
 				if(qrcodetextmode==qrcodemode.WORKORDER_ID){
 					mentryorderid.setText(content);
 //                    CheckproductinfoTask checkproductinfoTask=new CheckproductinfoTask(content);
-					CheckOrderidTask checkorderidTask=new CheckOrderidTask(content,true);
-					checkorderidTask.execute();
+//					CheckOrderidTask checkorderidTask=new CheckOrderidTask(content,true);
+//					checkorderidTask.execute();
 				}else if(qrcodetextmode==qrcodemode.PRODUCT_CODE){
-					CheckProductidTask checkprodyctidTask=new CheckProductidTask(content);
-					checkprodyctidTask.execute();
+					mentrybarcode.setText(content);
+//					CheckProductidTask checkprodyctidTask=new CheckProductidTask(content);
+//					checkprodyctidTask.execute();
 				}else if(qrcodetextmode==qrcodemode.WAREHOUSE_CODE){
 					mentrywarenumber.setText(content);
-					CheckLibrarynumTask checkprodyctidTask=new CheckLibrarynumTask(content);
-					checkprodyctidTask.execute();
+//					CheckLibrarynumTask checkprodyctidTask=new CheckLibrarynumTask(content);
+//					checkprodyctidTask.execute();
 				}
 			}
 
@@ -187,12 +286,13 @@ public class EntryWarehouseActivity extends AppCompatActivity {
 
 	private void cancleALLdata(){
 
-		mentryorderid.setText("");
+//		mentryorderid.setText("");
 		mentrybarcode.setText("");
 		mentryOrdernumber.setText("");
 		mentryNumberperbox.setText("");
 		mentrynumboxes.setText("");
 		mentrywarenumber.setText("");
+		finalbox.setChecked(false);
 		boxnum=0;
 		productBean=null;
 		ReportProductBean=null;
@@ -492,17 +592,17 @@ public class EntryWarehouseActivity extends AppCompatActivity {
 //			reloadviewText(success,msg);
 			Util.showShortToastMessage(EntryWarehouseActivity.this,msg);
 			if(success) {
+				mentrywarenumber.requestFocus();
 				mentryorderid.setError(null,null);
-				if(setidtext) {
-					mentryorderid.setText(orderid);
-					mentryorderid.setFocusable(false);
-					mentryorderid.setFocusableInTouchMode(false);
-				}
+//				if(setidtext) {
+//					mentryorderid.setText(orderid);
+////					mentryorderid.setFocusable(false);
+////					mentryorderid.setFocusableInTouchMode(false);
+//				}
 
-				mAdapter = new EntrydetailAdapter(EntryWarehouseActivity.this, EntryProductinfoBeans);
-				mSimpleDetailList.setAdapter(mAdapter);
-				setListViewHeightBasedOnChildren(mSimpleDetailList);
+				refreshdatalist();
 			}else{
+				mentryorderid.requestFocus();
 				mentryorderid.setError(msg);
 			}
 		}
@@ -604,9 +704,10 @@ public class EntryWarehouseActivity extends AppCompatActivity {
 		protected void onPostExecute(final Boolean success) {
 			Util.showShortToastMessage(EntryWarehouseActivity.this, msg);
 			if (success) {
-//				mdeliverybarcode.requestFocus();
+				mentrybarcode.requestFocus();
 				mentrywarenumber.setError(null, null);//焦点聚焦时去除错误图标
 			} else {
+				mentrywarenumber.requestFocus();
 				mentrywarenumber.setError("库位编号有错");
 			}
 		}
@@ -649,18 +750,20 @@ public class EntryWarehouseActivity extends AppCompatActivity {
 		String content="";
 		boolean isfinalbox=false;
 		int responsecode = 0;
-
-		CheckProductidTask(String content) {
+		TextWatcher textWatcher;
+		CheckProductidTask(String content,TextWatcher textWatcher) {
 			this.content=content;
+			this.textWatcher=textWatcher;
 			String[] workorderinfo=content.split(",");
-			if(workorderinfo.length>1)
+			if(workorderinfo.length>7) {
 				product_code = workorderinfo[0];
-			num_perbox = workorderinfo[2];
-			packaging_code= workorderinfo[3];
-			batch_number = workorderinfo[4];
-			String checkfinalbox = workorderinfo[7];
-			if(checkfinalbox.equals("true")){
-				isfinalbox=true;
+				num_perbox = workorderinfo[2];
+				packaging_code = workorderinfo[3];
+				batch_number = workorderinfo[4];
+				String checkfinalbox = workorderinfo[7];
+				if (checkfinalbox.equals("true")) {
+					isfinalbox = true;
+				}
 			}
 		}
 
@@ -720,8 +823,8 @@ public class EntryWarehouseActivity extends AppCompatActivity {
 						if (success.equals("true")) {
 							productBean=parseEntryproductbean(jsonObject);
 							HashMap<String,EntryProductBean> map=new HashMap<String, EntryProductBean>();
-							map.put(productBean.product_code,productBean);
-							productinfomap.put(productBean.product_code+"id",map);
+							map.put(content,productBean);
+							productinfomap.put(content+"id",map);
 						}
 					}
 //                    String s = ins.toString();
@@ -743,19 +846,27 @@ public class EntryWarehouseActivity extends AppCompatActivity {
 			Util.showShortToastMessage(EntryWarehouseActivity.this,msg);
 			if(success) {
 				mentrybarcode.setError(null,null);
-				if(product_code.equals(mentrybarcode.getText().toString())||
-						"".equals(mentrybarcode.getText().toString())){
+				if(boxnum==0||Productcontent.equals(content)){
 					boxnum++;
 					if(boxesnum.size()>0) {
 						boxesnum.remove(boxesnum.size() - 1);
-					}else{
-						mentrybarcode.setText(product_code);
 					}
-					saveBoxNum(product_code,boxnum+"");
+
+						mentrybarcode.setText(product_code);
+
+					saveBoxNum(content,boxnum+"");
+//					mentrynumboxes.setError(boxnum+"累加"+"Productcontent："+Productcontent+"content："+content);
+//					Util.showShortToastMessage(EntryWarehouseActivity.this,
+//							"boxnum==0||Productcontent.equals(content)"+boxnum);
 				}else {
-					saveBoxNum(product_code,boxnum+"");
 					mentrybarcode.setText(product_code);
-					boxnum=1;
+					boxnum = 1;
+					saveBoxNum(content, boxnum + "");
+
+//					mentrynumboxes.setError(boxnum+"重置"+"Productcontent:"+Productcontent+"content:"+content);
+////					mentrynumboxes.setError(boxnum+"重置");
+//					Util.showShortToastMessage(EntryWarehouseActivity.this,
+//							"boxnum==0||Productcontent.equals(content)"+boxnum);
 				}
 				mentrynumboxes.setText(boxnum+"");
 
@@ -766,8 +877,10 @@ public class EntryWarehouseActivity extends AppCompatActivity {
 				finalbox.setChecked(isfinalbox);
 				Productcontent=content;
 			}else{
+				mentrybarcode.requestFocus();
 				mentrybarcode.setError(msg);
 			}
+			mentrybarcode.addTextChangedListener(textWatcher);
 		}
 
 		@Override
@@ -820,10 +933,11 @@ public class EntryWarehouseActivity extends AppCompatActivity {
 		AddOrderidTask(String content) {
 			orderid=mentryorderid.getText().toString();
 			date=sdf.format(System.currentTimeMillis());
+			location_barcode=mentrywarenumber.getText().toString();
 			////data={"(产品id, 包装数量, 包装方案id, 批号合并名称, 序列号名称, 包装条码id)":{"qty":7000, "box_qty":10},}
 			String[] workorderinfo=content.split(",");
 			//二维码内容：产品编码+产品批次+包装数量+包装方案编码+批号合并名称+序列号名称+包装条码id+是尾箱  中间分隔符分开
-			if(workorderinfo.length>1) {
+			if(workorderinfo.length>7) {
 				product_code = workorderinfo[0];
 				num_perbox = workorderinfo[2];
 //				packaging_code = workorderinfo[3];
@@ -833,14 +947,16 @@ public class EntryWarehouseActivity extends AppCompatActivity {
 				if(finalbox.isChecked()){
 					isfinal="true";
 				}
-				location_barcode=mentrywarenumber.getText().toString();
+				this.content=workorderinfo[0]+","+workorderinfo[1]+","+workorderinfo[2]
+						+","+workorderinfo[3]+","+workorderinfo[4]
+						+","+workorderinfo[5]+","+workorderinfo[6]+","+isfinal;
 			}
 			if(!(boxnum+"").equals(mentrynumboxes.getText().toString())){
 
 				if(boxesnum.size()>0) {
 					boxesnum.remove(boxesnum.size() - 1);
 				}
-				saveBoxNum(product_code,mentrynumboxes.getText().toString());
+				saveBoxNum(this.content,mentrynumboxes.getText().toString());
 			}
 		}
 
@@ -863,29 +979,58 @@ public class EntryWarehouseActivity extends AppCompatActivity {
 //                Print("boxesnum.size():::"+boxesnum.size());
 //                String mparams="";
 				//data={"(产品id, 包装数量, 包装方案id, 批号合并名称, 序列号名称, 包装条码id)":{"qty":7000, "box_qty":10},}
-				String jsondata="";
+				String jsondata = "{";
+				String parajsondata = "";
 				for(int i=0;i<boxesnum.size();i++){
-					Print("boxesnum. key:::"+boxesnum.get(i).keySet().toString());
-					Map<String,HashMap<String,Integer>> data
-							=new HashMap<String,HashMap<String,Integer>>();
-					for(String productkey : boxesnum.get(i).keySet()){
-						String product_id=productinfomap.get(productkey+"id").get(productkey).product_id;
-						packaging_id=productinfomap.get(productkey+"id").get(productkey).packaging_id;
-						String key="("+product_id+","+num_perbox+","
-								+packaging_id+",\""+batch_number+"\",\""+product_number+"\","+packaging_code_id+",\""+isfinal+"\""+")";
-						String boxnum=boxesnum.get(i).get(productkey);
+					Map<String, HashMap<String, Integer>> data
+							= new HashMap<String, HashMap<String, Integer>>();
+					for (String contentkey : boxesnum.get(i).keySet()) {
+						String productkey = "";
+						String checkfinalbox = "false";
+						String num_perbox="";
+						String batch_number="";
+						String packaging_id="";
+						String product_number="";
+						String packaging_code_id="";
+						String[] workorderinfo = contentkey.split(",");
+						//二维码内容：产品编码+产品批次+包装数量+包装方案编码+批号合并名称+序列号名称+包装条码id+是尾箱  中间分隔符分开
+						if (workorderinfo.length > 7) {
+							productkey = workorderinfo[0];
+							num_perbox = workorderinfo[2];
+							batch_number = workorderinfo[4];
+							product_number= workorderinfo[5];
+							packaging_code_id = workorderinfo[6];
+							checkfinalbox = workorderinfo[7];
+//							if (checkfinalbox.equals("true")) {
+//								isfinalbox = true;
+//							}
+						}
+						Print("productinfomap. key:::" + productinfomap.keySet().toString());
+						HashMap<String, EntryProductBean> productinfo = productinfomap.get(contentkey + "id");
+						String product_id = productinfo.get(contentkey).product_id;
+						packaging_id = productinfo.get(contentkey).packaging_id;
+						String key = "(" + product_id + "," + num_perbox + ","
+								+ packaging_id + ",\"" + batch_number + "\",\"" + product_number + "\"," + packaging_code_id + ",\"" + checkfinalbox + "\"" + ")";
+						String boxnum = boxesnum.get(i).get(contentkey);
 //                        String value="{\"qty\"="+boxnum+",\"box_qty\"="+boxnum+"}}";
-						HashMap<String,Integer> nummap=new HashMap<String,Integer>();
-						nummap.put("qty",Integer.valueOf(num_perbox));
-						nummap.put("box_qty",Integer.valueOf(boxnum));
-						data.put(key,nummap);
+						System.out.println("num_perbox::" + num_perbox + " boxnum:::" + boxnum);
+						HashMap<String, Integer> nummap = new HashMap<String, Integer>();
+						nummap.put("qty", Integer.valueOf(num_perbox));
+						nummap.put("box_qty", Integer.valueOf(boxnum));
+						data.put(key, nummap);
 					}
-					jsondata=new Gson().toJson(data);
-					System.out.println("jsondata:::"+jsondata);
-					mparams.put("data",jsondata);
-					url=url+"&data="+jsondata;
-				}
+					parajsondata = new Gson().toJson(data);
+					parajsondata = parajsondata.substring(1, parajsondata.length() - 1);
+					jsondata = jsondata + parajsondata;
+					if (i == (boxesnum.size() - 1)) {
+						jsondata = jsondata + "}";
+					} else {
+						jsondata = jsondata + ",";
+					}
 
+
+				}
+				url = url + "&data=" + jsondata;
 				Print("workorder_no url:::" + url);
 				URL posturl = new URL(url);
 				HttpURLConnection conn = (HttpURLConnection) posturl.openConnection();
@@ -915,9 +1060,9 @@ public class EntryWarehouseActivity extends AppCompatActivity {
 						success = jsonObject.getString("success");
 						Print(" return: ReportProductBeans success::" + success);
 						if (success.equals("true")) {
-							Ordername = parseEntryordername(jsonObject);
+//							Ordername = parseEntryordername(jsonObject);
 							EntryProductinfoBeans = new ArrayList<EntryProductinfoBean>();
-							parseReportproduct(jsonObject);
+							parseSuccessproduct(jsonObject);
 						}
 					}
 //                    String s = ins.toString();
@@ -939,18 +1084,19 @@ public class EntryWarehouseActivity extends AppCompatActivity {
 			Util.showShortToastMessage(EntryWarehouseActivity.this,msg);
 			if(success) {
 				boxnum=0;
+				Ordername=orderid;
 				boxesnum=new ArrayList<Map<String,String>>();
 				mentrybarcode.setError(null,null);
-				mentrybarcode.setText(Ordername);
+//				mentrybarcode.setText(orderid);
 
-				mAdapter = new EntrydetailAdapter(EntryWarehouseActivity.this, EntryProductinfoBeans);
-				mSimpleDetailList.setAdapter(mAdapter);
-				setListViewHeightBasedOnChildren(mSimpleDetailList);
+				refreshdatalist();
+				cancleALLdata();
 //				mentryorderid.setText(product_code);
 //				mentryOrdernumber.setText(batch_number);
 //				mentryNumberperbox.setText(num_perbox);
 //				Productcontent=content;
 			}else{
+				mentrybarcode.requestFocus();
 				mentrybarcode.setError(msg);
 			}
 		}
@@ -985,7 +1131,7 @@ public class EntryWarehouseActivity extends AppCompatActivity {
 	}
 
 	public class SubmitOrderTask extends AsyncTask<Void, Void, Boolean> {
-		//		String orderid="";
+				String orderid="";
 //		String date="";
 //		String product_code = "";
 //		//		String packaging_code = "";
@@ -1001,7 +1147,7 @@ public class EntryWarehouseActivity extends AppCompatActivity {
 		SimpleDateFormat sdf = new SimpleDateFormat(
 				"yyyy-mm-dd");
 		SubmitOrderTask() {
-//			orderid=mentryorderid.getText().toString();
+			orderid=mentryorderid.getText().toString();
 //			date=sdf.format(new Date());
 //			////data={"(产品id, 包装数量, 包装方案id, 批号合并名称, 序列号名称, 包装条码id)":{"qty":7000, "box_qty":10},}
 //			String[] workorderinfo=content.split(",");
@@ -1033,7 +1179,7 @@ public class EntryWarehouseActivity extends AppCompatActivity {
 						+ ":" + PreferencesUtils.getString(EntryWarehouseActivity.this, port_key, "8062") +
 						IndexConstants.ENTRYWARESUBMITORDER + "?token=" +
 						PreferencesUtils.getString(EntryWarehouseActivity.this, token_key, "")
-						+ "&name=" + Ordername;
+						+ "&name=" + orderid;
 //                "login:","登录帐号","Password":"密码"
 				Print("entry submit url:::" + url);
 
@@ -1066,6 +1212,8 @@ public class EntryWarehouseActivity extends AppCompatActivity {
 						success = jsonObject.getString("success");
 						Print(" return: ReportProductBeans success::" + success);
 						if (success.equals("true")) {
+							EntryProductinfoBeans = new ArrayList<EntryProductinfoBean>();
+							parseSuccessproduct(jsonObject);
 //							productBean=parseEntryproductbean(jsonObject);
 						}
 					}
@@ -1087,8 +1235,8 @@ public class EntryWarehouseActivity extends AppCompatActivity {
 		protected void onPostExecute(final Boolean success) {
 			Util.showShortToastMessage(EntryWarehouseActivity.this,msg);
 			if(success) {
-				CheckOrderidTask getinfoTask = new CheckOrderidTask(mentryorderid.getText().toString(),false);
-				getinfoTask.execute();
+//				CheckOrderidTask getinfoTask = new CheckOrderidTask(mentryorderid.getText().toString(),false);
+//				getinfoTask.execute();
 				cancleALLdata();
 //				mentryorderid.setText(product_code);
 //				mentryOrdernumber.setText(batch_number);
@@ -1128,13 +1276,29 @@ public class EntryWarehouseActivity extends AppCompatActivity {
 	}
 
 	protected String parseEntryordername(JSONObject jsonObject) {
-		JSONArray dataarr = null;
+//		JSONArray dataarr = null;
 		try {
-			dataarr = jsonObject.getJSONArray("data");
-			for (int i = 0; i < dataarr.length(); i++) {
-				JSONObject reprotformdataObject = dataarr.getJSONObject(i);
-				String name=reprotformdataObject.getString("name");
-				return name;
+//			dataarr = jsonObject.getJSONArray("data");
+//			for (int i = 0; i < dataarr.length(); i++) {
+				JSONObject reprotformdataObject = jsonObject.getJSONObject("data");
+//				ReportFormBean ReportFormBean = beanParseUtility.parse(reprotformdataObject, ReportFormBean.class);
+//				ReportFormBeans.add(ReportFormBean);
+//				ReportProductBean ReportProductdataBean =
+//						beanParseUtility.parse(reprotformdataObject, ReportProductBean.class);
+//				ReportProductBeans.add(ReportProductdataBean);
+				if(reprotformdataObject.has("line_data")) {
+					JSONArray linedataarr = reprotformdataObject.getJSONArray("line_data");
+					for (int j = 0; j < linedataarr.length(); j++) {
+						JSONObject reprotformlinedataObject = linedataarr.getJSONObject(j);
+						String name = reprotformlinedataObject.getString("name");
+					return name;
+					}
+				}
+//				if(reprotformdataObject.has("line_data")) {
+////					JSONObject reprotformdataObject = dataarr.getJSONObject(i);
+//					String name = reprotformdataObject.getString("name");
+//					return name;
+//				}
 //				ReportFormBean ReportFormBean = beanParseUtility.parse(reprotformdataObject, ReportFormBean.class);
 //				ReportFormBeans.add(ReportFormBean);
 //				if(reprotformdataObject.has("line_data")) {
@@ -1147,7 +1311,7 @@ public class EntryWarehouseActivity extends AppCompatActivity {
 //					}
 //				}
 
-			}
+//			}
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
@@ -1366,8 +1530,85 @@ public class EntryWarehouseActivity extends AppCompatActivity {
 			e.printStackTrace();
 		}
 	}
+
+	protected void parseSuccessproduct(JSONObject jsonObject) {
+//		JSONArray dataarr = null;
+		try {
+//			dataarr = jsonObject.getJSONArray("data");
+//			for (int i = 0; i < dataarr.length(); i++) {
+				JSONObject reprotformdataObject = jsonObject.getJSONObject("data");
+//				ReportFormBean ReportFormBean = beanParseUtility.parse(reprotformdataObject, ReportFormBean.class);
+//				ReportFormBeans.add(ReportFormBean);
+//				ReportProductBean ReportProductdataBean =
+//						beanParseUtility.parse(reprotformdataObject, ReportProductBean.class);
+//				ReportProductBeans.add(ReportProductdataBean);
+//				if(reprotformdataObject.has("line_data")) {
+				JSONArray linedataarr = reprotformdataObject.getJSONArray("line_data");
+				for (int j = 0; j < linedataarr.length(); j++) {
+					JSONObject reprotformlinedataObject = linedataarr.getJSONObject(j);
+					EntryProductinfoBean ReportProductlineBean =
+							beanParseUtility.parse(reprotformlinedataObject, EntryProductinfoBean.class);
+					EntryProductinfoBeans.add(ReportProductlineBean);
+				}
+
+
+//			}
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+	}
+
+//	protected void parseSuccessproduct(JSONObject jsonObject) {
+////		JSONArray dataarr = null;
+//		try {
+////			dataarr = jsonObject.getJSONArray("data");
+////			for (int i = 0; i < dataarr.length(); i++) {
+//			JSONObject reprotformdataObject = jsonObject.getJSONObject("data");
+////				ReportFormBean ReportFormBean = beanParseUtility.parse(reprotformdataObject, ReportFormBean.class);
+////				ReportFormBeans.add(ReportFormBean);
+////				ReportProductBean ReportProductdataBean =
+////						beanParseUtility.parse(reprotformdataObject, ReportProductBean.class);
+////				ReportProductBeans.add(ReportProductdataBean);
+////				if(reprotformdataObject.has("line_data")) {
+//			JSONArray linedataarr = reprotformdataObject.getJSONArray("line_data");
+//			for (int j = 0; j < linedataarr.length(); j++) {
+//				JSONObject reprotformlinedataObject = linedataarr.getJSONObject(j);
+//				EntryProductinfoBean ReportProductlineBean =
+//						beanParseUtility.parse(reprotformlinedataObject, EntryProductinfoBean.class);
+//				EntryProductinfoBeans.add(ReportProductlineBean);
+//			}
+//
+//
+////			}
+//		} catch (JSONException e) {
+//			e.printStackTrace();
+//		}
+//	}
 	String TAG="Entryactivity::";
 	public void Print(String s){
 		System.out.println(TAG+s);
 	}
+	public static Comparator idComparator = new Comparator() {
+		@Override
+		public int compare(Object o1, Object o2) {
+			return (Integer.compare(Integer.parseInt(((EntryProductinfoBean) o1).sequence), Integer.parseInt(((EntryProductinfoBean) o2).sequence)));
+		}
+	};
+
+	@Override
+	public boolean onKeyDown(int keyCode, KeyEvent event) {
+//		Util.showShortToastMessage(EntryWarehouseActivity.this,"keycode:"+keyCode);
+//		mentrynumboxes.setError(boxnum+"keyCode:"+keyCode);
+		if(keyCode==301) {
+			if (mentryorderid.isFocused()) {
+				mentryorderid.setText("");
+			} else if (mentrywarenumber.isFocused()) {
+				mentrywarenumber.setText("");
+			} else if (mentrybarcode.isFocused()) {
+				mentrybarcode.setText("");
+			}
+		}
+		return super.onKeyDown(keyCode, event);
+	}
+
 }

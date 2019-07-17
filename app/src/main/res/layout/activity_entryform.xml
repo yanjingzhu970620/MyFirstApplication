@@ -205,6 +205,51 @@
                         android:textColor="@color/black" />
 
                 </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/entryform_timepicker_form"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:text="@string/entry_time" />
+
+                    <LinearLayout
+                        android:id="@+id/entry_form_time"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="3"
+                        android:clickable="true"
+                        android:onClick="onClick"
+                        android:orientation="vertical" >
+
+                        <TextView
+                            android:id="@+id/text_entryform_time"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_vertical"
+                            android:layout_marginLeft="10dip"
+                            android:layout_marginTop="3dp"
+                            android:text="请选择时间"
+                            android:textColor="#ffa8abad"
+                            android:textSize="18sp" />
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="1dp"
+                            android:layout_gravity="center_vertical"
+                            android:layout_marginTop="3dp"
+                            android:layout_marginStart="5dp"
+                            android:layout_marginEnd="5dp"
+                            android:background="@color/black"/>
+                    </LinearLayout>
+
+                </LinearLayout>
+
                 <LinearLayout
                     android:id="@+id/entryform_billnumber_form"
                     android:layout_width="match_parent"
@@ -246,11 +291,13 @@
 
                     <CheckBox
                         android:id="@+id/entryform_finalbox"
+                        android:onClick="onClick"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="3" />
 
                 </LinearLayout>
+
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -309,32 +356,34 @@
                         android:layout_height="wrap_content"
                         android:orientation="horizontal">
                         <TextView
-                            android:layout_width="0dp"
+                            android:layout_width="40dp"
                             android:layout_height="match_parent"
-                            android:text="@string/order_id"
-                            android:layout_weight="1"/>
+                            android:text="@string/order_id"/>
                         <TextView
                             android:layout_width="0dp"
                             android:layout_height="match_parent"
                             android:text="@string/product_item"
-                            android:layout_weight="1"/>
+                            android:layout_weight="2"/>
                         <TextView
                             android:layout_width="0dp"
                             android:layout_height="match_parent"
+                            android:gravity="center"
                             android:text="@string/report_num"
-                            android:layout_weight="1"/>
+                            android:layout_weight="2"/>
                         <TextView
                             android:layout_width="0dp"
                             android:layout_height="match_parent"
                             android:layout_gravity="center_horizontal"
-                            android:text="@string/Number_of_boxes"
-                            android:layout_weight="1"/>
+                            android:gravity="center"
+                            android:text="@string/Num_of_boxes"
+                            android:layout_weight="2"/>
                         <TextView
                             android:layout_width="0dp"
                             android:layout_height="match_parent"
+                            android:gravity="center"
                             android:layout_gravity="center_horizontal"
                             android:text="@string/Final_box"
-                            android:layout_weight="1"/>
+                            android:layout_weight="2"/>
                     </LinearLayout>
                     <ListView
                         android:id="@+id/entry_infolist"
