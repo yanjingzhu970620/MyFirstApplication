@@ -1,5 +1,6 @@
 package com.yjzfirst.adapter;
 
+import android.app.Activity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,7 +25,7 @@ import app.yjzfirst.com.activity.R;
  *
  */
 public class ReportdetailAdapter extends BaseAdapter {
-	private ReportActivity context;
+	private Activity context;
 	private List<ReportProductBean> ReportProductBeans;
 	/*
 	 * (non-Javadoc)
@@ -32,7 +33,7 @@ public class ReportdetailAdapter extends BaseAdapter {
 	 * @see android.widget.Adapter#getCount()
 	 */
 
-	public ReportdetailAdapter(ReportActivity context, List<ReportProductBean> deliveryBean) {
+	public ReportdetailAdapter(Activity context, List<ReportProductBean> deliveryBean) {
 		this.context = context;
 		this.ReportProductBeans = deliveryBean;
 	}
@@ -89,6 +90,9 @@ public class ReportdetailAdapter extends BaseAdapter {
 		TextView listtext_weight = (TextView) convertView
 				.findViewById(R.id.listtext_weight);
 		listtext_weight.setVisibility(View.VISIBLE);
+		TextView text_box_ware = (TextView) convertView
+				.findViewById(R.id.text_box_ware);
+		text_box_ware.setVisibility(View.GONE);
 //		RelativeLayout shipcell = (RelativeLayout) convertView
 //				.findViewById(R.id.effectRelativeLayout_details);
 		final ReportProductBean deliveryproduct = ReportProductBeans.get(position);

@@ -25,7 +25,7 @@
         <TextView
             android:id="@+id/text_product_pecification"
             android:layout_width="0dp"
-            android:layout_weight="2"
+            android:layout_weight="1"
             android:layout_height="wrap_content"
             android:gravity="center"
             android:textColor="#000000"
@@ -34,7 +34,7 @@
         <TextView
             android:id="@+id/text_number_applications"
             android:layout_width="0dp"
-            android:layout_weight="2"
+            android:layout_weight="1"
             android:layout_height="wrap_content"
             android:gravity="center"
             android:textColor="#000000"
@@ -43,7 +43,7 @@
         <TextView
             android:id="@+id/text_number_of_boxes"
             android:layout_width="0dp"
-            android:layout_weight="2"
+            android:layout_weight="1"
             android:layout_height="wrap_content"
             android:gravity="center"
             android:textColor="#000000"
@@ -51,7 +51,7 @@
         <TextView
             android:id="@+id/listtext_weight"
             android:layout_width="0dp"
-            android:layout_weight="2"
+            android:layout_weight="1"
             android:layout_height="wrap_content"
             android:gravity="center"
             android:textColor="#000000"
@@ -59,7 +59,7 @@
         <TextView
             android:id="@+id/text_box_ware"
             android:layout_width="0dp"
-            android:layout_weight="2"
+            android:layout_weight="1"
             android:layout_height="wrap_content"
             android:gravity="center"
             android:textColor="#000000"
@@ -67,7 +67,7 @@
         <TextView
             android:id="@+id/text_numbers"
             android:layout_width="0dp"
-            android:layout_weight="2"
+            android:layout_weight="1"
             android:layout_height="wrap_content"
             android:gravity="center"
             android:textColor="#000000"

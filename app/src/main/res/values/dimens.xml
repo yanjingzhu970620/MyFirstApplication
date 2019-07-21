@@ -7,6 +7,6 @@
     <dimen name="button_margin_left">60dp</dimen>
     <dimen name="appbar_padding_top">8dp</dimen>
     <dimen name="activity_topbar_height">200dp</dimen>
-    <dimen name="activity_button_height">300dp</dimen>
+    <dimen name="activity_button_height">350dp</dimen>
     <dimen name="activity_bar_title">20sp</dimen>
 </resources>

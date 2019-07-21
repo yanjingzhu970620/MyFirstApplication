@@ -28,89 +28,198 @@
         </LinearLayout>
 
     </LinearLayout>
+
     <include layout="@layout/include_line" />
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="@dimen/activity_button_height"
-        android:layout_marginRight="@dimen/button_margin_left"
         android:layout_marginLeft="@dimen/button_margin_left"
-        android:orientation="vertical" >
+        android:layout_marginRight="@dimen/button_margin_left"
+        android:orientation="vertical">
 
-            <!--android:background="#f3f7f6"-->
+        <!--android:background="#f3f7f6"-->
 
-            <!--android:orientation="horizontal">-->
+        <!--android:orientation="horizontal">-->
         <LinearLayout
-            android:id="@+id/Check_main"
+            android:id="@+id/Report_Check_main_material_content"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="1"
-            android:gravity="center"
+            android:maxHeight="80dip"
             android:layout_marginTop="@dimen/fab_margin"
+            android:layout_weight="1"
+            android:background="@color/colorbarbackground"
             android:clickable="true"
-            android:onClick="onClick"
-            android:background="@color/colorbarbackground" >
-            <ImageView
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                android:layout_marginLeft="@dimen/fab_margin"
-                android:layout_marginRight="@dimen/fab_margin"
-                android:background="@mipmap/check"/>
+            android:gravity="center"
+            android:onClick="onClick">
+
+            <!--<ImageView-->
+                <!--android:layout_width="50dp"-->
+                <!--android:layout_height="50dp"-->
+                <!--android:layout_marginLeft="@dimen/fab_margin"-->
+                <!--android:layout_marginRight="@dimen/fab_margin"-->
+                <!--android:background="@mipmap/check" />-->
+
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_marginLeft="@dimen/fab_margin"
-                android:text="@string/check_main"
+                android:text="@string/check_main_material"
                 android:textColor="@color/colorwhite"
                 android:textSize="@dimen/activity_bar_title">
 
 
+            </TextView>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/Report_Check_main_material"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:maxHeight="80dip"
+            android:layout_marginTop="@dimen/fab_margin"
+            android:layout_weight="1"
+            android:background="@color/colorbarbackground"
+            android:clickable="true"
+            android:gravity="center"
+            android:onClick="onClick">
+
+            <!--<ImageView-->
+                <!--android:layout_width="50dp"-->
+                <!--android:layout_height="50dp"-->
+                <!--android:layout_marginLeft="@dimen/fab_margin"-->
+                <!--android:layout_marginRight="@dimen/fab_margin"-->
+                <!--android:background="@mipmap/check" />-->
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginLeft="@dimen/fab_margin"
+                android:text="@string/check_main_material"
+                android:textColor="@color/colorwhite"
+                android:textSize="@dimen/activity_bar_title">
+
 
             </TextView>
         </LinearLayout>
-        <LinearLayout
-        android:id="@+id/entry_main"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:gravity="center"
-        android:layout_marginTop="@dimen/fab_margin"
-        android:background="@color/colorbarbackground"
-        android:layout_weight="1"
-        android:clickable="true"
-        android:onClick="onClick" >
-            <ImageView
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                android:layout_marginLeft="@dimen/fab_margin"
-                android:layout_marginRight="@dimen/fab_margin"
-                android:background="@mipmap/entry"/>
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_marginLeft="@dimen/fab_margin"
-            android:text="@string/entry_production"
-            android:textColor="@color/colorwhite"
-            android:textSize="@dimen/activity_bar_title" >
 
-        </TextView>
-    </LinearLayout>
+        <LinearLayout
+            android:id="@+id/Report_Check_main"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:maxHeight="80dip"
+            android:layout_marginTop="@dimen/fab_margin"
+            android:layout_weight="1"
+            android:background="@color/colorbarbackground"
+            android:clickable="true"
+            android:gravity="center"
+            android:onClick="onClick">
+
+            <!--<ImageView-->
+            <!--android:layout_width="50dp"-->
+            <!--android:layout_height="50dp"-->
+            <!--android:layout_marginLeft="@dimen/fab_margin"-->
+            <!--android:layout_marginRight="@dimen/fab_margin"-->
+            <!--android:background="@mipmap/check" />-->
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginLeft="@dimen/fab_margin"
+                android:text="@string/report_main"
+                android:textColor="@color/colorwhite"
+                android:textSize="@dimen/activity_bar_title">
+
+
+            </TextView>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/Report_Check_main_inspect"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:maxHeight="80dip"
+            android:layout_marginTop="@dimen/fab_margin"
+            android:layout_weight="1"
+            android:background="@color/colorbarbackground"
+            android:clickable="true"
+            android:gravity="center"
+            android:onClick="onClick">
+
+            <!--<ImageView-->
+                <!--android:layout_width="50dp"-->
+                <!--android:layout_height="50dp"-->
+                <!--android:layout_marginLeft="@dimen/fab_margin"-->
+                <!--android:layout_marginRight="@dimen/fab_margin"-->
+                <!--android:background="@mipmap/check" />-->
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginLeft="@dimen/fab_margin"
+                android:text="@string/check_main_inspect"
+                android:textColor="@color/colorwhite"
+                android:textSize="@dimen/activity_bar_title">
+
+
+            </TextView>
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:id="@+id/entry_main"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:maxHeight="80dip"
+            android:layout_marginTop="@dimen/fab_margin"
+            android:layout_weight="1"
+            android:background="@color/colorbarbackground"
+            android:clickable="true"
+            android:gravity="center"
+            android:onClick="onClick">
+
+            <!--<ImageView-->
+                <!--android:layout_width="50dp"-->
+                <!--android:layout_height="50dp"-->
+                <!--android:layout_marginLeft="@dimen/fab_margin"-->
+                <!--android:layout_marginRight="@dimen/fab_margin"-->
+                <!--android:background="@mipmap/entry" />-->
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginLeft="@dimen/fab_margin"
+                android:text="@string/entry_production"
+                android:textColor="@color/colorwhite"
+                android:textSize="@dimen/activity_bar_title">
+
+            </TextView>
+        </LinearLayout>
+
         <LinearLayout
             android:id="@+id/entry_main_warehouse"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:gravity="center"
+            android:maxHeight="80dip"
             android:layout_marginTop="@dimen/fab_margin"
-            android:background="@color/colorbarbackground"
             android:layout_weight="1"
+            android:background="@color/colorbarbackground"
             android:clickable="true"
-            android:onClick="onClick" >
-            <ImageView
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                android:layout_marginLeft="@dimen/fab_margin"
-                android:layout_marginRight="@dimen/fab_margin"
-                android:background="@mipmap/entry"/>
+            android:gravity="center"
+            android:onClick="onClick">
+
+            <!--<ImageView-->
+                <!--android:layout_width="50dp"-->
+                <!--android:layout_height="50dp"-->
+                <!--android:layout_marginLeft="@dimen/fab_margin"-->
+                <!--android:layout_marginRight="@dimen/fab_margin"-->
+                <!--android:background="@mipmap/entry" />-->
+
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -118,26 +227,30 @@
                 android:layout_marginLeft="@dimen/fab_margin"
                 android:text="@string/entry_warehouse"
                 android:textColor="@color/colorwhite"
-                android:textSize="@dimen/activity_bar_title" >
+                android:textSize="@dimen/activity_bar_title">
 
             </TextView>
         </LinearLayout>
+
         <LinearLayout
             android:id="@+id/delivery_main"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="1"
-            android:gravity="center"
+            android:maxHeight="80dip"
             android:layout_marginTop="@dimen/fab_margin"
+            android:layout_weight="1"
+            android:background="@color/colorbarbackground"
             android:clickable="true"
-            android:onClick="onClick"
-            android:background="@color/colorbarbackground">
-            <ImageView
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                android:layout_marginLeft="@dimen/fab_margin"
-                android:layout_marginRight="@dimen/fab_margin"
-                android:background="@mipmap/delivery"/>
+            android:gravity="center"
+            android:onClick="onClick">
+
+            <!--<ImageView-->
+                <!--android:layout_width="50dp"-->
+                <!--android:layout_height="50dp"-->
+                <!--android:layout_marginLeft="@dimen/fab_margin"-->
+                <!--android:layout_marginRight="@dimen/fab_margin"-->
+                <!--android:background="@mipmap/delivery" />-->
+
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -145,15 +258,108 @@
                 android:layout_marginLeft="@dimen/fab_margin"
                 android:text="@string/delivery"
                 android:textColor="@color/colorwhite"
-                android:textSize="@dimen/activity_bar_title" >
+                android:textSize="@dimen/activity_bar_title">
+
+
+            </TextView>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/Search_inventory_main"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:maxHeight="80dip"
+            android:layout_marginTop="@dimen/fab_margin"
+            android:layout_weight="1"
+            android:background="@color/colorbarbackground"
+            android:clickable="true"
+            android:gravity="center"
+            android:onClick="onClick">
+
+            <!--<ImageView-->
+            <!--android:layout_width="50dp"-->
+            <!--android:layout_height="50dp"-->
+            <!--android:layout_marginLeft="@dimen/fab_margin"-->
+            <!--android:layout_marginRight="@dimen/fab_margin"-->
+            <!--android:background="@mipmap/check" />-->
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginLeft="@dimen/fab_margin"
+                android:text="@string/search_inventory_main"
+                android:textColor="@color/colorwhite"
+                android:textSize="@dimen/activity_bar_title">
+
+
+            </TextView>
+        </LinearLayout>
+        <LinearLayout
+            android:id="@+id/manufacture_main"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:maxHeight="80dip"
+            android:layout_marginTop="@dimen/fab_margin"
+            android:layout_weight="1"
+            android:background="@color/colorbarbackground"
+            android:clickable="true"
+            android:gravity="center"
+            android:onClick="onClick">
+
+            <!--<ImageView-->
+            <!--android:layout_width="50dp"-->
+            <!--android:layout_height="50dp"-->
+            <!--android:layout_marginLeft="@dimen/fab_margin"-->
+            <!--android:layout_marginRight="@dimen/fab_margin"-->
+            <!--android:background="@mipmap/check" />-->
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginLeft="@dimen/fab_margin"
+                android:text="@string/manufacture_main"
+                android:textColor="@color/colorwhite"
+                android:textSize="@dimen/activity_bar_title">
 
 
             </TextView>
         </LinearLayout>
 
 
+        <LinearLayout
+            android:id="@+id/Report_Check_main_content"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:maxHeight="80dip"
+            android:layout_marginTop="@dimen/fab_margin"
+            android:layout_weight="1"
+            android:background="@color/colorbarbackground"
+            android:clickable="true"
+            android:gravity="center"
+            android:onClick="onClick">
+
+            <!--<ImageView-->
+                <!--android:layout_width="50dp"-->
+                <!--android:layout_height="50dp"-->
+                <!--android:layout_marginLeft="@dimen/fab_margin"-->
+                <!--android:layout_marginRight="@dimen/fab_margin"-->
+                <!--android:background="@mipmap/check" />-->
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginLeft="@dimen/fab_margin"
+                android:text="@string/check_main_material"
+                android:textColor="@color/colorwhite"
+                android:textSize="@dimen/activity_bar_title">
 
 
+            </TextView>
+        </LinearLayout>
 
-</LinearLayout>
+
+    </LinearLayout>
 </LinearLayout>

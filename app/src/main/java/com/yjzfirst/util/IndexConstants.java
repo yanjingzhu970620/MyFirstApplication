@@ -26,6 +26,7 @@ public class IndexConstants {
     public static final String CHECKCARDID="/app/mrp_runcard/get";
     public static final String REPORTCARD="/app/mrp_runcard/report";
     public static final String REPORTCARD_CANCLE="/app/mrp_runcard/report_cancel";
+    public static final String REPORTCARD_STOP="/app/mrp_runcard/app_mrp_runcard_done";
     public static final String REPORT_INSPECTPASS="/app/mrp_runcard/inspect_pass";
     public static final String REPORT_INSPECTCANCLE="/app/mrp_runcard/inspect_cancel";
     public static final String REPORT_INSPECTNG="/app/mrp_runcard/inspect_ng";

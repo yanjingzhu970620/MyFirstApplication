@@ -21,13 +21,9 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.yjzfirst.adapter.EntrydetailAdapter;
-import com.yjzfirst.adapter.MySpinnerAdapter;
 import com.yjzfirst.adapter.ReportdetailAdapter;
 import com.yjzfirst.bean.ReportFormBean;
-import com.yjzfirst.bean.ReportProductBean;
 import com.yjzfirst.bean.ReportProductBean;
 import com.yjzfirst.util.IndexConstants;
 import com.yjzfirst.util.PreferencesUtils;
@@ -43,12 +39,9 @@ import java.io.InputStream;
 import java.math.BigDecimal;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
@@ -59,7 +52,7 @@ import static com.yjzfirst.util.Util.setListViewHeightBasedOnChildren;
 import static com.yjzfirst.util.Util.textsetError;
 import static com.yzq.zxinglibrary.common.Constant.CODED_CONTENT;
 
-public class ReportActivity extends AppCompatActivity {
+public class ReportmaterialActivity extends AppCompatActivity {
 	private CheckCardidTask mCheckTask = null;
 	EditText eCardid;
 	EditText eCurrentprocess;
@@ -105,7 +98,6 @@ public class ReportActivity extends AppCompatActivity {
 	private  qrcodemode qrcodetextmode =  qrcodemode.CARDID;
 	boolean weightupdate=false;
 	boolean qtyupdate=false;
-	boolean netweightupdate=false;
 	boolean containerupdate=false;
 	boolean grossupdate=false;
 	//
@@ -115,7 +107,7 @@ public class ReportActivity extends AppCompatActivity {
 		setContentView(R.layout.activity_report);
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
 
-			Window window = ReportActivity.this.getWindow();
+			Window window = ReportmaterialActivity.this.getWindow();
 
 			window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
 
@@ -133,6 +125,8 @@ public class ReportActivity extends AppCompatActivity {
 		process_statusmap.put("to_ipqc", "待质量判定");
 		process_statusmap.put("done", "完工");
 		process_statusmap.put("cancel", "作废");
+		TextView title=(TextView) findViewById(R.id.report_activity_title);
+		title.setText(R.string.check_main_material);
 		eCardid = (EditText) findViewById(R.id.edittext_report_card_id);
 //        mcheckbatchnumber.addTextChangedListener(shipsWatcher);
 		eCurrentprocess = (EditText) findViewById(R.id.edittext_current_process);
@@ -145,13 +139,24 @@ public class ReportActivity extends AppCompatActivity {
 		eReportstate.setFocusable(false);//不可编辑
 //        mchecklibrarynumber.addTextChangedListener(shipsWatcher);
 		eContainerid = (EditText) findViewById(R.id.edittext_container_id);
+//		eContainerid.setVisibility(View.INVISIBLE);
+		eContainerid.setFocusableInTouchMode(false);//不可编辑
+		eContainerid.setFocusable(false);//不可编辑
 		eContainerweight = (EditText) findViewById(R.id.edittext_container_weight);
+//		eContainerweight.setVisibility(View.INVISIBLE);
+		eContainerweight.setFocusableInTouchMode(false);//不可编辑
+		eContainerweight.setFocusable(false);//不可编辑
 //        mcheckNumberperbox.addTextChangedListener(shipsWatcher);
 		eThousandweight = (EditText) findViewById(R.id.edit_thousand_weight);
+//		eThousandweight.setVisibility(View.INVISIBLE);
+		eThousandweight.setFocusableInTouchMode(false);//不可编辑
+		eThousandweight.setFocusable(false);//不可编辑
 //        mchecknumboxes.addTextChangedListener(shipsWatcher);
 		eNetweight = (EditText) findViewById(R.id.edit_net_weight);
 
 		eWaste = (EditText) findViewById(R.id.edit_waste);
+		LinearLayout wastelayout=(LinearLayout) findViewById(R.id.report_waste_layout);
+		wastelayout.setVisibility(View.GONE);
 		eGrossweight = (EditText) findViewById(R.id.edit_gross_weight);
 		eReportnum = (EditText) findViewById(R.id.edit_report_num);
 		eSplit_merge_cardid= (EditText) findViewById(R.id.edit_split_merge_cardid);
@@ -180,12 +185,6 @@ public class ReportActivity extends AppCompatActivity {
 		report_mergecard_id_button  = (ImageView) findViewById(R.id.report_mergecard_id_button);
 
 		split_merge_layout= (LinearLayout) findViewById(R.id.split_merge_layout);
-		split_merge_layout.setVisibility(View.VISIBLE);
-		LinearLayout split_merge_cardid_layout= (LinearLayout) findViewById(R.id.split_merge_cardid_layout);
-		split_merge_cardid_layout.setVisibility(View.VISIBLE);
-		LinearLayout split_container_no_layout= (LinearLayout) findViewById(R.id.split_container_no_layout);
-		split_container_no_layout.setVisibility(View.VISIBLE);
-
 		spinner_split_merge_type= (Spinner) findViewById(R.id.spinner_split_merge_type);
 
 		String[] mItems = new String[3];
@@ -204,10 +203,6 @@ public class ReportActivity extends AppCompatActivity {
 				if(position==0){
 					eSplit_merge_cardid.setFocusable(false);
 					eSplit_merge_cardid.setFocusableInTouchMode(false);
-					eSplit_merge_container_no.setFocusable(false);
-					eSplit_merge_container_no.setFocusableInTouchMode(false);
-					eSplit_merge_container_weight.setFocusable(false);
-					eSplit_merge_container_weight.setFocusableInTouchMode(false);
 					report_mergecard_id_button.setVisibility(View.GONE);
 				}else {
 					eSplit_merge_cardid.setFocusable(true);
@@ -262,11 +257,11 @@ public class ReportActivity extends AppCompatActivity {
 		if (view.getId() == R.id.report_back) {
 			finish();
 		} else if (view.getId() == R.id.report_card_id_button) {
-			Util.startQrCode(ReportActivity.this);
-			qrcodetextmode=qrcodemode.CARDID;
+			Util.startQrCode(ReportmaterialActivity.this);
+			qrcodetextmode= qrcodemode.CARDID;
 		}else if (view.getId() == R.id.report_mergecard_id_button) {
-			Util.startQrCode(ReportActivity.this);
-			qrcodetextmode=qrcodemode.MERGE_CARDID;
+			Util.startQrCode(ReportmaterialActivity.this);
+			qrcodetextmode= qrcodemode.MERGE_CARDID;
 		} else if (view.getId() == R.id.report_submit_button) {
 			Print("report_submit_button");
 			CheckCReportTask checkreporttask = new CheckCReportTask();
@@ -277,8 +272,8 @@ public class ReportActivity extends AppCompatActivity {
 			canclereporttask.execute();
 		} else if (view.getId() == R.id.report_stopruncard_button) {
 			Print("report_stopruncard_button");
-			CheckStopReportTask checkreporttask = new CheckStopReportTask();
-			checkreporttask.execute();
+//			CheckStopReportTask checkreporttask = new CheckStopReportTask();
+//			checkreporttask.execute();
 		}else if (view.getId() == R.id.report_inspect_submit_button) {
 			Print("report_inspect_submit_button");
 			ReportInspectpassTask reportInspectpassTask = new ReportInspectpassTask();
@@ -316,9 +311,9 @@ public class ReportActivity extends AppCompatActivity {
 			if (data != null) {
 
 				String content = data.getStringExtra(CODED_CONTENT);
-				if(qrcodetextmode==qrcodemode.CARDID) {
+				if(qrcodetextmode== qrcodemode.CARDID) {
 					eCardid.setText(content);
-				}else if(qrcodetextmode==qrcodemode.MERGE_CARDID){
+				}else if(qrcodetextmode== qrcodemode.MERGE_CARDID){
 					eSplit_merge_cardid.setText(content);
 				}
 //				Util.showToastMessage(ReportActivity.this, "扫描结果为：" + content);
@@ -373,31 +368,27 @@ public class ReportActivity extends AppCompatActivity {
 						weightupdate=true;
 					}
 
-				}
-				qtyupdate=false;
 
-//				if(!netweightupdate) {
-//					netweightupdate = true;
 //					if (!eNetweight.getText().toString().equals("")
 //							&& !eContainerweight.getText().toString().equals("")
 //							&& !eNetweight.getText().toString().equals("null")
 //							&& !eContainerweight.getText().toString().equals("null")
-//							&& Double.valueOf(eContainerweight.getText().toString()) > 0) {
-//						double tempnum = 0;
+//							&& Double.valueOf(eContainerweight.getText().toString())>0) {
+//						double tempnum =0;
 //						try {
-//							tempnum = Double.valueOf(eNetweight.getText().toString()) +
+//							tempnum=Double.valueOf(eNetweight.getText().toString()) +
 //									Double.valueOf(eContainerweight.getText().toString());
-//						} catch (Exception e) {
-//							e.printStackTrace();
+//						}catch (Exception e){
+//                             e.printStackTrace();
 //						}
 //						BigDecimal bg = new BigDecimal(tempnum);
 //						double num = bg.setScale(3, BigDecimal.ROUND_HALF_UP).doubleValue();
 //						eGrossweight.setText(num + "");
-//						grossupdate=true;
-////						Util.showShortToastMessage(ReportActivity.this, "eReportnum" + num);
+////						Util.showShortToastMessage(ReportActivity.this,"eReportnum"+num);
 //					}
-//				}
-//				netweightupdate=false;
+				}
+				qtyupdate=false;
+
 			}
 		});
 		eReportnum.addTextChangedListener(new TextWatcher() {
@@ -534,7 +525,6 @@ public class ReportActivity extends AppCompatActivity {
 						eNetweight.setText(tempnum + "");
 //						Util.showShortToastMessage(ReportActivity.this,"grossupdate"+tempnum);
 						containerupdate=true;
-						netweightupdate=true;
 					}
 				}
 				grossupdate=false;
@@ -640,7 +630,7 @@ public class ReportActivity extends AppCompatActivity {
 //            // There was an error; don't attempt login and focus the first
 //            // form field with an error.
 //            focusView.requestFocus();
-			Util.showToastMessage(ReportActivity.this, "请先扫描所有条目");
+			Util.showToastMessage(ReportmaterialActivity.this, "请先扫描所有条目");
 		} else {
 //            // Show a progress spinner, and kick off a background task to
 //            // perform the user login attempt.
@@ -677,10 +667,10 @@ public class ReportActivity extends AppCompatActivity {
 
 			try {
 				String url = "http://" +
-						PreferencesUtils.getString(ReportActivity.this, ip_key, "120.27.2.177")
-						+ ":" + PreferencesUtils.getString(ReportActivity.this, port_key, "8062") +
+						PreferencesUtils.getString(ReportmaterialActivity.this, ip_key, "120.27.2.177")
+						+ ":" + PreferencesUtils.getString(ReportmaterialActivity.this, port_key, "8062") +
 						IndexConstants.CHECKCARDID + "?token=" +
-						PreferencesUtils.getString(ReportActivity.this, token_key, "") + "&runcard_no=" + cardid;
+						PreferencesUtils.getString(ReportmaterialActivity.this, token_key, "") + "&runcard_no=" + cardid;
 //                "login:","登录帐号","Password":"密码"
 				Print("url:::" + url);
 //                Map<String,String> mparams=new HashMap<String,String>();
@@ -797,10 +787,10 @@ public class ReportActivity extends AppCompatActivity {
 
 			try {
 				String url = "http://" +
-						PreferencesUtils.getString(ReportActivity.this, ip_key, "120.27.2.177")
-						+ ":" + PreferencesUtils.getString(ReportActivity.this, port_key, "8062") +
+						PreferencesUtils.getString(ReportmaterialActivity.this, ip_key, "120.27.2.177")
+						+ ":" + PreferencesUtils.getString(ReportmaterialActivity.this, port_key, "8062") +
 						IndexConstants.CHECKCARDID + "?token=" +
-						PreferencesUtils.getString(ReportActivity.this, token_key, "") + "&runcard_no=" + cardid;
+						PreferencesUtils.getString(ReportmaterialActivity.this, token_key, "") + "&runcard_no=" + cardid;
 //                "login:","登录帐号","Password":"密码"
 				Print("url:::" + url);
 //                Map<String,String> mparams=new HashMap<String,String>();
@@ -842,7 +832,7 @@ public class ReportActivity extends AppCompatActivity {
 //						Print(" return:::" + jsonObject);
 						msg = jsonObject.getString("message");
 						success = jsonObject.getString("success");
-						Print(" merge return: ReportProductBeans success::" + success);
+						Print(" return: ReportProductBeans success::" + success);
 						if (success.equals("true")) {
 							ReportFormBeans = new ArrayList<ReportFormBean>();
 							parseReportid(jsonObject);
@@ -865,7 +855,6 @@ public class ReportActivity extends AppCompatActivity {
 
 		@Override
 		protected void onPostExecute(final Boolean success) {
-			Print(" merge split_merge_item::" + split_merge_item);
 			if(success&&split_merge_item.equals("merge")) {
 				eSplit_merge_container_no.setText(CheckNullString(ReportFormBeans.get(0).container_no));
 				eSplit_merge_container_weight.setText(CheckNullString(ReportFormBeans.get(0).container_weight));
@@ -943,17 +932,14 @@ public class ReportActivity extends AppCompatActivity {
 
 		CheckCReportTask() {
 			runcard_no = eCardid.getText().toString();
-			runcard_no_2=eSplit_merge_cardid.getText().toString();
 			weight = eNetweight.getText().toString();
 			unit_weight = eThousandweight.getText().toString();
 			qty = eReportnum.getText().toString();
 			gross_weight = eGrossweight.getText().toString();
 			loss_weight = eWaste.getText().toString();
 			container_no = eContainerid.getText().toString();
-			container_no_2=eSplit_merge_container_no.getText().toString();
-			container_weight_2=eSplit_merge_container_weight.getText().toString();
 			contrain_weight = eContainerweight.getText().toString();
-			token = PreferencesUtils.getString(ReportActivity.this, token_key, "");
+			token = PreferencesUtils.getString(ReportmaterialActivity.this, token_key, "");
 		}
 
 		@Override
@@ -962,14 +948,14 @@ public class ReportActivity extends AppCompatActivity {
 
 			try {
 				String url = "http://" +
-						PreferencesUtils.getString(ReportActivity.this, ip_key, "120.27.2.177")
-						+ ":" + PreferencesUtils.getString(ReportActivity.this, port_key, "8062") +
+						PreferencesUtils.getString(ReportmaterialActivity.this, ip_key, "120.27.2.177")
+						+ ":" + PreferencesUtils.getString(ReportmaterialActivity.this, port_key, "8062") +
 						IndexConstants.REPORTCARD + "?"
 						+ "token=" + token + "&runcard_no=" + runcard_no
 						+ "&weight=" + weight + "&unit_weight=" + unit_weight
 						+ "&loss_weight=" + loss_weight + "&qty=" + qty + "&gross_weight=" + gross_weight
 						+ "&container_no=" + container_no + "&container_weight=" + contrain_weight+"&split_merge_type="+split_merge_item
-						+"&runcard_no_2="+runcard_no_2+"&container_no_2="+container_no_2+"&container_weight_2="+container_weight_2;
+						+"&runcard_no_2="+"&container_no_2="+"&container_weight_2=";
 //                "login:","登录帐号","Password":"密码"
 				Print("url:::" + url);
 //                Map<String,String> mparams=new HashMap<String,String>();
@@ -1094,7 +1080,7 @@ public class ReportActivity extends AppCompatActivity {
 
 		CheckStopReportTask() {
 			runcard_no = eCardid.getText().toString();
-			token = PreferencesUtils.getString(ReportActivity.this, token_key, "");
+			token = PreferencesUtils.getString(ReportmaterialActivity.this, token_key, "");
 		}
 
 		@Override
@@ -1103,8 +1089,8 @@ public class ReportActivity extends AppCompatActivity {
 
 			try {
 				String url = "http://" +
-						PreferencesUtils.getString(ReportActivity.this, ip_key, "120.27.2.177")
-						+ ":" + PreferencesUtils.getString(ReportActivity.this, port_key, "8062") +
+						PreferencesUtils.getString(ReportmaterialActivity.this, ip_key, "120.27.2.177")
+						+ ":" + PreferencesUtils.getString(ReportmaterialActivity.this, port_key, "8062") +
 						IndexConstants.REPORTCARD_STOP + "?"
 						+ "token=" + token + "&runcard_no=" + runcard_no;
 //                "login:","登录帐号","Password":"密码"
@@ -1176,7 +1162,7 @@ public class ReportActivity extends AppCompatActivity {
 		protected void onPostExecute(final Boolean success) {
 //            showProgress(false);
 //			reloadviewText(success,msg);
-			Util.showShortToastMessage(ReportActivity.this,msg);
+			Util.showShortToastMessage(ReportmaterialActivity.this,msg);
 			if(success){
 				eCardid.setError(null,null);
 			}else{
@@ -1244,7 +1230,7 @@ public class ReportActivity extends AppCompatActivity {
 			weight = eNetweight.getText().toString();
 			qty = eReportnum.getText().toString();
 			gross_weight = eGrossweight.getText().toString();
-			token = PreferencesUtils.getString(ReportActivity.this, token_key, "");
+			token = PreferencesUtils.getString(ReportmaterialActivity.this, token_key, "");
 		}
 
 		@Override
@@ -1253,8 +1239,8 @@ public class ReportActivity extends AppCompatActivity {
 
 			try {
 				String url = "http://" +
-						PreferencesUtils.getString(ReportActivity.this, ip_key, "120.27.2.177")
-						+ ":" + PreferencesUtils.getString(ReportActivity.this, port_key, "8062") +
+						PreferencesUtils.getString(ReportmaterialActivity.this, ip_key, "120.27.2.177")
+						+ ":" + PreferencesUtils.getString(ReportmaterialActivity.this, port_key, "8062") +
 						IndexConstants.REPORTMATERIAL + "?"
 						+ "token=" + token + "&runcard_no=" + runcard_no + "&weight=" + weight
 						+ "&qty=" + qty
@@ -1363,7 +1349,7 @@ public class ReportActivity extends AppCompatActivity {
 
 		CancleReportTask() {
 			runcard_no = eCardid.getText().toString();
-			token = PreferencesUtils.getString(ReportActivity.this, token_key, "");
+			token = PreferencesUtils.getString(ReportmaterialActivity.this, token_key, "");
 		}
 
 		@Override
@@ -1372,8 +1358,8 @@ public class ReportActivity extends AppCompatActivity {
 
 			try {
 				String url = "http://" +
-						PreferencesUtils.getString(ReportActivity.this, ip_key, "120.27.2.177")
-						+ ":" + PreferencesUtils.getString(ReportActivity.this, port_key, "8062") +
+						PreferencesUtils.getString(ReportmaterialActivity.this, ip_key, "120.27.2.177")
+						+ ":" + PreferencesUtils.getString(ReportmaterialActivity.this, port_key, "8062") +
 						IndexConstants.REPORTCARD_CANCLE + "?"
 						+ "token=" + token + "&runcard_no=" + runcard_no;
 //                "login:","登录帐号","Password":"密码"
@@ -1480,7 +1466,7 @@ public class ReportActivity extends AppCompatActivity {
 
 		ReportInspectpassTask() {
 			runcard_no = eCardid.getText().toString();
-			token = PreferencesUtils.getString(ReportActivity.this, token_key, "");
+			token = PreferencesUtils.getString(ReportmaterialActivity.this, token_key, "");
 		}
 
 		@Override
@@ -1489,8 +1475,8 @@ public class ReportActivity extends AppCompatActivity {
 
 			try {
 				String url = "http://" +
-						PreferencesUtils.getString(ReportActivity.this, ip_key, "120.27.2.177")
-						+ ":" + PreferencesUtils.getString(ReportActivity.this, port_key, "8062") +
+						PreferencesUtils.getString(ReportmaterialActivity.this, ip_key, "120.27.2.177")
+						+ ":" + PreferencesUtils.getString(ReportmaterialActivity.this, port_key, "8062") +
 						IndexConstants.REPORT_INSPECTPASS + "?"
 						+ "token=" + token + "&runcard_no=" + runcard_no;
 //                "login:","登录帐号","Password":"密码"
@@ -1597,7 +1583,7 @@ public class ReportActivity extends AppCompatActivity {
 
 		ReportInspectcancleTask() {
 			runcard_no = eCardid.getText().toString();
-			token = PreferencesUtils.getString(ReportActivity.this, token_key, "");
+			token = PreferencesUtils.getString(ReportmaterialActivity.this, token_key, "");
 		}
 
 		@Override
@@ -1606,8 +1592,8 @@ public class ReportActivity extends AppCompatActivity {
 
 			try {
 				String url = "http://" +
-						PreferencesUtils.getString(ReportActivity.this, ip_key, "120.27.2.177")
-						+ ":" + PreferencesUtils.getString(ReportActivity.this, port_key, "8062") +
+						PreferencesUtils.getString(ReportmaterialActivity.this, ip_key, "120.27.2.177")
+						+ ":" + PreferencesUtils.getString(ReportmaterialActivity.this, port_key, "8062") +
 						IndexConstants.REPORT_INSPECTCANCLE + "?"
 						+ "token=" + token + "&runcard_no=" + runcard_no;
 //                "login:","登录帐号","Password":"密码"
@@ -1716,7 +1702,7 @@ public class ReportActivity extends AppCompatActivity {
 
 		ReportInspectNgTask() {
 			runcard_no = eCardid.getText().toString();
-			token = PreferencesUtils.getString(ReportActivity.this, token_key, "");
+			token = PreferencesUtils.getString(ReportmaterialActivity.this, token_key, "");
 		}
 
 		@Override
@@ -1725,8 +1711,8 @@ public class ReportActivity extends AppCompatActivity {
 
 			try {
 				String url = "http://" +
-						PreferencesUtils.getString(ReportActivity.this, ip_key, "120.27.2.177")
-						+ ":" + PreferencesUtils.getString(ReportActivity.this, port_key, "8062") +
+						PreferencesUtils.getString(ReportmaterialActivity.this, ip_key, "120.27.2.177")
+						+ ":" + PreferencesUtils.getString(ReportmaterialActivity.this, port_key, "8062") +
 						IndexConstants.REPORT_INSPECTNG + "?"
 						+ "token=" + token + "&runcard_no=" + runcard_no;
 //                "login:","登录帐号","Password":"密码"
@@ -1835,7 +1821,7 @@ public class ReportActivity extends AppCompatActivity {
 
 		ReportMaterialCancleTask() {
 			runcard_no = eCardid.getText().toString();
-			token = PreferencesUtils.getString(ReportActivity.this, token_key, "");
+			token = PreferencesUtils.getString(ReportmaterialActivity.this, token_key, "");
 		}
 
 		@Override
@@ -1844,8 +1830,8 @@ public class ReportActivity extends AppCompatActivity {
 
 			try {
 				String url = "http://" +
-						PreferencesUtils.getString(ReportActivity.this, ip_key, "120.27.2.177")
-						+ ":" + PreferencesUtils.getString(ReportActivity.this, port_key, "8062") +
+						PreferencesUtils.getString(ReportmaterialActivity.this, ip_key, "120.27.2.177")
+						+ ":" + PreferencesUtils.getString(ReportmaterialActivity.this, port_key, "8062") +
 						IndexConstants.REPORT_MATERIALCANCLE + "?"
 						+ "token=" + token + "&runcard_no=" + runcard_no;
 //                "login:","登录帐号","Password":"密码"
@@ -2011,7 +1997,7 @@ public class ReportActivity extends AppCompatActivity {
 		}
 	}
 	protected void reloadviewText(Boolean success,String msg){
-		Util.showToastMessage(ReportActivity.this, msg);
+		Util.showToastMessage(ReportmaterialActivity.this, msg);
 		if (success&&ReportFormBeans!=null) {
 			Print("ReportProductBeans size::"+ReportProductBeans.size());
 			eCardid.requestFocus();
@@ -2060,22 +2046,19 @@ public class ReportActivity extends AppCompatActivity {
 //                 eReportnum.setText(ReportProductBeans.get(0).);
 //				String process_status = ReportProductBeans.get(0).process_status;
 //				{
-				System.err.println("process_status"+process_status);
 				if (process_status.equals("to_report")) {
-					report_submitbutton.setVisibility(View.VISIBLE);
-//					reportmaterialcancel_submitbutton.setVisibility(View.VISIBLE);
-					report_stopruncard_button.setVisibility(View.VISIBLE);
-					reportcancel_submitbutton.setVisibility(View.GONE);
+//					report_submitbutton.setVisibility(View.VISIBLE);
+					reportmaterialcancel_submitbutton.setVisibility(View.VISIBLE);
+					reportmaterial_submitbutton.setVisibility(View.GONE);
+//					report_stopruncard_button.setVisibility(View.VISIBLE);
 				} else if (process_status.equals("to_inspect")) {
 //					reportmaterialcancel_submitbutton.setVisibility(View.VISIBLE);
 //					reportinspect_submitbutton.setVisibility(View.VISIBLE);
 //					reportinspect_ng_submitbutton.setVisibility(View.VISIBLE);
-					reportcancel_submitbutton.setVisibility(View.VISIBLE);
-
-					report_submitbutton.setVisibility(View.GONE);
-					report_stopruncard_button.setVisibility(View.GONE);
+//					reportcancel_submitbutton.setVisibility(View.VISIBLE);
 				} else if (process_status.equals("to_material")) {
-//					reportmaterial_submitbutton.setVisibility(View.VISIBLE);
+					reportmaterial_submitbutton.setVisibility(View.VISIBLE);
+					reportmaterialcancel_submitbutton.setVisibility(View.GONE);
 //					reportinspectcancel_submitbutton.setVisibility(View.VISIBLE);
 				}
 			}else{
@@ -2110,7 +2093,7 @@ public class ReportActivity extends AppCompatActivity {
 	}
 	public void refreshdatalist(){
 		Collections.sort(ReportProductBeans,idComparator);
-		mAdapter = new ReportdetailAdapter(ReportActivity.this, ReportProductBeans);
+		mAdapter = new ReportdetailAdapter(ReportmaterialActivity.this, ReportProductBeans);
 		mSimpleDetailList.setAdapter(mAdapter);
 		setListViewHeightBasedOnChildren(mSimpleDetailList);
 	}

@@ -77,7 +77,7 @@
                         android:layout_height="match_parent"
                         android:layout_weight="1"
                         android:gravity="center"
-                        android:text="@string/product_batch_number"/>
+                        android:text="@string/product_batch_number" />
 
                     <EditText
                         android:id="@+id/delivery_batch_number"
@@ -87,15 +87,16 @@
                         android:maxLines="1"
                         android:singleLine="true"
                         android:textColor="@color/black" />
+
                     <ImageView
                         android:id="@+id/delivery_batch_number_button"
                         android:layout_width="25dp"
                         android:layout_height="25dp"
                         android:layout_gravity="bottom"
                         android:layout_marginBottom="@dimen/erqode_vertical_margin"
+                        android:background="@mipmap/ercode"
                         android:clickable="true"
-                        android:onClick="onClick"
-                        android:background="@mipmap/ercode" />
+                        android:onClick="onClick" />
 
                 </LinearLayout>
 
@@ -104,30 +105,32 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal">
+
                     <TextView
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
-                        android:gravity="center"
                         android:layout_weight="1"
-                        android:text="@string/Library_number"/>
+                        android:gravity="center"
+                        android:text="@string/Library_number" />
 
                     <EditText
                         android:id="@+id/delivery_library_number"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:maxLines="1"
                         android:layout_weight="3"
+                        android:maxLines="1"
                         android:singleLine="true"
                         android:textColor="@color/black" />
+
                     <ImageView
                         android:id="@+id/delivery_library_number_button"
                         android:layout_width="25dp"
                         android:layout_height="25dp"
                         android:layout_gravity="bottom"
                         android:layout_marginBottom="@dimen/erqode_vertical_margin"
+                        android:background="@mipmap/ercode"
                         android:clickable="true"
-                        android:onClick="onClick"
-                        android:background="@mipmap/ercode" />
+                        android:onClick="onClick" />
                 </LinearLayout>
 
                 <LinearLayout
@@ -135,30 +138,32 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal">
+
                     <TextView
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
-                        android:gravity="center"
                         android:layout_weight="1"
-                        android:text="@string/Bar_code"/>
+                        android:gravity="center"
+                        android:text="@string/Bar_code" />
 
                     <EditText
                         android:id="@+id/delivery_bar_code"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:maxLines="1"
                         android:layout_weight="3"
+                        android:maxLines="1"
                         android:singleLine="true"
                         android:textColor="@color/black" />
+
                     <ImageView
                         android:id="@+id/delivery_bar_code_button"
                         android:layout_width="25dp"
                         android:layout_height="25dp"
                         android:layout_gravity="bottom"
                         android:layout_marginBottom="@dimen/erqode_vertical_margin"
+                        android:background="@mipmap/ercode"
                         android:clickable="true"
-                        android:onClick="onClick"
-                        android:background="@mipmap/ercode" />
+                        android:onClick="onClick" />
 
                 </LinearLayout>
 
@@ -168,19 +173,20 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal">
+
                     <TextView
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
-                        android:gravity="center"
                         android:layout_weight="1"
-                        android:text="@string/Order_number"/>
+                        android:gravity="center"
+                        android:text="@string/Order_number" />
 
                     <EditText
                         android:id="@+id/delivery_Order_number"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:maxLines="1"
                         android:layout_weight="3"
+                        android:maxLines="1"
                         android:singleLine="true"
                         android:textColor="@color/black" />
 
@@ -194,49 +200,43 @@
                     <TextView
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
-                        android:gravity="center"
                         android:layout_weight="1"
-                        android:text="@string/Number_per_box"/>
-
-                    <EditText
-                        android:id="@+id/delivery_Number_per_box"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:maxLines="1"
-                        android:layout_weight="3"
-                        android:digits="1234567890."
-                        android:inputType="phone|number"
-                        android:singleLine="true"
-                        android:textColor="@color/black" />
-
-                </LinearLayout>
-
-                <LinearLayout
-                    android:id="@+id/delivery_num_boxes_form"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal">
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
                         android:gravity="center"
-                        android:layout_weight="1"
-                        android:text="@string/Number_of_boxes"/>
+                        android:text="@string/Number_of_boxes" />
 
                     <EditText
                         android:id="@+id/delivery_num_boxes"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:maxLines="1"
+                        android:layout_weight="1"
                         android:digits="1234567890"
                         android:inputType="phone|number"
-                        android:layout_weight="3"
+                        android:maxLines="1"
+                        android:singleLine="true"
+                        android:textColor="@color/black" />
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:text="@string/Number_per_box" />
+
+                    <EditText
+                        android:id="@+id/delivery_Number_per_box"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:digits="1234567890."
+                        android:inputType="phone|number"
+                        android:maxLines="1"
                         android:singleLine="true"
                         android:textColor="@color/black" />
 
                 </LinearLayout>
+
+
+
                 <LinearLayout
-                    android:id="@+id/delivery_inventory_form"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal">
@@ -246,13 +246,31 @@
                         android:layout_height="match_parent"
                         android:layout_weight="1"
                         android:gravity="center"
-                        android:text="@string/Inventory_quantity" />
+                        android:text="@string/front_of_boxes" />
 
                     <EditText
-                        android:id="@+id/delivery_inventory_quantity"
+                        android:id="@+id/delivery_front_boxes"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_weight="3"
+                        android:layout_weight="1"
+                        android:digits="1234567890"
+                        android:inputType="phone|number"
+                        android:maxLines="1"
+                        android:singleLine="true"
+                        android:textColor="@color/black" />
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:text="@string/front_of_boxes_num" />
+
+                    <EditText
+                        android:id="@+id/delivery_front_boxes_num"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
                         android:digits="1234567890"
                         android:inputType="phone|number"
                         android:maxLines="1"
@@ -260,12 +278,56 @@
                         android:textColor="@color/black" />
 
                 </LinearLayout>
+
                 <LinearLayout
-                    android:id="@+id/delivery_inventory_boxes_form"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal">
 
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:text="@string/thisbatch_of_boxes" />
+
+                    <EditText
+                        android:id="@+id/delivery_thisbatch_boxes"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:digits="1234567890"
+                        android:inputType="phone|number"
+                        android:maxLines="1"
+                        android:singleLine="true"
+                        android:textColor="@color/black" />
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:text="@string/thisbatch_of_boxes_num" />
+
+                    <EditText
+                        android:id="@+id/delivery_thisbatch_boxes_num"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:digits="1234567890"
+                        android:inputType="phone|number"
+                        android:maxLines="1"
+                        android:singleLine="true"
+                        android:textColor="@color/black" />
+
+                </LinearLayout>
+
+
+                <LinearLayout
+                    android:id="@+id/delivery_inventory_form"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
                     <TextView
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
@@ -277,7 +339,24 @@
                         android:id="@+id/delivery_inventory_boxes"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_weight="3"
+                        android:layout_weight="1"
+                        android:digits="1234567890"
+                        android:inputType="phone|number"
+                        android:maxLines="1"
+                        android:singleLine="true"
+                        android:textColor="@color/black" />
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:text="@string/Inventory_quantity" />
+
+                    <EditText
+                        android:id="@+id/delivery_inventory_quantity"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
                         android:digits="1234567890"
                         android:inputType="phone|number"
                         android:maxLines="1"
@@ -285,92 +364,145 @@
                         android:textColor="@color/black" />
 
                 </LinearLayout>
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="horizontal">
-                <Button
-                    android:id="@+id/delivery_submit_button"
-                    style="?android:textAppearanceSmall"
-                    android:onClick="onClick"
-                    android:background="@color/colorbarbackground"
+
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="16dp"
-                    android:layout_weight="1"
-                    android:text="@string/action_scan"
-                    android:textStyle="bold" />
-                <Button
-                    android:id="@+id/delivery_submitcancle_button"
-                    style="?android:textAppearanceSmall"
-                    android:onClick="onClick"
-                    android:background="@color/colorbarbackground"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="16dp"
-                    android:layout_weight="1"
-                    android:text="@string/action_scan_cancle"
-                    android:textStyle="bold" />
-                <Button
-                    android:id="@+id/delivery_warehouse_button"
-                    style="?android:textAppearanceSmall"
-                    android:onClick="onClick"
-                    android:background="@color/colorbarbackground"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="16dp"
-                    android:layout_weight="1"
-                    android:text="@string/action_warehouse"
-                    android:textStyle="bold" />
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:text="@string/available_of_boxes" />
+
+                    <EditText
+                        android:id="@+id/delivery_available_boxes"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:digits="1234567890"
+                        android:inputType="phone|number"
+                        android:maxLines="1"
+                        android:singleLine="true"
+                        android:textColor="@color/black" />
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:text="@string/available_of_boxes_num" />
+
+                    <EditText
+                        android:id="@+id/delivery_available_boxes_num"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:digits="1234567890"
+                        android:inputType="phone|number"
+                        android:maxLines="1"
+                        android:singleLine="true"
+                        android:textColor="@color/black" />
+
                 </LinearLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal">
+
+                    <Button
+                        android:id="@+id/delivery_submit_button"
+                        style="?android:textAppearanceSmall"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="16dp"
+                        android:layout_weight="1"
+                        android:background="@color/colorbarbackground"
+                        android:onClick="onClick"
+                        android:text="@string/action_scan"
+                        android:textStyle="bold" />
+
+                    <Button
+                        android:id="@+id/delivery_submitcancle_button"
+                        style="?android:textAppearanceSmall"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="16dp"
+                        android:layout_weight="1"
+                        android:background="@color/colorbarbackground"
+                        android:onClick="onClick"
+                        android:text="@string/action_scan_cancle"
+                        android:textStyle="bold" />
+
+                    <Button
+                        android:id="@+id/delivery_warehouse_button"
+                        style="?android:textAppearanceSmall"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="16dp"
+                        android:layout_weight="1"
+                        android:background="@color/colorbarbackground"
+                        android:onClick="onClick"
+                        android:text="@string/action_warehouse"
+                        android:textStyle="bold" />
+                </LinearLayout>
+
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="150dp"
                     android:layout_marginTop="5dp"
-                    android:orientation="vertical"
-                    android:background="@color/transport_int">
+                    android:background="@color/transport_int"
+                    android:orientation="vertical">
 
-                   <LinearLayout
+                    <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                       android:orientation="horizontal">
+                        android:orientation="horizontal">
+
                         <TextView
                             android:layout_width="40dp"
                             android:layout_height="match_parent"
-                            android:text="@string/order_id"/>
-                       <TextView
-                           android:layout_width="0dp"
-                           android:layout_height="match_parent"
-                           android:text="@string/Bar_code"
-                           android:layout_weight="2"/>
-                       <TextView
-                           android:layout_width="0dp"
-                           android:layout_height="match_parent"
-                           android:text="@string/number_applications"
-                           android:gravity="center"
-                           android:layout_weight="2"/>
-                       <TextView
-                           android:layout_width="0dp"
-                           android:layout_height="match_parent"
-                           android:layout_gravity="center_horizontal"
-                           android:text="@string/Number_of_boxes"
-                           android:gravity="center"
-                           android:layout_weight="2"/>
-                       <TextView
-                           android:layout_width="0dp"
-                           android:layout_height="match_parent"
-                           android:layout_gravity="center_horizontal"
-                           android:gravity="center"
-                           android:text="@string/numbers"
-                           android:layout_weight="2"/>
-                </LinearLayout>
-                <ListView
+                            android:text="@string/order_id" />
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="2"
+                            android:text="@string/Bar_code" />
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="2"
+                            android:gravity="center"
+                            android:text="@string/number_applications" />
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_gravity="center_horizontal"
+                            android:layout_weight="2"
+                            android:gravity="center"
+                            android:text="@string/Number_of_boxes" />
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_gravity="center_horizontal"
+                            android:layout_weight="2"
+                            android:gravity="center"
+                            android:text="@string/numbers" />
+                    </LinearLayout>
+
+                    <ListView
                         android:id="@+id/delivery_infolist"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:background="@color/c_e6e1db">
 
-                </ListView>
+                    </ListView>
                 </LinearLayout>
             </LinearLayout>
         </ScrollView>

@@ -4,11 +4,17 @@
     <string name="action_settings">设置</string>
     <string name="action_sign_in">登录/注册</string>
     <string name="action_sign_in_short">登录</string>
-    <string name="check_main">生产报工</string>
-    <string name="report_main">生产报工</string>
+    <string name="check_main">工序报工</string>
+    <string name="check_main_material">工序领料</string>
+    <string name="check_main_inspect">工序检验</string>
+    <string name="report_main">工序报工</string>
     <string name="delivery">销售出库</string>
     <string name="entry_production">生产入库(生产)</string>
     <string name="entry_warehouse">生产入库(仓库)</string>
+    <string name="search_inventory_main">库存查询</string>
+    <string name="manufacture_main">生产进度查询</string>
+
+
     <string name="error_field_required">This field is required</string>
     <string name="error_incorrect_password">密码错误</string>
     <string name="error_invalid_email">邮箱地址错误</string>
@@ -33,7 +39,16 @@
     <string name="container_id">容器编号</string>
     <string name="Final_box">是尾箱</string>
     <string name="Inventory_quantity_of_boxes">库存箱数</string>
-    <string name="Inventory_quantity">库存数量</string>
+    <string name="Inventory_quantity">数量</string>
+    <string name="front_of_boxes">前批箱数</string>
+    <string name="front_of_boxes_num">数量</string>
+    <string name="thisbatch_of_boxes">本批箱数</string>
+    <string name="thisbatch_of_boxes_num">数量</string>
+    <string name="instock_of_boxes">库存箱数</string>
+    <string name="instock_of_boxes_num">数量</string>
+    <string name="available_of_boxes">可用箱数</string>
+    <string name="available_of_boxes_num">数量</string>
+
 
     <string name="order_id">项次</string>
     <string name="process_name">工序</string>
@@ -51,6 +66,10 @@
     <string name="Product_Specification">产品规格</string>
     <string name="numbers">数量</string>
     <string name="report_num">数量</string>
+    <string name="merge_cardid">分并桶卡号</string>
+    <string name="split_container_no">桶号</string>
+    <string name="split_container_weight">空桶重</string>
+    <string name="split_merge_type">并桶分桶</string>
     <string name="entrychoice_num">已选数</string>
     <string name="title_activity_check">CheckActivity</string>
     <string name="title_activity_delivery">DeliveryActivity</string>
@@ -66,8 +85,9 @@
     <string name="action_inspect_cancel">取消检验</string>
     <string name="action_report_cancel">取消报工</string>
     <string name="action_material">领  料</string>
-    <string name="action_inspect_pass">检  验</string>
+    <string name="action_inspect_pass">检验PASS</string>
     <string name="action_report">报  工</string>
+    <string name="action_stopruncard">停用流程卡</string>
     <string name="Thousand_weight">千件重量</string>
     <string name="report_thousand_weight">报工千支重</string>
     <string name="net_weight">净重</string>

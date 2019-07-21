@@ -84,4 +84,21 @@
     <string name="entrychoice_num">choice num</string>
     <string name="Num_of_boxes">Num_of_boxes</string>
     <string name="entry_time">entry_time</string>
+    <string name="action_stopruncard">action_stopruncard</string>
+    <string name="split_container_no">split_container_no</string>
+    <string name="split_container_weight">split_container_weight</string>
+    <string name="split_merge_type">split_merge_type</string>
+    <string name="thisbatch_of_boxes">thisbatch_of_boxes</string>
+    <string name="thisbatch_of_boxes_num">thisbatch_of_boxes_num</string>
+    <string name="merge_cardid">merge_cardid</string>
+    <string name="instock_of_boxes_num">instock_of_boxes_num</string>
+    <string name="instock_of_boxes">instock_of_boxes</string>
+    <string name="front_of_boxes_num">front_of_boxes_num</string>
+    <string name="front_of_boxes">front_of_boxes</string>
+    <string name="available_of_boxes">available_of_boxes</string>
+    <string name="available_of_boxes_num">available_of_boxes_num</string>
+    <string name="check_main_inspect">check_main_inspect</string>
+    <string name="check_main_material">check_main_material</string>
+    <string name="manufacture_main">manufacture_main</string>
+    <string name="search_inventory_main">search_inventory_main</string>
 </resources>

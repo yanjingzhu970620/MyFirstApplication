@@ -49,6 +49,7 @@ import static com.yjzfirst.util.IndexConstants.token_key;
 import static com.yjzfirst.util.Util.REQUEST_CODE_SCAN;
 import static com.yjzfirst.util.Util.readStream;
 import static com.yjzfirst.util.Util.setListViewHeightBasedOnChildren;
+import static com.yjzfirst.util.Util.textsetError;
 import static com.yzq.zxinglibrary.common.Constant.CODED_CONTENT;
 
 public class DeliveryActivity extends AppCompatActivity {
@@ -61,6 +62,12 @@ public class DeliveryActivity extends AppCompatActivity {
     EditText mdeliveryInventoryquantity;
     EditText mdeliveryInventoryquantityboxes;
     EditText mdeliveryOrdernumber;
+    EditText mdelivery_front_boxes;
+    EditText mdelivery_front_boxes_num;
+    EditText mdelivery_thisbatch_boxes;
+    EditText mdelivery_thisbatch_boxes_num;
+    EditText mdelivery_available_boxes;
+    EditText mdelivery_available_boxes_num;
     ListView mSimpleDetailList;
     ChooseShipAdapter mAdapter;
     String lastproduct_content = "";
@@ -112,7 +119,28 @@ public class DeliveryActivity extends AppCompatActivity {
 //		mdeliverystocknumboxes = (EditText) findViewById(R.id.delivery_stocknum_boxes);
         mdeliveryInventoryquantity = (EditText) findViewById(R.id.delivery_inventory_quantity);
         mdeliveryInventoryquantityboxes = (EditText) findViewById(R.id.delivery_inventory_boxes);
-
+        mdeliveryInventoryquantity.setFocusable(false);
+        mdeliveryInventoryquantity.setFocusableInTouchMode(false);
+        mdeliveryInventoryquantityboxes.setFocusable(false);
+        mdeliveryInventoryquantityboxes.setFocusableInTouchMode(false);
+          mdelivery_front_boxes= (EditText) findViewById(R.id.delivery_front_boxes);
+          mdelivery_front_boxes.setFocusable(false);
+          mdelivery_front_boxes.setFocusableInTouchMode(false);
+          mdelivery_front_boxes_num= (EditText) findViewById(R.id.delivery_front_boxes_num);
+        mdelivery_front_boxes_num.setFocusable(false);
+        mdelivery_front_boxes_num.setFocusableInTouchMode(false);
+          mdelivery_thisbatch_boxes= (EditText) findViewById(R.id.delivery_thisbatch_boxes);
+        mdelivery_thisbatch_boxes.setFocusable(false);
+        mdelivery_thisbatch_boxes.setFocusableInTouchMode(false);
+          mdelivery_thisbatch_boxes_num= (EditText) findViewById(R.id.delivery_thisbatch_boxes_num);
+        mdelivery_thisbatch_boxes_num.setFocusable(false);
+        mdelivery_thisbatch_boxes_num.setFocusableInTouchMode(false);
+          mdelivery_available_boxes= (EditText) findViewById(R.id.delivery_available_boxes);
+        mdelivery_available_boxes.setFocusable(false);
+        mdelivery_available_boxes.setFocusableInTouchMode(false);
+          mdelivery_available_boxes_num= (EditText) findViewById(R.id.delivery_available_boxes_num);
+        mdelivery_available_boxes_num.setFocusable(false);
+        mdelivery_available_boxes_num.setFocusableInTouchMode(false);
 //        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         mdeliveryOrdernumber = (EditText) findViewById(R.id.delivery_Order_number);
 
@@ -342,6 +370,12 @@ public class DeliveryActivity extends AppCompatActivity {
 //		mdeliverystocknumboxes.setText("");
         mdeliveryInventoryquantity.setText("");
         mdeliveryInventoryquantityboxes.setText("");
+         mdelivery_front_boxes.setText("");;
+         mdelivery_front_boxes_num.setText("");;
+         mdelivery_thisbatch_boxes.setText("");;
+         mdelivery_thisbatch_boxes_num.setText("");;
+         mdelivery_available_boxes.setText("");;
+         mdelivery_available_boxes_num.setText("");;
         mdeliveryOrdernumber.setText("");
         mdeliveryTask = null;
         boxnum = 0;
@@ -443,8 +477,9 @@ public class DeliveryActivity extends AppCompatActivity {
                 mdeliverybatchnumber.setError(null, null);//焦点聚焦时去除错误图标
             } else {
                 Util.showShortToastMessage(DeliveryActivity.this, msg);
-                mdeliverybatchnumber.requestFocus();
-                mdeliverybatchnumber.setError("出货单号有错");
+//                mdeliverybatchnumber.requestFocus();
+//                mdeliverybatchnumber.setError("出货单号有错");
+                textsetError(mdeliverybatchnumber,msg);
             }
         }
 
@@ -558,8 +593,9 @@ public class DeliveryActivity extends AppCompatActivity {
                 mdeliverylibrarynumber.setError(null, null);//焦点聚焦时去除错误图标
             } else {
                 Util.showShortToastMessage(DeliveryActivity.this, msg);
-                mdeliverylibrarynumber.requestFocus();
-                mdeliverylibrarynumber.setError("库位编号有错");
+//                mdeliverylibrarynumber.requestFocus();
+//                mdeliverylibrarynumber.setError("库位编号有错");
+                textsetError(mdeliverylibrarynumber,"库位编号有错"+msg);
             }
         }
 
@@ -734,8 +770,9 @@ public class DeliveryActivity extends AppCompatActivity {
                 getinventoryinfoTask.execute();
             } else {
                 Util.showShortToastMessage(DeliveryActivity.this, msg);
-                mdeliverybarcode.requestFocus();
-                mdeliverybarcode.setError(msg);
+//                mdeliverybarcode.requestFocus();
+//                mdeliverybarcode.setError(msg);
+                textsetError(mdeliverybarcode,msg);
             }
             mdeliverybarcode.addTextChangedListener(textwatcher);
         }
@@ -873,8 +910,7 @@ public class DeliveryActivity extends AppCompatActivity {
 //                Util.showShortToastMessage(DeliveryActivity.this,msg);
                 mdeliverybatchnumber.setError(null, null);
             } else {
-                mdeliverybatchnumber.requestFocus();
-                mdeliverybatchnumber.setError(msg);
+                textsetError(mdeliverybatchnumber,msg);
                 Util.showShortToastMessage(DeliveryActivity.this, msg);
             }
         }
@@ -915,10 +951,43 @@ public class DeliveryActivity extends AppCompatActivity {
         String msg = "";
         String qty = "";//,#数量
         String box_qty = "";// 8#箱数
+        String qty_0 = "";//,#数量
+        String box_qty_0 = "";// 8#箱数
+        String qty_1 = "";//,#数量
+        String box_qty_1 = "";// 8#箱数
+        String qty_2 = "";//,#数量
+        String box_qty_2 = "";// 8#箱数
         int responsecode = 0;
-
+        String location="";
+        String lot_no="";
+        String package_code="";
+        String customercode="";
         GetinventoryinfoTask() {
             product_code = mdeliverybarcode.getText().toString();
+            lot_no = mdeliverybatchnumber.getText().toString();
+            location = mdeliverylibrarynumber.getText().toString();
+            String productinfo[] = lastproduct_content.split(",");
+            for (int i = 0; i < productinfo.length; i++) {
+                String info = productinfo[i];
+                if (i == 0) {
+//                    product_code = info;
+                } else if (i == 1) {
+//                    lot_id = info;
+                } else if (i == 2) {
+//                    qty = info;
+                } else if (i == 3) {
+
+                } else if (i == 4) {
+//                    lot_name = info;
+                } else if (i == 5) {
+                    package_code = info;
+                } else if (i == 6) {
+
+                } else if (i == 7) {
+
+                }
+            }
+            customercode= deliveryBean.get(deliveryBean.size()-1).customer_code;
             token = PreferencesUtils.getString(DeliveryActivity.this, token_key, "");
 
         }
@@ -930,9 +999,11 @@ public class DeliveryActivity extends AppCompatActivity {
             try {
                 String url = "http://" + PreferencesUtils.getString(DeliveryActivity.this, ip_key, "120.27.2.177")
                         + ":" + PreferencesUtils.getString(DeliveryActivity.this, port_key, "8062") +
-                        IndexConstants.CHECKDELIVERYINVENTORY + "?product_code=" + product_code + "&token=" + token;
+                        IndexConstants.CHECKDELIVERYINVENTORY + "?product_code=" + product_code+ "&warehouse_barcode=" + product_code
+                        + "&location_barcode=" + location+ "&lot_no=" + lot_no+
+                        "&package_code=" + package_code+"&customer_code=" +customercode+ "&token=" + token;
 
-                Print("url:::" + url);
+                Print("CHECKDELIVERYINVENTORY url:::" + url);
                 URL posturl = new URL(url);
                 HttpURLConnection conn = (HttpURLConnection) posturl.openConnection();
                 conn.setConnectTimeout(10000);
@@ -961,6 +1032,12 @@ public class DeliveryActivity extends AppCompatActivity {
                             JSONObject numdata = data.getJSONObject(d);
                             box_qty = numdata.getString("box_qty");
                             qty = numdata.getString("qty");
+                            box_qty_0 = numdata.getString("box_qty_0");
+                            qty_0 = numdata.getString("qty_0");
+                            box_qty_1 = numdata.getString("box_qty_1");
+                            qty_1 = numdata.getString("qty_1");
+                            box_qty_2 = numdata.getString("box_qty_2");
+                            qty_2 = numdata.getString("qty_2");
                         }
                     }
                 }
@@ -983,6 +1060,18 @@ public class DeliveryActivity extends AppCompatActivity {
 
                 mdeliveryInventoryquantity.setText(qty);
                 mdeliveryInventoryquantityboxes.setText(box_qty);
+                if(!qty_0.equals("")&&Float.valueOf(qty_0)>0) {
+                    mdelivery_front_boxes_num.setText(qty_0);
+                    mdelivery_front_boxes_num.setBackgroundColor(getResources().getColor(R.color.red));
+                }
+                if(!box_qty_0.equals("")&&Float.valueOf(box_qty_0)>0) {
+                    mdelivery_front_boxes.setText(box_qty_0);
+                    mdelivery_front_boxes.setBackgroundColor(getResources().getColor(R.color.red));
+                }
+                mdelivery_thisbatch_boxes.setText(box_qty_1);
+                mdelivery_thisbatch_boxes_num.setText(qty_1);
+                mdelivery_available_boxes.setText(box_qty_2);
+                mdelivery_available_boxes_num.setText(qty_2);
 //                mdeliveryNumberperbox.setText(qty);
 
             } else {

@@ -55,6 +55,7 @@ import static com.yjzfirst.util.IndexConstants.token_key;
 import static com.yjzfirst.util.Util.REQUEST_CODE_SCAN;
 import static com.yjzfirst.util.Util.readStream;
 import static com.yjzfirst.util.Util.setListViewHeightBasedOnChildren;
+import static com.yjzfirst.util.Util.textsetError;
 import static com.yzq.zxinglibrary.common.Constant.CODED_CONTENT;
 
 public class EntryFormActivity extends AppCompatActivity {
@@ -602,8 +603,9 @@ public class EntryFormActivity extends AppCompatActivity {
 //				mentryorderid.setFocusable(false);
 //				mentryorderid.setFocusableInTouchMode(false);
 			} else {
-				mentryorderid.requestFocus();
-				mentryorderid.setError(msg);
+//				mentryorderid.requestFocus();
+//				mentryorderid.setError(msg);
+				textsetError(mentryorderid,msg);
 			}
 			mentryorderid.addTextChangedListener(textWatcher);
 		}
@@ -771,8 +773,9 @@ public class EntryFormActivity extends AppCompatActivity {
 				Productcontent = content;
 				Print("Productcontent"+Productcontent);
 			} else {
-				mentrybarcode.requestFocus();
-				mentrybarcode.setError(msg);
+//				mentrybarcode.requestFocus();
+//				mentrybarcode.setError(msg);
+				textsetError(mentrybarcode,msg);
 			}
 			mentrybarcode.addTextChangedListener(textWatcher);
 		}
@@ -975,7 +978,7 @@ public class EntryFormActivity extends AppCompatActivity {
 			if (success) {
 				boxnum = 0;
 				boxesnum = new ArrayList<Map<String, String>>();
-				mentrybillnumber.setError(null, null);
+				mentrybarcode.setError(null, null);
 				mentrybillnumber.setText(Ordername);
 
 				refreshdatalist();
@@ -985,8 +988,9 @@ public class EntryFormActivity extends AppCompatActivity {
 //				mentryNumberperbox.setText(num_perbox);
 //				Productcontent=content;
 			} else {
-				mentrybillnumber.requestFocus();
-				mentrybillnumber.setError(msg);
+//				mentrybarcode.requestFocus();
+//				mentrybarcode.setError(msg);
+				textsetError(mentrybarcode,msg);
 			}
 		}
 
@@ -1306,8 +1310,9 @@ public class EntryFormActivity extends AppCompatActivity {
 
 				refreshdatalist();
 			} else {
-				mentrybillnumber.requestFocus();
-				mentrybillnumber.setError(msg);
+//				mentrybillnumber.requestFocus();
+//				mentrybillnumber.setError(msg);
+				textsetError(mentrybillnumber,msg);
 			}
 		}
 

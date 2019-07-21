@@ -59,6 +59,14 @@
             android:name="app.yjzfirst.com.activity.ReportActivity"
             android:label="@string/title_activity_check"
             android:theme="@style/AppTheme.NoActionBar"/>
+        <activity
+            android:name="app.yjzfirst.com.activity.ReportcheckActivity"
+            android:label="@string/title_activity_check"
+            android:theme="@style/AppTheme.NoActionBar"/>
+        <activity
+            android:name="app.yjzfirst.com.activity.ReportmaterialActivity"
+            android:label="@string/title_activity_check"
+            android:theme="@style/AppTheme.NoActionBar"/>
     </application>
 
 </manifest>

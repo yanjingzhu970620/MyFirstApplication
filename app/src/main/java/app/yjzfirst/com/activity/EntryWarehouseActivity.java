@@ -53,6 +53,7 @@ import static com.yjzfirst.util.IndexConstants.token_key;
 import static com.yjzfirst.util.Util.REQUEST_CODE_SCAN;
 import static com.yjzfirst.util.Util.readStream;
 import static com.yjzfirst.util.Util.setListViewHeightBasedOnChildren;
+import static com.yjzfirst.util.Util.textsetError;
 import static com.yzq.zxinglibrary.common.Constant.CODED_CONTENT;
 
 public class EntryWarehouseActivity extends AppCompatActivity {
@@ -631,8 +632,9 @@ public class EntryWarehouseActivity extends AppCompatActivity {
 
 				refreshdatalist();
 			}else{
-				mentryorderid.requestFocus();
-				mentryorderid.setError(msg);
+//				mentryorderid.requestFocus();
+//				mentryorderid.setError(msg);
+				textsetError(mentrywarenumber,"库位编号有错"+msg);
 			}
 		}
 
@@ -736,8 +738,9 @@ public class EntryWarehouseActivity extends AppCompatActivity {
 				mentrybarcode.requestFocus();
 				mentrywarenumber.setError(null, null);//焦点聚焦时去除错误图标
 			} else {
-				mentrywarenumber.requestFocus();
-				mentrywarenumber.setError("库位编号有错");
+//				mentrywarenumber.requestFocus();
+//				mentrywarenumber.setError("库位编号有错");
+				textsetError(mentrywarenumber,"库位编号有错"+msg);
 			}
 		}
 
@@ -906,8 +909,9 @@ public class EntryWarehouseActivity extends AppCompatActivity {
 				finalbox.setChecked(isfinalbox);
 				Productcontent=content;
 			}else{
-				mentrybarcode.requestFocus();
-				mentrybarcode.setError(msg);
+//				mentrybarcode.requestFocus();
+//				mentrybarcode.setError(msg);
+				textsetError(mentrybarcode,msg);
 			}
 			mentrybarcode.addTextChangedListener(textWatcher);
 		}
@@ -1125,8 +1129,9 @@ public class EntryWarehouseActivity extends AppCompatActivity {
 //				mentryNumberperbox.setText(num_perbox);
 //				Productcontent=content;
 			}else{
-				mentrybarcode.requestFocus();
-				mentrybarcode.setError(msg);
+//				mentrybarcode.requestFocus();
+//				mentrybarcode.setError(msg);
+				textsetError(mentrybarcode,msg);
 			}
 		}
 

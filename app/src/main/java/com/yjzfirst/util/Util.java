@@ -2,12 +2,21 @@ package com.yjzfirst.util;
 
 import android.Manifest;
 import android.app.Activity;
+import android.app.AlarmManager;
+import android.app.Notification;
+import android.app.NotificationManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.BitmapFactory;
+import android.media.AudioManager;
+import android.media.MediaPlayer;
+import android.media.SoundPool;
+import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.ContextCompat;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
@@ -16,6 +25,9 @@ import com.yzq.zxinglibrary.android.CaptureActivity;
 
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
+import java.util.HashMap;
+
+import app.yjzfirst.com.activity.R;
 
 /**
  * Created by 94012 on 2018/1/17.
@@ -95,5 +107,34 @@ public class Util {
         } else {
             return s;
         }
+    }
+
+    private void setsound(Context context) {
+        //发送通知
+        NotificationCompat.Builder notifyBuilder =
+                new NotificationCompat.Builder(context)
+                        //设置可以显示多行文本
+                        .setContentTitle("信息错误")
+                        .setContentText("信息错误")
+                        .setSmallIcon(R.mipmap.mainview)
+                        //设置大图标
+                        .setLargeIcon(BitmapFactory.decodeResource(context.getResources(), R.mipmap.mainview))
+                        // 点击消失
+                        .setAutoCancel(true)
+                        // 设置该通知优先级
+                        .setPriority(Notification.PRIORITY_MAX)
+                        .setTicker("悬浮通知")
+                        // 通知首次出现在通知栏，带上升动画效果的
+                        .setWhen(System.currentTimeMillis())
+                        // 通知产生的时间，会在通知信息里显示
+                        // 向通知添加声音、闪灯和振动效果的最简单、最一致的方式是使用当前的用户默认设置，使用defaults属性，可以组合：
+                        .setDefaults(Notification.DEFAULT_VIBRATE | Notification.DEFAULT_ALL | Notification.DEFAULT_SOUND);
+        NotificationManager mNotifyMgr = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+        Notification notification = notifyBuilder.build();
+        mNotifyMgr.notify(01, notification);
+    }
+    public static void textsetError(EditText text,String msg) {
+        text.requestFocus();
+        text.setError(msg);
     }
 }

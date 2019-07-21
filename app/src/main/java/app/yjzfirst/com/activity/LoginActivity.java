@@ -43,6 +43,7 @@ import static com.yjzfirst.util.IndexConstants.port_key;
 import static com.yjzfirst.util.IndexConstants.rights_key;
 import static com.yjzfirst.util.IndexConstants.token_key;
 import static com.yjzfirst.util.Util.readStream;
+import static com.yjzfirst.util.Util.textsetError;
 
 /**
  * A login screen that offers login via email/password.
@@ -443,8 +444,10 @@ public class LoginActivity extends AppCompatActivity {
                 LoginActivity.this.startActivity(intent);
                 finish();
             } else {
-                mPasswordView.setError(getString(R.string.error_incorrect_password));
-                mPasswordView.requestFocus();
+//                mPasswordView.setError(getString(R.string.error_incorrect_password));
+//                mPasswordView.requestFocus();
+
+                textsetError(mPasswordView,getString(R.string.error_incorrect_password));
             }
         }
 

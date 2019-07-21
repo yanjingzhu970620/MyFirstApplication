@@ -50,8 +50,15 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         LinearLayout entry_main=(LinearLayout) findViewById(R.id.entry_main);
+        LinearLayout entry_main_warehouse=(LinearLayout) findViewById(R.id.entry_main_warehouse);
         LinearLayout delivery_main=(LinearLayout) findViewById(R.id.delivery_main);
-        LinearLayout Check_main=(LinearLayout) findViewById(R.id.Check_main);
+        LinearLayout report_check_main=(LinearLayout) findViewById(R.id.Report_Check_main);
+        LinearLayout report_check_main_material=(LinearLayout) findViewById(R.id.Report_Check_main_material);
+        LinearLayout report_check_main_inspect=(LinearLayout) findViewById(R.id.Report_Check_main_inspect);
+        LinearLayout Search_inventory_main=(LinearLayout) findViewById(R.id.Search_inventory_main);
+        LinearLayout manufacture_main=(LinearLayout) findViewById(R.id.manufacture_main);
+        LinearLayout report_check_main_material_content=(LinearLayout) findViewById(R.id.Report_Check_main_material_content);
+        LinearLayout report_check_main_content=(LinearLayout) findViewById(R.id.Report_Check_main_content);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
 
             Window window = MainActivity.this.getWindow();
@@ -65,25 +72,52 @@ public class MainActivity extends AppCompatActivity {
             //window.setNavigationBarColor(activity.getResources().getColor(colorResId));
         }
         String rights= PreferencesUtils.getString(MainActivity.this,rights_key,"rights");
+        int coloumn=6;
         if(!rights.contains("group_app_mrp_finish_in")){
             entry_main.setVisibility(View.GONE);
+            coloumn=coloumn-1;
         }
         if(!rights.contains("group_app_mrp_finish_in_confirm")){
-            entry_main.setVisibility(View.GONE);
-        }
-        if(!rights.contains("group_app_mrp_move")){
-            Check_main.setVisibility(View.GONE);
+            entry_main_warehouse.setVisibility(View.GONE);
+            coloumn=coloumn-1;
         }
         if(!rights.contains("group_app_sales_delivery")){
             delivery_main.setVisibility(View.GONE);
+            coloumn=coloumn-1;
         }
-
+        if(!rights.contains("group_app_mrp_move")){
+            report_check_main.setVisibility(View.GONE);
+            coloumn=coloumn-1;
+        }
+        if(!rights.contains("group_app_mrp_material")){
+            report_check_main_material.setVisibility(View.GONE);
+            coloumn=coloumn-1;
+        }
+        if(!rights.contains("group_app_mrp_inspect")){
+            report_check_main_inspect.setVisibility(View.GONE);
+            coloumn=coloumn-1;
+        }
+        if(!rights.contains("group_app_inventory_query")){
+            Search_inventory_main.setVisibility(View.GONE);
+            coloumn=coloumn-1;
+        }
+        if(!rights.contains("group_app_manufacture_query")){
+            manufacture_main.setVisibility(View.GONE);
+            coloumn=coloumn-1;
+        }
+        if(coloumn<=2) {
+            report_check_main_material_content.setVisibility(View.INVISIBLE);
+            report_check_main_content.setVisibility(View.INVISIBLE);
+        }else{
+            report_check_main_material_content.setVisibility(View.GONE);
+            report_check_main_content.setVisibility(View.GONE);
+        }
         SimpleDateFormat sdf = new SimpleDateFormat(
                 "yyyyMMdd");
         Date nowdate=new Date();
         Date expiredate=new Date();;
         try {
-            expiredate=sdf.parse("20190815");
+            expiredate=sdf.parse("20190810");
         } catch (ParseException e) {
             e.printStackTrace();
         }
@@ -106,8 +140,14 @@ public class MainActivity extends AppCompatActivity {
         }else if (view.getId() == R.id.entry_main_warehouse) {
             Intent intent=new Intent(MainActivity.this,EntryWarehouseActivity.class);
             MainActivity.this.startActivity(intent);
-        }else if (view.getId() == R.id.Check_main) {
+        }else if (view.getId() == R.id.Report_Check_main) {
             Intent intent=new Intent(MainActivity.this,ReportActivity.class);
+            MainActivity.this.startActivity(intent);
+        }else if (view.getId() == R.id.Report_Check_main_material) {
+            Intent intent=new Intent(MainActivity.this,ReportmaterialActivity.class);
+            MainActivity.this.startActivity(intent);
+        }else if (view.getId() == R.id.Report_Check_main_inspect) {
+            Intent intent=new Intent(MainActivity.this,ReportcheckActivity.class);
             MainActivity.this.startActivity(intent);
         }
     }
