@@ -100,11 +100,14 @@ public class CheckInventoryActivity extends AppCompatActivity {
             //window.setNavigationBarColor(activity.getResources().getColor(colorResId));
 
         }
-        minventorybatchnumber = (EditText) findViewById(R.id.inventory_batch_number);
-//        minventorybatchnumber.addTextChangedListener(shipsWatcher);
         minventorybarcode = (EditText) findViewById(R.id.inventory_bar_code);//产品编号会有多个
 //        minventorybarcode.addTextChangedListener(shipsWatcher);
         minventorylibrarynumber = (EditText) findViewById(R.id.inventory_library_number);
+
+        minventorybatchnumber = (EditText) findViewById(R.id.inventory_batch_number);
+        minventorybatchnumber.setFocusable(false);
+        minventorybatchnumber.setFocusableInTouchMode(false);
+//        minventorybatchnumber.addTextChangedListener(shipsWatcher);
 //        minventorylibrarynumber.addTextChangedListener(shipsWatcher);
         minventoryNumberperbox = (EditText) findViewById(R.id.inventory_Number_per_box);
 //        minventoryNumberperbox.addTextChangedListener(shipsWatcher);
@@ -116,22 +119,22 @@ public class CheckInventoryActivity extends AppCompatActivity {
         minventoryInventoryquantity.setFocusableInTouchMode(false);
         minventoryInventoryquantityboxes.setFocusable(false);
         minventoryInventoryquantityboxes.setFocusableInTouchMode(false);
-          minventory_front_boxes= (EditText) findViewById(R.id.inventory_front_boxes);
-          minventory_front_boxes.setFocusable(false);
-          minventory_front_boxes.setFocusableInTouchMode(false);
-          minventory_front_boxes_num= (EditText) findViewById(R.id.inventory_front_boxes_num);
+        minventory_front_boxes = (EditText) findViewById(R.id.inventory_front_boxes);
+        minventory_front_boxes.setFocusable(false);
+        minventory_front_boxes.setFocusableInTouchMode(false);
+        minventory_front_boxes_num = (EditText) findViewById(R.id.inventory_front_boxes_num);
         minventory_front_boxes_num.setFocusable(false);
         minventory_front_boxes_num.setFocusableInTouchMode(false);
-          minventory_thisbatch_boxes= (EditText) findViewById(R.id.inventory_thisbatch_boxes);
+        minventory_thisbatch_boxes = (EditText) findViewById(R.id.inventory_thisbatch_boxes);
         minventory_thisbatch_boxes.setFocusable(false);
         minventory_thisbatch_boxes.setFocusableInTouchMode(false);
-          minventory_thisbatch_boxes_num= (EditText) findViewById(R.id.inventory_thisbatch_boxes_num);
+        minventory_thisbatch_boxes_num = (EditText) findViewById(R.id.inventory_thisbatch_boxes_num);
         minventory_thisbatch_boxes_num.setFocusable(false);
         minventory_thisbatch_boxes_num.setFocusableInTouchMode(false);
-          minventory_available_boxes= (EditText) findViewById(R.id.inventory_available_boxes);
+        minventory_available_boxes = (EditText) findViewById(R.id.inventory_available_boxes);
         minventory_available_boxes.setFocusable(false);
         minventory_available_boxes.setFocusableInTouchMode(false);
-          minventory_available_boxes_num= (EditText) findViewById(R.id.inventory_available_boxes_num);
+        minventory_available_boxes_num = (EditText) findViewById(R.id.inventory_available_boxes_num);
         minventory_available_boxes_num.setFocusable(false);
         minventory_available_boxes_num.setFocusableInTouchMode(false);
 //        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -165,26 +168,7 @@ public class CheckInventoryActivity extends AppCompatActivity {
     }
 
     public void addTextWatcher() {
-        minventorybatchnumber.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-
-                if (!minventorybatchnumber.getText().toString().equals("")) {
-                    GetforminfoTask getforminfotask = new GetforminfoTask();
-                    getforminfotask.execute((Void) null);
-                }
-            }
-        });
         minventorylibrarynumber.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -199,9 +183,12 @@ public class CheckInventoryActivity extends AppCompatActivity {
             @Override
             public void afterTextChanged(Editable s) {
 //				minventorylibrarynumber.removeTextChangedListener(this);
-                if (!minventorylibrarynumber.getText().toString().equals("")) {
+                if (!minventorylibrarynumber.getText().toString().equals("")
+                        &&!minventorybarcode.getText().toString().equals("")) {
                     CheckLibrarynumTask checklibrarynumTask = new CheckLibrarynumTask();
                     checklibrarynumTask.execute();
+                }else{
+                    minventorylibrarynumber.setError("请先扫描产品编码");
                 }
 //				minventorylibrarynumber.addTextChangedListener(this);
             }
@@ -223,20 +210,6 @@ public class CheckInventoryActivity extends AppCompatActivity {
 
                 if (!content.equals("")) {
                     minventorybarcode.removeTextChangedListener(this);
-//					String product_code="";
-//					try {
-//						String productinfo[] = content.split(",");
-//						for (int i = 0; i < productinfo.length; i++) {
-//							String info = productinfo[i];
-//							if (i == 0) {
-//								product_code = info;
-//							}
-//						}
-//					}catch (Exception e){
-//						e.printStackTrace();
-//					}
-//					minventorybarcode.setText(product_code);
-//					minventorybarcode.addTextChangedListener(this);
                     CheckproductinfoTask checkproductinfoTask = new CheckproductinfoTask(content, this);
                     checkproductinfoTask.execute();
                 }
@@ -249,7 +222,8 @@ public class CheckInventoryActivity extends AppCompatActivity {
             finish();
         } else if (view.getId() == R.id.inventory_submit_button) {
             Print("inventory_submit_button:::");
-            attemptCheck();
+            GetinventoryinfoTask getinventoryinfoTask = new GetinventoryinfoTask();
+            getinventoryinfoTask.execute();
         }
 //        else if (view.getId() == R.id.inventory_submitcancle_button) {
 //            Print("inventory_submit_button:::");
@@ -301,11 +275,6 @@ public class CheckInventoryActivity extends AppCompatActivity {
 //                    minventorylibrarynumber.setText("9995-0001");
 //					CheckLibrarynumTask checklibrarynumTask = new CheckLibrarynumTask();
 //					checklibrarynumTask.execute();//监听了
-                } else if (qrcodetextmode == qrcodemode.BATCH_NUMBER) {
-                    minventorybatchnumber.setText(content);//
-//                    minventorybatchnumber.setText("SD20190625-01");//测试数据
-//					GetforminfoTask getforminfotask = new GetforminfoTask();
-//					getforminfotask.execute((Void) null);//监听了
                 }
             }
 
@@ -365,12 +334,12 @@ public class CheckInventoryActivity extends AppCompatActivity {
 //		minventorystocknumboxes.setText("");
         minventoryInventoryquantity.setText("");
         minventoryInventoryquantityboxes.setText("");
-         minventory_front_boxes.setText("");;
-         minventory_front_boxes_num.setText("");;
-         minventory_thisbatch_boxes.setText("");;
-         minventory_thisbatch_boxes_num.setText("");;
-         minventory_available_boxes.setText("");;
-         minventory_available_boxes_num.setText("");;
+        minventory_front_boxes.setText("");
+        minventory_front_boxes_num.setText("");
+        minventory_thisbatch_boxes.setText("");
+        minventory_thisbatch_boxes_num.setText("");
+        minventory_available_boxes.setText("");
+        minventory_available_boxes_num.setText("");
         minventoryOrdernumber.setText("");
         minventoryTask = null;
         boxnum = 0;
@@ -403,7 +372,7 @@ public class CheckInventoryActivity extends AppCompatActivity {
             try {
                 String url = "http://" + PreferencesUtils.getString(CheckInventoryActivity.this, ip_key, "120.27.2.177")
                         + ":" + PreferencesUtils.getString(CheckInventoryActivity.this, port_key, "8062") +
-                        IndexConstants.CHECKinventoryFORM + "?name=" + batch_num + "&token=" + token;
+                        IndexConstants.CHECKDELIVERYFORM + "?name=" + batch_num + "&token=" + token;
                 Print("url:::" + url);
                 URL posturl = new URL(url);
                 HttpURLConnection conn = (HttpURLConnection) posturl.openConnection();
@@ -429,20 +398,20 @@ public class CheckInventoryActivity extends AppCompatActivity {
 //                        String token =data.getString("line_data");
                                 JSONArray line_data = data.getJSONObject(d).getJSONArray("line_data");
                                 for (int i = 0; i < line_data.length(); i++) {
-                                    InventoryBean deliver = new InventoryBean();
-                                    deliver.sequence = line_data.getJSONObject(i).getString("sequence");
-                                    deliver.bar_code = line_data.getJSONObject(i).getString("product_code");
-                                    deliver.product_id = line_data.getJSONObject(i).getString("product_id");
-                                    deliver.product_specification = line_data.getJSONObject(i).getString("product_name");
-                                    deliver.number_applications = line_data.getJSONObject(i).getString("qty");
-                                    deliver.number_boxes = line_data.getJSONObject(i).getString("box_qty");
-                                    deliver.numbers = line_data.getJSONObject(i).getString("product_qty");
+//                                    InventoryBean deliver = new InventoryBean();
+//                                    deliver.sequence = line_data.getJSONObject(i).getString("sequence");
+//                                    deliver.bar_code = line_data.getJSONObject(i).getString("product_code");
+//                                    deliver.product_id = line_data.getJSONObject(i).getString("product_id");
+//                                    deliver.product_specification = line_data.getJSONObject(i).getString("product_name");
+//                                    deliver.number_applications = line_data.getJSONObject(i).getString("qty");
+//                                    deliver.number_boxes = line_data.getJSONObject(i).getString("box_qty");
+//                                    deliver.numbers = line_data.getJSONObject(i).getString("product_qty");
+//
+//                                    HashMap<String, String> map = new HashMap<String, String>();
+//                                    map.put(deliver.bar_code, deliver.product_id);
+//                                    productidmap.put(deliver.bar_code + "id", map);
 
-                                    HashMap<String, String> map = new HashMap<String, String>();
-                                    map.put(deliver.bar_code, deliver.product_id);
-                                    productidmap.put(deliver.bar_code + "id", map);
-
-                                    InventoryBean.add(deliver);
+//                                    InventoryBean.add(deliver);
 
                                 }
                             }
@@ -474,7 +443,7 @@ public class CheckInventoryActivity extends AppCompatActivity {
                 Util.showShortToastMessage(CheckInventoryActivity.this, msg);
 //                minventorybatchnumber.requestFocus();
 //                minventorybatchnumber.setError("出货单号有错");
-                textsetError(CheckInventoryActivity.this,minventorybatchnumber,msg);
+                textsetError(CheckInventoryActivity.this, minventorybatchnumber, msg);
             }
         }
 
@@ -510,7 +479,7 @@ public class CheckInventoryActivity extends AppCompatActivity {
     public static Comparator idComparator = new Comparator() {
         @Override
         public int compare(Object o1, Object o2) {
-            return (Integer.compare(Integer.parseInt(((InventoryBean) o1).sequence), Integer.parseInt(((InventoryBean) o2).sequence)));
+            return (Integer.compare(Integer.parseInt(((InventoryBean) o1).location_code), Integer.parseInt(((InventoryBean) o2).location_code)));
         }
     };
 
@@ -559,10 +528,14 @@ public class CheckInventoryActivity extends AppCompatActivity {
 //                        String token =data.getString("line_data");
                             JSONObject locationdata = data.getJSONObject(d);
                             String warehouse_id = locationdata.getString("warehouse_id");
+                            String warehouse_code = locationdata.getString("warehouse_code");
                             String location_id = locationdata.getString("location_id");
+                            String location_code = locationdata.getString("location_code");
                             HashMap<String, String> map = new HashMap<>();
                             map.put("warehouse_id", warehouse_id);
+                            map.put("warehouse_code", warehouse_code);
                             map.put("location_id", location_id);
+                            map.put("location_code", location_code);
                             locationmap.put(library_num, map);
                         }
                     }
@@ -584,13 +557,15 @@ public class CheckInventoryActivity extends AppCompatActivity {
         protected void onPostExecute(final Boolean success) {
             if (success) {
                 Util.showShortToastMessage(CheckInventoryActivity.this, msg);
-                minventorybarcode.requestFocus();
+//                mdeliverybarcode.requestFocus();
                 minventorylibrarynumber.setError(null, null);//焦点聚焦时去除错误图标
+                GetinventoryinfoTask getinventoryinfoTask = new GetinventoryinfoTask();
+                getinventoryinfoTask.execute();
             } else {
                 Util.showShortToastMessage(CheckInventoryActivity.this, msg);
-//                minventorylibrarynumber.requestFocus();
-//                minventorylibrarynumber.setError("库位编号有错");
-                textsetError(CheckInventoryActivity.this,minventorylibrarynumber,"库位编号有错"+msg);
+//                mdeliverylibrarynumber.requestFocus();
+//                mdeliverylibrarynumber.setError("库位编号有错");
+                textsetError(CheckInventoryActivity.this, minventorylibrarynumber, "库位编号有错" + msg);
             }
         }
 
@@ -623,16 +598,13 @@ public class CheckInventoryActivity extends AppCompatActivity {
     }
 
     public class CheckproductinfoTask extends AsyncTask<Void, Void, Boolean> {
+        TextWatcher textwatcher;
         String content = "";
         String token = "";
-        String batch_num = "";
-        String librarynum = "";
         String product_code = "";
+        String lot_name = "";
         String success = "";
         String msg = "";
-        String lot_id = "";
-        String qty = "";
-        TextWatcher textwatcher;
         int responsecode = 0;
 
         CheckproductinfoTask(String content, TextWatcher textwatcher) {
@@ -644,26 +616,22 @@ public class CheckInventoryActivity extends AppCompatActivity {
                 if (i == 0) {
                     product_code = info;
                 } else if (i == 1) {
-
+//                    lot_id = info;
                 } else if (i == 2) {
-                    qty = info;
+//                    qty = info;
                 } else if (i == 3) {
 
                 } else if (i == 4) {
-                    lot_id = info;
+                    lot_name = info;
                 } else if (i == 5) {
-
+//                    package_code = info;
                 } else if (i == 6) {
 
                 } else if (i == 7) {
 
-                } else if (i == 8) {
-
                 }
             }
 //            product_code=content;
-            librarynum = minventorylibrarynumber.getText().toString();
-            batch_num = minventorybatchnumber.getText().toString();
             token = PreferencesUtils.getString(CheckInventoryActivity.this, token_key, "");
 
         }
@@ -674,10 +642,8 @@ public class CheckInventoryActivity extends AppCompatActivity {
 
             try {
                 String url = "http://" + PreferencesUtils.getString(CheckInventoryActivity.this, ip_key, "120.27.2.177")
-                        + ":" + PreferencesUtils.getString(CheckInventoryActivity.this, port_key, "8062") +"";
-//                        IndexConstants.CHECKinventoryPRODUCT + "?product_code=" + product_code + "&name=" + batch_num + "&token=" + token;
-//                "login:","登录帐号","Password":"密码"
-                Print("lot_id:::" + lot_id + "qty:::" + qty);
+                        + ":" + PreferencesUtils.getString(CheckInventoryActivity.this, port_key, "8062")
+                        + IndexConstants.CHECKINVERTORYPRODUCT + "?product_code=" + product_code + "&token=" + token;
                 Print("url:::" + url);
                 URL posturl = new URL(url);
                 HttpURLConnection conn = (HttpURLConnection) posturl.openConnection();
@@ -726,48 +692,30 @@ public class CheckInventoryActivity extends AppCompatActivity {
         protected void onPostExecute(final Boolean success) {
             if (success) {
                 Util.showShortToastMessage(CheckInventoryActivity.this, msg);
-                librarymap.put(this.content, librarynum);
 
-                if (this.content.equals(lastproduct_content) ||
-                        boxnum == 0) {
-                    boxnum++;
-                    if (boxesnum.size() > 0) {
-                        boxesnum.remove(boxesnum.size() - 1);
-                    }
-                    minventorybarcode.setText(product_code);
 
-                    saveBoxNum(this.content, boxnum + "");
-                } else {
-                    minventorybarcode.setText(product_code);
-                    boxnum = 1;
-                    saveBoxNum(this.content, boxnum + "");
-                }
+//                minventoryOrdernumber.setFocusable(false);
+//                minventoryOrdernumber.setFocusableInTouchMode(false);
+//                minventoryNumberperbox.setFocusable(false);
+//                minventoryNumberperbox.setFocusableInTouchMode(false);
+//                minventoryInventoryquantity.setFocusable(false);
+//                minventoryInventoryquantity.setFocusableInTouchMode(false);
+//                minventoryInventoryquantityboxes.setFocusable(false);
+//                minventoryInventoryquantityboxes.setFocusableInTouchMode(false);
                 lastproduct_content = this.content;
-                minventorynumboxes.setText(boxnum + "");
-                minventoryOrdernumber.setText(lot_id);
-                minventoryNumberperbox.setText(qty);
-
-                minventoryOrdernumber.setFocusable(false);
-                minventoryOrdernumber.setFocusableInTouchMode(false);
-                minventoryNumberperbox.setFocusable(false);
-                minventoryNumberperbox.setFocusableInTouchMode(false);
-                minventoryInventoryquantity.setFocusable(false);
-                minventoryInventoryquantity.setFocusableInTouchMode(false);
-                minventoryInventoryquantityboxes.setFocusable(false);
-                minventoryInventoryquantityboxes.setFocusableInTouchMode(false);
-
                 minventorybarcode.setError(null, null);//焦点聚焦时去除错误图标
-
-                CheckproductlabelTask checkproductlabelTask = new CheckproductlabelTask(content);
-                checkproductlabelTask.execute();
-
+                minventorybarcode.setText(product_code);
+                minventorybatchnumber.setText(lot_name);
+//                CheckproductlabelTask checkproductlabelTask = new CheckproductlabelTask(content);
+//                checkproductlabelTask.execute();
+                minventorylibrarynumber.requestFocus();
                 GetinventoryinfoTask getinventoryinfoTask = new GetinventoryinfoTask();
                 getinventoryinfoTask.execute();
             } else {
                 Util.showShortToastMessage(CheckInventoryActivity.this, msg);
 //                minventorybarcode.requestFocus();
 //                minventorybarcode.setError(msg);
-                textsetError(CheckInventoryActivity.this,minventorybarcode,msg);
+                textsetError(CheckInventoryActivity.this, minventorybarcode, msg);
             }
             minventorybarcode.addTextChangedListener(textwatcher);
         }
@@ -905,7 +853,7 @@ public class CheckInventoryActivity extends AppCompatActivity {
 //                Util.showShortToastMessage(inventoryActivity.this,msg);
                 minventorybatchnumber.setError(null, null);
             } else {
-                textsetError(CheckInventoryActivity.this,minventorybatchnumber,msg);
+                textsetError(CheckInventoryActivity.this, minventorybatchnumber, msg);
                 Util.showShortToastMessage(CheckInventoryActivity.this, msg);
             }
         }
@@ -953,14 +901,21 @@ public class CheckInventoryActivity extends AppCompatActivity {
         String qty_2 = "";//,#数量
         String box_qty_2 = "";// 8#箱数
         int responsecode = 0;
-        String location="";
-        String lot_no="";
-        String package_code="";
-        String customercode="";
+        String location = "";
+        String locationcode = "";
+        String lot_no = "";
+        String package_code = "";
+        String customercode = "";
+        String warehouse = "";
+
         GetinventoryinfoTask() {
             product_code = minventorybarcode.getText().toString();
             lot_no = minventorybatchnumber.getText().toString();
             location = minventorylibrarynumber.getText().toString();
+            if (!location.equals("") && locationmap.get(location) != null) {
+                warehouse = locationmap.get(location).get("warehouse_code");
+                locationcode = locationmap.get(location).get("location_code");
+            }
             String productinfo[] = lastproduct_content.split(",");
             for (int i = 0; i < productinfo.length; i++) {
                 String info = productinfo[i];
@@ -982,7 +937,7 @@ public class CheckInventoryActivity extends AppCompatActivity {
 
                 }
             }
-            customercode= InventoryBean.get(InventoryBean.size()-1).customer_code;
+//            customercode = InventoryBean.get(InventoryBean.size() - 1).customer_code;
             token = PreferencesUtils.getString(CheckInventoryActivity.this, token_key, "");
 
         }
@@ -993,10 +948,10 @@ public class CheckInventoryActivity extends AppCompatActivity {
 
             try {
                 String url = "http://" + PreferencesUtils.getString(CheckInventoryActivity.this, ip_key, "120.27.2.177")
-                        + ":" + PreferencesUtils.getString(CheckInventoryActivity.this, port_key, "8062") +""
-//                        IndexConstants.CHECKinventoryINVENTORY + "?product_code=" + product_code+ "&warehouse_barcode=" + product_code
-                        + "&location_barcode=" + location+ "&lot_no=" + lot_no+
-                        "&package_code=" + package_code+"&customer_code=" +customercode+ "&token=" + token;
+                        + ":" + PreferencesUtils.getString(CheckInventoryActivity.this, port_key, "8062") +
+                        IndexConstants.CHECKINVENTORYINFO + "?product_code=" + product_code + "&warehouse_barcode=" + warehouse
+                        + "&location_barcode=" + location + "&lot_no=" + lot_no +
+                        "&package_code=" + package_code + "&customer_code=" + customercode + "&token=" + token;
 
                 Print("CHECKinventoryINVENTORY url:::" + url);
                 URL posturl = new URL(url);
@@ -1017,6 +972,7 @@ public class CheckInventoryActivity extends AppCompatActivity {
                         msg = jsonObject.getString("message");
                         success = jsonObject.getString("success");
                         Print("parse submit json:::" + success);
+                        InventoryBean = new ArrayList<InventoryBean>();
 //                        JSONObject data =jsonObject.getJSONObject("data");
 //                        String token =data.getString("token");
 //                        JSONArray rights=data.getJSONArray("rights");//"group_app_mrp_finish_in","group_app_mrp_finish_in_confirm","group_app_mrp_move","group_app_sales_inventory"
@@ -1033,6 +989,25 @@ public class CheckInventoryActivity extends AppCompatActivity {
                             qty_1 = numdata.getString("qty_1");
                             box_qty_2 = numdata.getString("box_qty_2");
                             qty_2 = numdata.getString("qty_2");
+
+//							Print(" return:::" + data);
+//							for (int d = 0; d < data.length(); d++) {
+////                        String token =data.getString("line_data");
+                            JSONArray line_data = numdata.getJSONArray("line_data");//data.getJSONObject(d).getJSONArray("line_data");
+                            for (int i = 0; i < line_data.length(); i++) {
+                                InventoryBean deliver = new InventoryBean();
+                                deliver.location_code = line_data.getJSONObject(i).getString("location_code");
+                                deliver.location_name = line_data.getJSONObject(i).getString("location_name");
+                                deliver.weight = line_data.getJSONObject(i).getString("weight");
+                                deliver.qty = line_data.getJSONObject(i).getString("qty");
+
+//									HashMap<String, String> map = new HashMap<String, String>();
+//									map.put(deliver.bar_code, deliver.product_id);
+//									productidmap.put(deliver.bar_code + "id", map);
+
+                                InventoryBean.add(deliver);
+
+                            }
                         }
                     }
                 }
@@ -1052,15 +1027,15 @@ public class CheckInventoryActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(final Boolean success) {
             if (success) {
-
+                refreshdatalist();
                 minventoryInventoryquantity.setText(qty);
                 minventoryInventoryquantityboxes.setText(box_qty);
-                if(!qty_0.equals("")&&Float.valueOf(qty_0)>0) {
-                    minventory_front_boxes_num.setText(qty_0);
+                minventory_front_boxes_num.setText(qty_0);
+                if (!qty_0.equals("") && Float.valueOf(qty_0) > 0) {
                     minventory_front_boxes_num.setBackgroundColor(getResources().getColor(R.color.red));
                 }
-                if(!box_qty_0.equals("")&&Float.valueOf(box_qty_0)>0) {
-                    minventory_front_boxes.setText(box_qty_0);
+                minventory_front_boxes.setText(box_qty_0);
+                if (!box_qty_0.equals("") && Float.valueOf(box_qty_0) > 0) {
                     minventory_front_boxes.setBackgroundColor(getResources().getColor(R.color.red));
                 }
                 minventory_thisbatch_boxes.setText(box_qty_1);
@@ -1104,104 +1079,6 @@ public class CheckInventoryActivity extends AppCompatActivity {
 
     }
 
-    public class CheckwareinfoTask extends AsyncTask<Void, Void, Boolean> {
-        String token = "";
-        String batch_num = "";
-        String success = "";
-        String msg = "";
-        int responsecode = 0;
-
-        CheckwareinfoTask() {
-            batch_num = minventorybatchnumber.getText().toString();
-            token = PreferencesUtils.getString(CheckInventoryActivity.this, token_key, "");
-        }
-
-        @Override
-        protected Boolean doInBackground(Void... params) {
-            // TODO: attempt authentication against a network service.
-
-            try {
-                String url = "http://" + PreferencesUtils.getString(CheckInventoryActivity.this, ip_key, "120.27.2.177")
-                        + ":" + PreferencesUtils.getString(CheckInventoryActivity.this, port_key, "8062") +
-                        IndexConstants.CHECKinventoryWAREHOUSE + "?name=" + batch_num + "&token=" + token;
-                Print("url:::" + url);
-                URL posturl = new URL(url);
-                HttpURLConnection conn = (HttpURLConnection) posturl.openConnection();
-                conn.setConnectTimeout(10000);
-                //使用Post方式不能使用缓存
-
-                responsecode = conn.getResponseCode();
-                if (responsecode == 200) {
-                    InputStream ins = conn.getInputStream();
-                    JSONObject rootjsonObject = parseJson(ins);
-                    JSONObject jsonObject = null;
-                    if (rootjsonObject != null) {
-                        jsonObject = rootjsonObject.getJSONArray("results").getJSONObject(0);
-                    }
-                    if (jsonObject != null) {
-                        msg = jsonObject.getString("message");
-                        success = jsonObject.getString("success");
-                        if (success.equals("true")) {
-                            JSONArray data = jsonObject.getJSONArray("data");
-                            Print(" return:::" + data);
-                            for (int d = 0; d < data.length(); d++) {
-//                          String token =data.getString("line_data");
-
-                            }
-                        }
-                    }
-                }
-//                Print(" return:::"+responsecode);
-
-            } catch (Exception e) {
-                // TODO: handle exception
-                System.err.println("未能获取网络数据");
-                e.printStackTrace();
-            }
-
-
-            // TODO: register the new account here.
-            return success.equals("true");
-        }
-
-        @Override
-        protected void onPostExecute(final Boolean success) {
-            if (success) {
-                Util.showShortToastMessage(CheckInventoryActivity.this, msg);
-
-            } else {
-                Util.showShortToastMessage(CheckInventoryActivity.this, msg);
-            }
-        }
-
-        @Override
-        protected void onCancelled() {
-//            mAuthTask = null;
-//            showProgress(false);
-        }
-
-        private JSONObject parseJson(InputStream ins) {
-            byte[] data = new byte[0];   // 把输入流转换成字符数组
-            try {
-                data = readStream(ins);
-
-                String json = new String(data);        // 把字符数组转换成字符串
-                Print("check forminfo msgmsg:::" + json);
-//            JSONArray array = new JSONArray(json);
-//            for(int i = 0 ; i < array.length() ; i++){
-                JSONObject jsonObject = new JSONObject(json);//array.getJSONObject(i);
-//                String msg=jsonObject.getString("message");
-//                String success=jsonObject.getString("success");
-                return jsonObject;
-//            }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            return null;
-        }
-
-
-    }
 
     private void saveBoxNum(String code, String num) {
         for (int i = 0; i < boxesnum.size(); i++) {
@@ -1210,12 +1087,12 @@ public class CheckInventoryActivity extends AppCompatActivity {
                 if (code.equals(contentkey)) {
                     String oldnumstr = boxesnum.get(i).get(contentkey);
                     try {
-                        int oldnum=Integer.valueOf(oldnumstr);
-                        int newnum=Integer.valueOf(num);
-                        int nownum=oldnum+newnum;
-                        System.err.println("oldnum "+oldnum+"newnum"+newnum+" now "+nownum);
+                        int oldnum = Integer.valueOf(oldnumstr);
+                        int newnum = Integer.valueOf(num);
+                        int nownum = oldnum + newnum;
+                        System.err.println("oldnum " + oldnum + "newnum" + newnum + " now " + nownum);
                         Map<String, String> map = new HashMap<String, String>();
-                        map.put(code, nownum+"");
+                        map.put(code, nownum + "");
                         boxesnum.remove(i);
                         boxesnum.add(map);//存起每个产品的数量 提交使用
                         return;
@@ -1528,20 +1405,20 @@ public class CheckInventoryActivity extends AppCompatActivity {
 ////                        String token =data.getString("line_data");
                             JSONArray line_data = data.getJSONArray("line_data");//data.getJSONObject(d).getJSONArray("line_data");
                             for (int i = 0; i < line_data.length(); i++) {
-                                InventoryBean deliver = new InventoryBean();
-                                deliver.sequence = line_data.getJSONObject(i).getString("sequence");
-                                deliver.bar_code = line_data.getJSONObject(i).getString("product_code");
-                                deliver.product_id = line_data.getJSONObject(i).getString("product_id");
-                                deliver.product_specification = line_data.getJSONObject(i).getString("product_name");
-                                deliver.number_applications = line_data.getJSONObject(i).getString("qty");
-                                deliver.number_boxes = line_data.getJSONObject(i).getString("box_qty");
-                                deliver.numbers = line_data.getJSONObject(i).getString("product_qty");
-
-//									HashMap<String, String> map = new HashMap<String, String>();
-//									map.put(deliver.bar_code, deliver.product_id);
-//									productidmap.put(deliver.bar_code + "id", map);
-
-                                InventoryBean.add(deliver);
+//                                InventoryBean deliver = new InventoryBean();
+//                                deliver.sequence = line_data.getJSONObject(i).getString("sequence");
+//                                deliver.bar_code = line_data.getJSONObject(i).getString("product_code");
+//                                deliver.product_id = line_data.getJSONObject(i).getString("product_id");
+//                                deliver.product_specification = line_data.getJSONObject(i).getString("product_name");
+//                                deliver.number_applications = line_data.getJSONObject(i).getString("qty");
+//                                deliver.number_boxes = line_data.getJSONObject(i).getString("box_qty");
+//                                deliver.numbers = line_data.getJSONObject(i).getString("product_qty");
+//
+////									HashMap<String, String> map = new HashMap<String, String>();
+////									map.put(deliver.bar_code, deliver.product_id);
+////									productidmap.put(deliver.bar_code + "id", map);
+//
+//                                InventoryBean.add(deliver);
 
                             }
 //							}

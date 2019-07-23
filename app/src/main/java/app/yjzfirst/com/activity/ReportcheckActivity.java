@@ -850,6 +850,7 @@ public class ReportcheckActivity extends AppCompatActivity {
 
 		@Override
 		protected void onPostExecute(final Boolean success) {
+			Util.showShortToastMessage(ReportcheckActivity.this,msg);
 			if(success&&split_merge_item.equals("merge")) {
 				eSplit_merge_container_no.setText(CheckNullString(ReportFormBeans.get(0).container_no));
 				eSplit_merge_container_weight.setText(CheckNullString(ReportFormBeans.get(0).container_weight));

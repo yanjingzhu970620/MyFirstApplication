@@ -95,11 +95,11 @@ public class InventoryAdapter extends BaseAdapter {
 //		RelativeLayout shipcell = (RelativeLayout) convertView
 //				.findViewById(R.id.effectRelativeLayout_details);
 		final InventoryBean deliveryproduct = mInventoryBean.get(position);
-		barcode.setText(Util.CheckNullString(deliveryproduct.sequence));
-		product_pecification.setText(Util.CheckNullString(deliveryproduct.bar_code));
-		number_applications.setText( Util.CheckNullString(deliveryproduct.number_applications));
-		number_of_boxes.setText(Util.CheckNullString(deliveryproduct.number_boxes));
-		numbers.setText(Util.CheckNullString(deliveryproduct.numbers));
+		barcode.setText(Util.CheckNullString(deliveryproduct.location_code));
+		product_pecification.setText(Util.CheckNullString(deliveryproduct.location_name));
+		number_applications.setText( Util.CheckNullString(deliveryproduct.weight));
+		number_of_boxes.setText(Util.CheckNullString(deliveryproduct.qty));
+//		numbers.setText(Util.CheckNullString(deliveryproduct.numbers));
 
 		return convertView;
 	}

@@ -564,10 +564,14 @@ public class DeliveryActivity extends AppCompatActivity {
 //                        String token =data.getString("line_data");
                             JSONObject locationdata = data.getJSONObject(d);
                             String warehouse_id = locationdata.getString("warehouse_id");
+                            String warehouse_code = locationdata.getString("warehouse_code");
                             String location_id = locationdata.getString("location_id");
+                            String location_code = locationdata.getString("location_code");
                             HashMap<String, String> map = new HashMap<>();
                             map.put("warehouse_id", warehouse_id);
+                            map.put("warehouse_code", warehouse_code);
                             map.put("location_id", location_id);
+                            map.put("location_code", location_code);
                             locationmap.put(library_num, map);
                         }
                     }
@@ -958,7 +962,9 @@ public class DeliveryActivity extends AppCompatActivity {
         String qty_2 = "";//,#数量
         String box_qty_2 = "";// 8#箱数
         int responsecode = 0;
+        String warehouse="";
         String location="";
+        String locationcode="";
         String lot_no="";
         String package_code="";
         String customercode="";
@@ -966,6 +972,10 @@ public class DeliveryActivity extends AppCompatActivity {
             product_code = mdeliverybarcode.getText().toString();
             lot_no = mdeliverybatchnumber.getText().toString();
             location = mdeliverylibrarynumber.getText().toString();
+            if (!location.equals("") && locationmap.get(location) != null) {
+                warehouse = locationmap.get(location).get("warehouse_code");
+                locationcode = locationmap.get(location).get("location_code");
+            }
             String productinfo[] = lastproduct_content.split(",");
             for (int i = 0; i < productinfo.length; i++) {
                 String info = productinfo[i];
@@ -999,7 +1009,7 @@ public class DeliveryActivity extends AppCompatActivity {
             try {
                 String url = "http://" + PreferencesUtils.getString(DeliveryActivity.this, ip_key, "120.27.2.177")
                         + ":" + PreferencesUtils.getString(DeliveryActivity.this, port_key, "8062") +
-                        IndexConstants.CHECKDELIVERYINVENTORY + "?product_code=" + product_code+ "&warehouse_barcode=" + product_code
+                        IndexConstants.CHECKDELIVERYINVENTORY + "?product_code=" + product_code+ "&warehouse_barcode=" + warehouse
                         + "&location_barcode=" + location+ "&lot_no=" + lot_no+
                         "&package_code=" + package_code+"&customer_code=" +customercode+ "&token=" + token;
 
@@ -1060,12 +1070,12 @@ public class DeliveryActivity extends AppCompatActivity {
 
                 mdeliveryInventoryquantity.setText(qty);
                 mdeliveryInventoryquantityboxes.setText(box_qty);
+                mdelivery_front_boxes_num.setText(qty_0);
                 if(!qty_0.equals("")&&Float.valueOf(qty_0)>0) {
-                    mdelivery_front_boxes_num.setText(qty_0);
                     mdelivery_front_boxes_num.setBackgroundColor(getResources().getColor(R.color.red));
                 }
+                mdelivery_front_boxes.setText(box_qty_0);
                 if(!box_qty_0.equals("")&&Float.valueOf(box_qty_0)>0) {
-                    mdelivery_front_boxes.setText(box_qty_0);
                     mdelivery_front_boxes.setBackgroundColor(getResources().getColor(R.color.red));
                 }
                 mdelivery_thisbatch_boxes.setText(box_qty_1);

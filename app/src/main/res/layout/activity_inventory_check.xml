@@ -116,6 +116,7 @@
                         android:id="@+id/inventory_batch_number"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
+                        android:layout_marginStart="-10dp"
                         android:layout_weight="3"
                         android:maxLines="1"
                         android:singleLine="true"
@@ -125,6 +126,7 @@
                         android:id="@+id/inventory_batch_number_button"
                         android:layout_width="25dp"
                         android:layout_height="25dp"
+                        android:visibility="gone"
                         android:layout_gravity="bottom"
                         android:layout_marginBottom="@dimen/erqode_vertical_margin"
                         android:background="@mipmap/ercode"
@@ -425,7 +427,7 @@
                         android:layout_weight="1"
                         android:background="@color/colorbarbackground"
                         android:onClick="onClick"
-                        android:text="@string/action_scan"
+                        android:text="@string/action_search"
                         android:textStyle="bold" />
 
                 </LinearLayout>

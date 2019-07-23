@@ -149,6 +149,9 @@ public class MainActivity extends AppCompatActivity {
         }else if (view.getId() == R.id.Report_Check_main_inspect) {
             Intent intent=new Intent(MainActivity.this,ReportcheckActivity.class);
             MainActivity.this.startActivity(intent);
+        }else if (view.getId() == R.id.Search_inventory_main) {
+            Intent intent=new Intent(MainActivity.this,CheckInventoryActivity.class);
+            MainActivity.this.startActivity(intent);
         }
     }
 

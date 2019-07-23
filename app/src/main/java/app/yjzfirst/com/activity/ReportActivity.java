@@ -209,14 +209,18 @@ public class ReportActivity extends AppCompatActivity {
 		mItems[1]="并桶";
 		mItems[2]="分桶";
 // 建立Adapter并且绑定数据源
-		ArrayAdapter<String> _Adapter=new ArrayAdapter<String>(this,android.R.layout.simple_spinner_item, mItems);
-		spinner_split_merge_type.setAdapter(_Adapter);
+//		ArrayAdapter<String> _Adapter=new ArrayAdapter<String>(this,android.R.layout.simple_spinner_item, mItems);
+		MySpinnerAdapter mySpinnerAdapter=new MySpinnerAdapter(ReportActivity.this,getDatacn());
+		spinner_split_merge_type.setAdapter(mySpinnerAdapter);
 		spinner_split_merge_type.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
 			@Override
 			public void onItemSelected(AdapterView<?> parent, View view,
 									   int position, long id) {
 //				String str=parent.getItemAtPosition(position).toString();
 				split_merge_item=getData().get(position);
+				eSplit_merge_cardid.setText("");
+				eSplit_merge_container_no.setText("");
+				eSplit_merge_container_weight.setText("");
 				if(position==0){
 					eSplit_merge_cardid.setFocusable(false);
 					eSplit_merge_cardid.setFocusableInTouchMode(false);
@@ -272,7 +276,13 @@ public class ReportActivity extends AppCompatActivity {
 		list.add("split");
 		return list;
 	}
-
+	private List<String> getDatacn() {
+		List<String> list=new ArrayList<String>();
+		list.add("空");
+		list.add("并桶");
+		list.add("分桶");
+		return list;
+	}
 
 	public void onClick(View view) {
 		Errortext.setVisibility(View.GONE);

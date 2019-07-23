@@ -40,18 +40,14 @@ public class MySpinnerAdapter extends BaseAdapter implements SpinnerAdapter {
         return position;
     }
 
+
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        return null;
+        convertView = LayoutInflater.from(context).inflate(R.layout.spinner_simple_detail, null);
+        TextView tvgetView = (TextView) convertView.findViewById(R.id.text_item_spinner);
+        tvgetView.setText(getItem(position).toString());
+        return convertView;
     }
-
-//    @Override
-//    public View getView(int position, View convertView, ViewGroup parent) {
-////        convertView = LayoutInflater.from(context).inflate(R.layout.getview, null);
-////        TextView tvgetView = (TextView) convertView.findViewById(R.id.tvgetView);
-////        tvgetView.setText(getItem(position).toString());
-//        return convertView;
-//    }
 
 //    @Override
 //    public View getDropDownView(int position, View convertView, ViewGroup parent) {
