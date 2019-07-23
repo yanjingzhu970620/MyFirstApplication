@@ -605,7 +605,7 @@ public class EntryFormActivity extends AppCompatActivity {
 			} else {
 //				mentryorderid.requestFocus();
 //				mentryorderid.setError(msg);
-				textsetError(mentryorderid,msg);
+				textsetError(EntryFormActivity.this,mentryorderid,msg);
 			}
 			mentryorderid.addTextChangedListener(textWatcher);
 		}
@@ -775,7 +775,7 @@ public class EntryFormActivity extends AppCompatActivity {
 			} else {
 //				mentrybarcode.requestFocus();
 //				mentrybarcode.setError(msg);
-				textsetError(mentrybarcode,msg);
+				textsetError(EntryFormActivity.this,mentrybarcode,msg);
 			}
 			mentrybarcode.addTextChangedListener(textWatcher);
 		}
@@ -990,7 +990,7 @@ public class EntryFormActivity extends AppCompatActivity {
 			} else {
 //				mentrybarcode.requestFocus();
 //				mentrybarcode.setError(msg);
-				textsetError(mentrybarcode,msg);
+				textsetError(EntryFormActivity.this,mentrybarcode,msg);
 			}
 		}
 
@@ -1312,7 +1312,7 @@ public class EntryFormActivity extends AppCompatActivity {
 			} else {
 //				mentrybillnumber.requestFocus();
 //				mentrybillnumber.setError(msg);
-				textsetError(mentrybillnumber,msg);
+				textsetError(EntryFormActivity.this,mentrybillnumber,msg);
 			}
 		}
 

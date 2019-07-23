@@ -4,14 +4,24 @@ import android.Manifest;
 import android.app.Activity;
 import android.app.AlarmManager;
 import android.app.Notification;
+import android.app.NotificationChannel;
 import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.content.res.AssetFileDescriptor;
+import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
+import android.media.AudioAttributes;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
+import android.media.RingtoneManager;
 import android.media.SoundPool;
+import android.net.Uri;
+import android.os.Build;
+import android.os.Environment;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.ContextCompat;
 import android.view.View;
@@ -21,13 +31,23 @@ import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
 
+
 import com.yzq.zxinglibrary.android.CaptureActivity;
 
 import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
+
 
 import app.yjzfirst.com.activity.R;
+
+import static android.content.Context.NOTIFICATION_SERVICE;
 
 /**
  * Created by 94012 on 2018/1/17.
@@ -109,32 +129,148 @@ public class Util {
         }
     }
 
-    private void setsound(Context context) {
-        //发送通知
-        NotificationCompat.Builder notifyBuilder =
-                new NotificationCompat.Builder(context)
-                        //设置可以显示多行文本
-                        .setContentTitle("信息错误")
-                        .setContentText("信息错误")
-                        .setSmallIcon(R.mipmap.mainview)
-                        //设置大图标
-                        .setLargeIcon(BitmapFactory.decodeResource(context.getResources(), R.mipmap.mainview))
-                        // 点击消失
-                        .setAutoCancel(true)
-                        // 设置该通知优先级
-                        .setPriority(Notification.PRIORITY_MAX)
-                        .setTicker("悬浮通知")
-                        // 通知首次出现在通知栏，带上升动画效果的
-                        .setWhen(System.currentTimeMillis())
-                        // 通知产生的时间，会在通知信息里显示
-                        // 向通知添加声音、闪灯和振动效果的最简单、最一致的方式是使用当前的用户默认设置，使用defaults属性，可以组合：
-                        .setDefaults(Notification.DEFAULT_VIBRATE | Notification.DEFAULT_ALL | Notification.DEFAULT_SOUND);
-        NotificationManager mNotifyMgr = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
-        Notification notification = notifyBuilder.build();
-        mNotifyMgr.notify(01, notification);
+    static String defaultLocation = Environment.getExternalStorageDirectory()
+            .getAbsolutePath();
+    public static final String APP_DIR = "yjzerp/";
+    public static File getAppPath(String path) {
+        if (path == null) {
+            path = "";
+        }
+        return new File(defaultLocation,
+                APP_DIR + path);
     }
-    public static void textsetError(EditText text,String msg) {
+    public static void initNotification(Context context, boolean sound,String msg){
+//
+        String NOTIFICATION_CHANNEL_ID="1002";
+        // 获取NotificationManager的引用
+        NotificationManager notificationManager = (NotificationManager) context.getSystemService(NOTIFICATION_SERVICE);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            NotificationChannel notificationChannel = new NotificationChannel(NOTIFICATION_CHANNEL_ID, "My Notifications", NotificationManager.IMPORTANCE_DEFAULT);
+
+            // Configure the notification channel.
+            notificationChannel.setDescription("Channel description");
+            notificationChannel.enableLights(true);
+            notificationChannel.setLightColor(Color.RED);
+            notificationChannel.setVibrationPattern(new long[]{0, 1000, 500, 1000});
+            notificationChannel.enableVibration(true);
+            notificationManager.createNotificationChannel(notificationChannel);
+        }
+//        Uri uri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);//设置提示音
+//        if(sound){
+////            Uri uri = null;
+//            File f=new File(getAppPath("SOUNDS/")+"alarm2.mp3");
+//            if(!f.exists()){
+//        	System.err.println("!!!f.exists 111 getName ???"+f.getName());
+//                try {
+//                    f.createNewFile();
+//                    InputStream ins = null;
+//                    try {
+//                        ins = context.getAssets().open("alarm2.mp3");
+//                        System.err.println("!!!f.exists 222 alarm2.mp3"+f.getName());
+//                    } catch (IOException e) {
+//                        // TODO Auto-generated catch block
+//                        e.printStackTrace();
+//                    }
+//                    if(ins!=null){
+//                        inputstreamtofile(ins, f);
+//                        uri = Uri.fromFile(f);
+////			        uri = Uri.parse(view.getApplication().getAppPath("SOUNDS/")+"alert.mp3");
+//                    }else{
+//                        uri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+//                    }
+//                } catch (IOException e) {
+//                    // TODO Auto-generated catch block
+//                    e.printStackTrace();
+//                }
+//            }else{
+////        	System.err.println("f.exists"+f.getName());
+//                uri=Uri.parse(getAppPath("SOUNDS/")+"alarm2.mp3");
+//            }
+//
+////            m_builder.setSound(uri);
+//        }//设置提示音
+
+//        AssetFileDescriptor fileDescriptor=null;
+//        try {
+//             fileDescriptor = context.getAssets().openFd("alarm2.mp3");
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+        Uri uri = Uri.parse("file:///android_asset/alarm2.mp3");
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(context, NOTIFICATION_CHANNEL_ID)
+//                .setVibrate(new long[]{0, 100 })
+                .setSound(uri)
+                .setSmallIcon(R.mipmap.icon_safe_message)
+                .setContentTitle("信息验证错误")
+                .setContentText(msg);
+        notificationManager.notify(1001, builder.build());
+
+
+    }
+
+    public static void inputstreamtofile(InputStream ins,File file) {
+        try {
+
+
+            OutputStream os = new FileOutputStream(file);
+            int bytesWritten = 0;
+            int byteCount = 0;
+
+            byte[] b = new byte[1024];
+            while ((byteCount=ins.read(b)) != -1) {
+//				   System.err.println("FileOutputStream write"+b);
+                os.write(b, bytesWritten, byteCount);
+            }
+            os.close();
+            ins.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+
+
+    public static void setsound(Context context){
+         SoundPool soundPool = null;
+        List<Integer> soundIdList = new ArrayList<>();
+        AudioAttributes audioAttributes = null;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            audioAttributes = new AudioAttributes.Builder()
+                    // 设置场景
+                    .setUsage(AudioAttributes.USAGE_NOTIFICATION )
+                    // 设置类型
+                    .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
+                    .build();
+        }
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            soundPool = new SoundPool.Builder()
+                    // 设置上面的属性
+                    .setAudioAttributes(audioAttributes)
+                    // 设置最多10个音频流文件
+                    .setMaxStreams(10).build();
+        }
+
+        // 加载音频流到soundPool中去，并且用List存储起来
+        soundIdList.add(soundPool.load(context , R.raw.alarm2 , 1));
+        soundPool.setOnLoadCompleteListener(new SoundPool.OnLoadCompleteListener() {
+            @Override
+            public void onLoadComplete(SoundPool soundPool, int i, int i2) {
+                soundPool.play(1,  //声音id
+                        1, //左声道
+                        1, //右声道
+                        1, //优先级
+                        0, // 0表示不循环，-1表示循环播放
+                        1);//播放比率，0.5~2，一般为1
+            }
+        });
+//        soundPool.play( soundIdList.get(0) , 1 ,1 , 0 , 0 , 1);
+
+    }
+    public static void textsetError(Context context,EditText text,String msg) {
         text.requestFocus();
         text.setError(msg);
+//        initNotification(context,true,msg);
+        setsound(context);
     }
 }

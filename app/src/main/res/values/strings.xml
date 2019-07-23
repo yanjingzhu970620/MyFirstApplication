@@ -101,4 +101,9 @@
     <string name="check_main_material">check_main_material</string>
     <string name="manufacture_main">manufacture_main</string>
     <string name="search_inventory_main">search_inventory_main</string>
+    <string name="check_warehouse_code">check_warehouse_code</string>
+    <string name="check_warehouse_name">check_warehouse_name</string>
+    <string name="weight">weight</string>
+    <string name="action_search">action_search</string>
+    <string name="inventory_orderno">inventory_orderno</string>
 </resources>

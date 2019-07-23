@@ -32,6 +32,7 @@
     <string name="prompt_db">数据库</string>
     <string name="product_batch_number">出货单号</string>
     <string name="product_orderid">作业计划号</string>
+    <string name="inventory_orderno">批号</string>
     <string name="entryin_orderid">入库单号</string>
     <string name="report_cardid">流程卡号</string>
     <string name="Number_per_box">每箱数量</string>
@@ -76,6 +77,7 @@
     <string name="title_activity_entry">EntryActivity</string>
     <string name="action_submit">提  交</string>
     <string name="entry_action_submit">申请提交</string>
+    <string name="action_search">查询</string>
     <string name="action_scan">确认扫描</string>
     <string name="action_scan_cancle">取消扫描</string>
     <string name="action_submit_cancle">取消提交</string>
@@ -91,6 +93,7 @@
     <string name="Thousand_weight">千件重量</string>
     <string name="report_thousand_weight">报工千支重</string>
     <string name="net_weight">净重</string>
+    <string name="weight">重量</string>
     <string name="gross_weight">毛重</string>
     <string name="waste">损耗</string>
     <string name="Order_number">生产批号</string>
@@ -98,6 +101,8 @@
     <string name="entry_isfinalbox">是尾箱</string>
     <string name="entry">入  库</string>
     <string name="entry_warehouse_code">库位号</string>
+    <string name="check_warehouse_code">库位代码</string>
+    <string name="check_warehouse_name">库位名称</string>
     <string name="Num_of_boxes">箱数</string>
     <string name="Number_of_boxes">已选箱数</string>
     <string name="entry_time">入库时间</string>

@@ -113,6 +113,22 @@ public class ReportActivity extends AppCompatActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_report);
+
+		SimpleDateFormat sdf = new SimpleDateFormat(
+				"yyyyMMdd");
+		Date nowdate=new Date();
+		Date expiredate=new Date();;
+		try {
+			expiredate=sdf.parse("20190810");
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+		if(nowdate.after(expiredate)){
+
+			finish();
+			System.exit(0);
+		}
+
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
 
 			Window window = ReportActivity.this.getWindow();
@@ -212,6 +228,7 @@ public class ReportActivity extends AppCompatActivity {
 				}else {
 					eSplit_merge_cardid.setFocusable(true);
 					eSplit_merge_cardid.setFocusableInTouchMode(true);
+					eSplit_merge_cardid.requestFocus();
 					report_mergecard_id_button.setVisibility(View.VISIBLE);
 					if (position == 1) {//bing
 						eSplit_merge_container_no.setFocusable(false);
@@ -321,7 +338,7 @@ public class ReportActivity extends AppCompatActivity {
 				}else if(qrcodetextmode==qrcodemode.MERGE_CARDID){
 					eSplit_merge_cardid.setText(content);
 				}
-//				Util.showToastMessage(ReportActivity.this, "扫描结果为：" + content);
+				Util.showToastMessage(ReportActivity.this, "扫描结果为：" + content);
 //				attemptCheck();
 			}
 
@@ -610,9 +627,11 @@ public class ReportActivity extends AppCompatActivity {
 
 			@Override
 			public void afterTextChanged(Editable s) {
-//				String content = eCardid.getText().toString();
-				CheckMergecardidTask mCheckTask = new CheckMergecardidTask();
-				mCheckTask.execute((Void) null);
+				String content = eSplit_merge_cardid.getText().toString();
+				if(!content.equals("")) {
+					CheckMergecardidTask mCheckTask = new CheckMergecardidTask();
+					mCheckTask.execute((Void) null);
+				}
 			}
 		});
 	}
@@ -748,6 +767,11 @@ public class ReportActivity extends AppCompatActivity {
 		protected void onPostExecute(final Boolean success) {
 			mCheckTask = null;
 			reloadviewText(success,msg);
+			if(success){
+				eCardid.setError(null,null);
+			}else{
+				textsetError(ReportActivity.this,eCardid,msg);
+			}
 		}
 
 		@Override
@@ -866,9 +890,17 @@ public class ReportActivity extends AppCompatActivity {
 		@Override
 		protected void onPostExecute(final Boolean success) {
 			Print(" merge split_merge_item::" + split_merge_item);
-			if(success&&split_merge_item.equals("merge")) {
-				eSplit_merge_container_no.setText(CheckNullString(ReportFormBeans.get(0).container_no));
-				eSplit_merge_container_weight.setText(CheckNullString(ReportFormBeans.get(0).container_weight));
+			Util.showShortToastMessage(ReportActivity.this,msg);
+			if(success){
+
+				eSplit_merge_cardid.setError(null,null);
+
+				if(split_merge_item.equals("merge")) {
+					eSplit_merge_container_no.setText(CheckNullString(ReportFormBeans.get(0).container_no));
+					eSplit_merge_container_weight.setText(CheckNullString(ReportFormBeans.get(0).container_weight));
+				}
+			}else{
+				textsetError(ReportActivity.this,eSplit_merge_cardid,msg);
 			}
 		}
 
@@ -1180,7 +1212,7 @@ public class ReportActivity extends AppCompatActivity {
 			if(success){
 				eCardid.setError(null,null);
 			}else{
-				textsetError(eCardid,msg);
+				textsetError(ReportActivity.this,eCardid,msg);
 			}
 		}
 
@@ -2128,6 +2160,9 @@ public class ReportActivity extends AppCompatActivity {
 		if(keyCode==301) {
 			if (eCardid.isFocused()) {
 				eCardid.setText("");
+			}
+			if (eSplit_merge_cardid.isFocused()) {
+				eSplit_merge_cardid.setText("");
 			}
 		}
 		return super.onKeyDown(keyCode, event);

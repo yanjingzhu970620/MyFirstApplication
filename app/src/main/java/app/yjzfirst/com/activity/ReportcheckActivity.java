@@ -1161,7 +1161,7 @@ public class ReportcheckActivity extends AppCompatActivity {
 			if(success){
 				eCardid.setError(null,null);
 			}else{
-				textsetError(eCardid,msg);
+				textsetError(ReportcheckActivity.this,eCardid,msg);
 			}
 		}
 

@@ -634,7 +634,7 @@ public class EntryWarehouseActivity extends AppCompatActivity {
 			}else{
 //				mentryorderid.requestFocus();
 //				mentryorderid.setError(msg);
-				textsetError(mentrywarenumber,"库位编号有错"+msg);
+				textsetError(EntryWarehouseActivity.this,mentrywarenumber,"库位编号有错"+msg);
 			}
 		}
 
@@ -740,7 +740,7 @@ public class EntryWarehouseActivity extends AppCompatActivity {
 			} else {
 //				mentrywarenumber.requestFocus();
 //				mentrywarenumber.setError("库位编号有错");
-				textsetError(mentrywarenumber,"库位编号有错"+msg);
+				textsetError(EntryWarehouseActivity.this,mentrywarenumber,"库位编号有错"+msg);
 			}
 		}
 
@@ -911,7 +911,7 @@ public class EntryWarehouseActivity extends AppCompatActivity {
 			}else{
 //				mentrybarcode.requestFocus();
 //				mentrybarcode.setError(msg);
-				textsetError(mentrybarcode,msg);
+				textsetError(EntryWarehouseActivity.this,mentrybarcode,msg);
 			}
 			mentrybarcode.addTextChangedListener(textWatcher);
 		}
@@ -1131,7 +1131,7 @@ public class EntryWarehouseActivity extends AppCompatActivity {
 			}else{
 //				mentrybarcode.requestFocus();
 //				mentrybarcode.setError(msg);
-				textsetError(mentrybarcode,msg);
+				textsetError(EntryWarehouseActivity.this,mentrybarcode,msg);
 			}
 		}
 

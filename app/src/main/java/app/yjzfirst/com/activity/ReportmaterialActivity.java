@@ -1166,7 +1166,7 @@ public class ReportmaterialActivity extends AppCompatActivity {
 			if(success){
 				eCardid.setError(null,null);
 			}else{
-				textsetError(eCardid,msg);
+				textsetError(ReportmaterialActivity.this,eCardid,msg);
 			}
 		}
 
