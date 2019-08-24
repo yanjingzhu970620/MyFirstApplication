@@ -117,9 +117,9 @@ public class ReportActivity extends AppCompatActivity {
 		SimpleDateFormat sdf = new SimpleDateFormat(
 				"yyyyMMdd");
 		Date nowdate=new Date();
-		Date expiredate=new Date();;
+		Date expiredate=new Date();
 		try {
-			expiredate=sdf.parse("20190810");
+			expiredate=sdf.parse("20190920");
 		} catch (ParseException e) {
 			e.printStackTrace();
 		}
