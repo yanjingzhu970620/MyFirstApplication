@@ -1286,7 +1286,7 @@ public class CheckInventoryActivity extends AppCompatActivity {
             try {
                 String url = "http://" + PreferencesUtils.getString(CheckInventoryActivity.this, ip_key, "120.27.2.177")
                         + ":" + PreferencesUtils.getString(CheckInventoryActivity.this, port_key, "8062") +
-                        IndexConstants.OUTSTOCK + "?";//+ "token="+PreferencesUtils.getString(inventoryActivity.this,token_key,"");
+                        IndexConstants.OUTSTOCK + "?";//
 //                "login:","登录帐号","Password":"密码"
 //				Map<String, String> mparams = new HashMap<String, String>();
                 url = url + "inventory_no=" + batch_num;
@@ -1357,7 +1357,7 @@ public class CheckInventoryActivity extends AppCompatActivity {
 //					mparams.put("data", jsondata);
 //					url = url + "&data=" + jsondata;
                 }
-                url = url + "&data=" + jsondata;
+                url = url + "&data=" + jsondata + "&token="+PreferencesUtils.getString(CheckInventoryActivity.this,token_key,"");;
 //              mparams.put("inventory_no",batch_num);
 //              JSONObject testjsonObject = new JSONObject(mparams);
 //              System.out.println("输出的结果是：" + testjsonObject);

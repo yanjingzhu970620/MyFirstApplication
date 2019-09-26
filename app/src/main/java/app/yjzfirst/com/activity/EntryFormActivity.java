@@ -1318,7 +1318,7 @@ public class EntryFormActivity extends AppCompatActivity {
 
 		@Override
 		protected void onCancelled() {
-//			mCheckTask = null;
+//			  mCheckTask = null;
 //            showProgress(false);
 		}
 

@@ -27,6 +27,10 @@ public class IndexConstants {
     public static final String CHECKINVENTORYINFO="/app/stock_inventory/get";
 
     public static final String CHECKCARDID="/app/mrp_runcard/get";
+    public static final String CHECKPACKAGENAME="/app/material_check/get";
+    public static final String CHECKEQUIPMENTCODE="/app/equipment/get";
+    public static final String REPORTSTART="/app/mrp_runcard/start";
+    public static final String REPORTPAUSE="/app/mrp_runcard/suspend";
     public static final String REPORTCARD="/app/mrp_runcard/report";
     public static final String REPORTCARD_CANCLE="/app/mrp_runcard/report_cancel";
     public static final String REPORTCARD_STOP="/app/mrp_runcard/app_mrp_runcard_done";

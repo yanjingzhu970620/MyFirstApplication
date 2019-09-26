@@ -363,8 +363,8 @@ public class LoginActivity extends AppCompatActivity {
             try {
                 String url = "http://" + PreferencesUtils.getString(LoginActivity.this, ip_key, "120.27.2.177")
                         + ":" + PreferencesUtils.getString(LoginActivity.this, port_key, "8062") + IndexConstants.LOGINURL +
-                        "/"+PreferencesUtils.getString(LoginActivity.this, db_key, "demo-efasten")
-                        + "/" + mEmail + "/" + mPassword;
+                        "?db="+PreferencesUtils.getString(LoginActivity.this, db_key, "demo-fasten")
+                        + "&username=" + mEmail + "&password=" + mPassword;
 //                "login:","登录帐号","Password":"密码"
                 Print("url:::" + url);
 //                Map<String,String> mparams=new HashMap<String,String>();
@@ -407,7 +407,7 @@ public class LoginActivity extends AppCompatActivity {
                         JSONArray rights = data.getJSONArray("rights");//"group_app_mrp_finish_in","group_app_mrp_finish_in_confirm","group_app_mrp_move","group_app_sales_delivery"
                         PreferencesUtils.putString(LoginActivity.this, token_key, token);
                         PreferencesUtils.putString(LoginActivity.this, rights_key, rights.toString());
-                        Print("rights:::" + PreferencesUtils.getString(LoginActivity.this, rights_key, "rights"));
+                        Print("token:::" + PreferencesUtils.getString(LoginActivity.this, token_key, "rights"));
                     }
 //                    String s = ins.toString();
 //                    System.err.println("sssssssss:::"+success);

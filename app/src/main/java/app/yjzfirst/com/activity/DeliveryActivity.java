@@ -13,6 +13,9 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ListView;
 
@@ -68,9 +71,16 @@ public class DeliveryActivity extends AppCompatActivity {
     EditText mdelivery_thisbatch_boxes_num;
     EditText mdelivery_available_boxes;
     EditText mdelivery_available_boxes_num;
+
+    CheckBox deliverycheckbox;
+    CheckBox defaultloccheckbox;
+
+    Button deliverSubmitbtn;
     ListView mSimpleDetailList;
     ChooseShipAdapter mAdapter;
     String lastproduct_content = "";
+
+    String use_default_location="";
     List<DeliveryBean> deliveryBean = new ArrayList<DeliveryBean>();
     private OutStockTask mdeliveryTask = null;
 
@@ -144,6 +154,27 @@ public class DeliveryActivity extends AppCompatActivity {
 //        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         mdeliveryOrdernumber = (EditText) findViewById(R.id.delivery_Order_number);
 
+        deliverSubmitbtn = (Button) findViewById(R.id.delivery_submit_button);
+        deliverycheckbox = (CheckBox) findViewById(R.id.check_delivery);
+        deliverycheckbox.setVisibility(View.VISIBLE);
+        deliverycheckbox.setChecked(false);
+
+        deliverycheckbox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener(){
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView,
+                                         boolean isChecked) {
+                // TODO Auto-generated method stub
+                if(isChecked){
+                    deliverSubmitbtn.setVisibility(View.GONE);
+                }else{
+                    deliverSubmitbtn.setVisibility(View.VISIBLE);
+                }
+            }
+        });
+
+        defaultloccheckbox= (CheckBox) findViewById(R.id.check__delivery_defaultloc);
+        defaultloccheckbox.setChecked(false);
+        defaultloccheckbox.setVisibility(View.VISIBLE);
         addTextWatcher();
 
         mSimpleDetailList = (ListView) findViewById(R.id.delivery_infolist);
@@ -432,6 +463,8 @@ public class DeliveryActivity extends AppCompatActivity {
                             Print(" return:::" + data);
                             for (int d = 0; d < data.length(); d++) {
 //                        String token =data.getString("line_data");
+                                use_default_location=data.getJSONObject(d).getString("use_default_location");
+                                System.out.println("use_default_location ::"+use_default_location);
                                 JSONArray line_data = data.getJSONObject(d).getJSONArray("line_data");
                                 for (int i = 0; i < line_data.length(); i++) {
                                     DeliveryBean deliver = new DeliveryBean();
@@ -471,6 +504,12 @@ public class DeliveryActivity extends AppCompatActivity {
         protected void onPostExecute(final Boolean success) {
             if (success) {
                 Util.showShortToastMessage(DeliveryActivity.this, msg);
+
+                if(use_default_location.equals("true")){
+                    defaultloccheckbox.setChecked(true);
+                }else{
+                    defaultloccheckbox.setChecked(false);
+                }
                 mdeliverylibrarynumber.requestFocus();
 
                 refreshdatalist();
@@ -704,6 +743,7 @@ public class DeliveryActivity extends AppCompatActivity {
                     if (jsonObject != null) {
                         msg = jsonObject.getString("message");
                         success = jsonObject.getString("success");
+//                        System.err.println("productinfo json:::"+jsonObject);
 //                        JSONObject data =jsonObject.getJSONObject("data");
 //                        String token =data.getString("token");
 //                        JSONArray rights=data.getJSONArray("rights");//"group_app_mrp_finish_in","group_app_mrp_finish_in_confirm","group_app_mrp_move","group_app_sales_delivery"
@@ -770,8 +810,6 @@ public class DeliveryActivity extends AppCompatActivity {
                 CheckproductlabelTask checkproductlabelTask = new CheckproductlabelTask(content);
                 checkproductlabelTask.execute();
 
-                GetinventoryinfoTask getinventoryinfoTask = new GetinventoryinfoTask();
-                getinventoryinfoTask.execute();
             } else {
                 Util.showShortToastMessage(DeliveryActivity.this, msg);
 //                mdeliverybarcode.requestFocus();
@@ -793,7 +831,7 @@ public class DeliveryActivity extends AppCompatActivity {
                 data = readStream(ins);
 
                 String json = new String(data);        // 把字符数组转换成字符串
-                Print("check forminfo msgmsg:::" + json);
+                Print("check productinfo msgmsg:::" + json);
 //            JSONArray array = new JSONArray(json);
 //            for(int i = 0 ; i < array.length() ; i++){
                 JSONObject jsonObject = new JSONObject(json);//array.getJSONObject(i);
@@ -821,9 +859,13 @@ public class DeliveryActivity extends AppCompatActivity {
         String package_name = "";
         String qty = "";
         String content = "";
+        String library_num="";
+        Boolean checkbox=false;
         int responsecode = 0;
 
         CheckproductlabelTask(String content) {
+            library_num = mdeliverylibrarynumber.getText().toString();
+            checkbox=defaultloccheckbox.isChecked();
             String productinfo[] = content.split(",");
             for (int i = 0; i < productinfo.length; i++) {
                 String info = productinfo[i];
@@ -889,6 +931,27 @@ public class DeliveryActivity extends AppCompatActivity {
                             map.put("package_name", package_name);
                             map.put("lot_id", lot_id);
                             map.put("package_id", package_id);
+
+//                            "location_id": 1,#默认库位id 2019-09-11 Add
+//                            "warehouse_id": 1,#仓库id
+//                            "location_barcode": 1,#库位Barcode
+
+
+                            if(checkbox) {
+                                String warehouse_id = data.getString("warehouse_id");
+                                String location_id = data.getString("location_id");
+                                String warehouse_code = data.getString("warehouse_code");
+                                String location_code = data.getString("location_barcode");
+                                library_num = data.getString("location_barcode");
+                                HashMap<String, String> maploc = new HashMap<>();
+                                maploc.put("warehouse_id", warehouse_id);
+                                maploc.put("location_id", location_id);
+                                maploc.put("warehouse_code", warehouse_code);
+                                maploc.put("location_code", location_code);
+                                System.err.println("checkbox checkdefault loc true");
+                                locationmap.put(library_num, map);
+                            }
+
                             productinfomap.put(content, map);
 
                         }
@@ -913,10 +976,16 @@ public class DeliveryActivity extends AppCompatActivity {
             if (success) {
 //                Util.showShortToastMessage(DeliveryActivity.this,msg);
                 mdeliverybatchnumber.setError(null, null);
+                if(!library_num.equals("")){
+                    mdeliverylibrarynumber.setText(library_num);
+                }
             } else {
                 textsetError(DeliveryActivity.this,mdeliverybatchnumber,msg);
                 Util.showShortToastMessage(DeliveryActivity.this, msg);
             }
+
+            GetinventoryinfoTask getinventoryinfoTask = new GetinventoryinfoTask();
+            getinventoryinfoTask.execute();
         }
 
         @Override
@@ -931,7 +1000,7 @@ public class DeliveryActivity extends AppCompatActivity {
                 data = readStream(ins);
 
                 String json = new String(data);        // 把字符数组转换成字符串
-                Print("check forminfo msgmsg:::" + json);
+                Print("check label msgmsg:::" + json);
 //            JSONArray array = new JSONArray(json);
 //            for(int i = 0 ; i < array.length() ; i++){
                 JSONObject jsonObject = new JSONObject(json);//array.getJSONObject(i);
@@ -1102,7 +1171,7 @@ public class DeliveryActivity extends AppCompatActivity {
                 data = readStream(ins);
 
                 String json = new String(data);        // 把字符数组转换成字符串
-                Print("check forminfo msgmsg:::" + json);
+                Print("check label msgmsg:::" + json);
 //            JSONArray array = new JSONArray(json);
 //            for(int i = 0 ; i < array.length() ; i++){
                 JSONObject jsonObject = new JSONObject(json);//array.getJSONObject(i);

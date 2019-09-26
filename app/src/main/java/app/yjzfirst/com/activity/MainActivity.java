@@ -112,20 +112,7 @@ public class MainActivity extends AppCompatActivity {
             report_check_main_material_content.setVisibility(View.GONE);
             report_check_main_content.setVisibility(View.GONE);
         }
-        SimpleDateFormat sdf = new SimpleDateFormat(
-                "yyyyMMdd");
-        Date nowdate=new Date();
-        Date expiredate=new Date();;
-        try {
-            expiredate=sdf.parse("20190920");
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-        if(nowdate.after(expiredate)){
 
-            finish();
-            System.exit(0);
-        }
         //"group_app_mrp_finish_in","group_app_mrp_finish_in_confirm","group_app_mrp_move","group_app_sales_delivery"
     }
 

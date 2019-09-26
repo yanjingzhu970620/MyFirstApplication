@@ -38,6 +38,8 @@
     <string name="Number_per_box">每箱数量</string>
     <string name="container_weight">容器重量</string>
     <string name="container_id">容器编号</string>
+    <string name="package_name">材料卷号</string>
+    <string name="equipment_code">设备编号</string>
     <string name="Final_box">是尾箱</string>
     <string name="Inventory_quantity_of_boxes">库存箱数</string>
     <string name="Inventory_quantity">数量</string>
@@ -60,6 +62,8 @@
     <string name="report_quantity">报工重</string>
     <string name="Library_number">库位编号</string>
     <string name="report_state">状态</string>
+    <string name="delivery_check">出库检查</string>
+    <string name="report_default_loc">使用产品默认库位</string>
     <string name="Delivery_detail">出库明细</string>
     <string name="Bar_code">产品编码</string>
     <string name="current_process">当前工序</string>
@@ -68,6 +72,7 @@
     <string name="numbers">数量</string>
     <string name="report_num">数量</string>
     <string name="merge_cardid">分并桶卡号</string>
+    <string name="split_grossweight">分桶毛重</string>
     <string name="split_container_no">桶号</string>
     <string name="split_container_weight">空桶重</string>
     <string name="split_merge_type">并桶分桶</string>

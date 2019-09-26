@@ -106,4 +106,9 @@
     <string name="weight">weight</string>
     <string name="action_search">action_search</string>
     <string name="inventory_orderno">inventory_orderno</string>
+    <string name="delivery_check">report_check</string>
+    <string name="report_default_loc">report_default_loc</string>
+    <string name="package_name">package_name</string>
+    <string name="equipment_code">equipment_code</string>
+    <string name="split_grossweight">split_grossweight</string>
 </resources>
