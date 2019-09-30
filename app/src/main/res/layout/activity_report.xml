@@ -156,6 +156,80 @@
                     </LinearLayout>
                 </LinearLayout>
 
+                <LinearLayout
+                    android:id="@+id/package_name_layout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:visibility="gone"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:gravity="right"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginEnd="3dp"
+                        android:layout_marginTop="10dp"
+                        android:text="@string/package_name" />
+                    <EditText
+                        android:id="@+id/edittext_package_name"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="3"
+                        android:digits="1234567890."
+                        android:inputType="phone|number"
+                        android:maxLines="1"
+                        android:singleLine="true"
+                        android:textColor="@color/black" />
+
+                    <ImageView
+                        android:id="@+id/report_package_name_button"
+                        android:layout_width="25dp"
+                        android:layout_height="25dp"
+                        android:layout_gravity="bottom"
+                        android:layout_marginBottom="@dimen/erqode_vertical_margin"
+                        android:background="@mipmap/ercode"
+                        android:clickable="true"
+                        android:onClick="onClick" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/equipment_code_layout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:visibility="gone"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:gravity="right"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginEnd="3dp"
+                        android:layout_marginTop="10dp"
+                        android:text="@string/equipment_code" />
+                    <EditText
+                        android:id="@+id/edittext_equipment_code"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="3"
+                        android:inputType="phone|number"
+                        android:maxLines="1"
+                        android:singleLine="true"
+                        android:textColor="@color/black" />
+
+                    <ImageView
+                        android:id="@+id/report_equipment_code_button"
+                        android:layout_width="25dp"
+                        android:layout_height="25dp"
+                        android:layout_gravity="bottom"
+                        android:layout_marginBottom="@dimen/erqode_vertical_margin"
+                        android:background="@mipmap/ercode"
+                        android:clickable="true"
+                        android:onClick="onClick" />
+                </LinearLayout>
 
                 <LinearLayout
                     android:id="@+id/container_id_layout"
@@ -194,61 +268,6 @@
 
                 </LinearLayout>
 
-                <LinearLayout
-                    android:id="@+id/package_name_layout"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal">
-
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1"
-                        android:gravity="right"
-                        android:layout_gravity="center_vertical"
-                        android:layout_marginEnd="3dp"
-                        android:layout_marginTop="10dp"
-                        android:text="@string/package_name" />
-                    <EditText
-                        android:id="@+id/edittext_package_name"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="3"
-                        android:digits="1234567890."
-                        android:inputType="phone|number"
-                        android:maxLines="1"
-                        android:singleLine="true"
-                        android:textColor="@color/black" />
-
-                </LinearLayout>
-
-                <LinearLayout
-                    android:id="@+id/equipment_code_layout"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal">
-
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1"
-                        android:gravity="right"
-                        android:layout_gravity="center_vertical"
-                        android:layout_marginEnd="3dp"
-                        android:layout_marginTop="10dp"
-                        android:text="@string/equipment_code" />
-                    <EditText
-                        android:id="@+id/edittext_equipment_code"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="3"
-                        android:digits="1234567890."
-                        android:inputType="phone|number"
-                        android:maxLines="1"
-                        android:singleLine="true"
-                        android:textColor="@color/black" />
-
-                </LinearLayout>
 
                 <LinearLayout
                     android:id="@+id/container_weight_layout"
@@ -485,7 +504,7 @@
                         android:layout_weight="1"
                         android:background="@color/colorbarbackground"
                         android:onClick="onClick"
-                        android:text="@string/action_report"
+                        android:text="@string/action_start"
                         android:textStyle="bold" />
                     <Button
                         android:id="@+id/report_pause_button"
@@ -497,7 +516,7 @@
                         android:layout_weight="1"
                         android:background="@color/colorbarbackground"
                         android:onClick="onClick"
-                        android:text="@string/action_report"
+                        android:text="@string/action_pause"
                         android:textStyle="bold" />
 
                     <Button
@@ -682,6 +701,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="-10dp"
+                    android:visibility="gone"
                     android:orientation="horizontal">
 
                     <TextView

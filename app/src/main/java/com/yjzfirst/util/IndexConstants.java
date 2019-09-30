@@ -25,6 +25,12 @@ public class IndexConstants {
 
     public static final String CHECKINVERTORYPRODUCT="/app/product/get";
     public static final String CHECKINVENTORYINFO="/app/stock_inventory/get";
+    public static final String CHECKPRODUCTIONPLAN="/app/mrp_production/get";
+
+    public static final String CHECKMATERIALORDERID="/app/mrp_material_picking/get";
+    public static final String CHECKMATERIALPACKAGE="/app/mrp_material_picking_stock/get";
+    public static final String CHECKMATERIALSUBMIT="/app/mrp_material_picking/add_op";
+    public static final String CHECKMATERIALWAREHOUSE="/app/mrp_material_picking/done";
 
     public static final String CHECKCARDID="/app/mrp_runcard/get";
     public static final String CHECKPACKAGENAME="/app/material_check/get";

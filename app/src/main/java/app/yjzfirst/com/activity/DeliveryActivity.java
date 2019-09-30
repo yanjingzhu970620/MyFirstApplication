@@ -18,6 +18,7 @@ import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
@@ -75,6 +76,7 @@ public class DeliveryActivity extends AppCompatActivity {
     CheckBox deliverycheckbox;
     CheckBox defaultloccheckbox;
 
+    TextView torderstate;
     Button deliverSubmitbtn;
     ListView mSimpleDetailList;
     ChooseShipAdapter mAdapter;
@@ -155,6 +157,8 @@ public class DeliveryActivity extends AppCompatActivity {
         mdeliveryOrdernumber = (EditText) findViewById(R.id.delivery_Order_number);
 
         deliverSubmitbtn = (Button) findViewById(R.id.delivery_submit_button);
+
+        torderstate = (TextView) findViewById(R.id.order_state_text);
         deliverycheckbox = (CheckBox) findViewById(R.id.check_delivery);
         deliverycheckbox.setVisibility(View.VISIBLE);
         deliverycheckbox.setChecked(false);
@@ -410,6 +414,9 @@ public class DeliveryActivity extends AppCompatActivity {
         mdeliveryOrdernumber.setText("");
         mdeliveryTask = null;
         boxnum = 0;
+
+        deliverycheckbox.setChecked(false);
+        defaultloccheckbox.setChecked(false);
 //        productinfomap=new HashMap<String, HashMap<String,String>>();
 //        locationmap=new HashMap<String, String>();
 //        boxesnum=new ArrayList<Map<String,String>>();
@@ -423,6 +430,7 @@ public class DeliveryActivity extends AppCompatActivity {
     public class GetforminfoTask extends AsyncTask<Void, Void, Boolean> {
         String token = "";
         String batch_num = "";
+        String state="";
         String success = "";
         String msg = "";
         int responsecode = 0;
@@ -438,7 +446,7 @@ public class DeliveryActivity extends AppCompatActivity {
 
             try {
                 String url = "http://" + PreferencesUtils.getString(DeliveryActivity.this, ip_key, "120.27.2.177")
-                        + ":" + PreferencesUtils.getString(DeliveryActivity.this, port_key, "8062") +
+                        + ":" + PreferencesUtils.getString(DeliveryActivity.this, port_key, "8069") +
                         IndexConstants.CHECKDELIVERYFORM + "?name=" + batch_num + "&token=" + token;
                 Print("url:::" + url);
                 URL posturl = new URL(url);
@@ -464,6 +472,7 @@ public class DeliveryActivity extends AppCompatActivity {
                             for (int d = 0; d < data.length(); d++) {
 //                        String token =data.getString("line_data");
                                 use_default_location=data.getJSONObject(d).getString("use_default_location");
+                                state=data.getJSONObject(d).getString("state");
                                 System.out.println("use_default_location ::"+use_default_location);
                                 JSONArray line_data = data.getJSONObject(d).getJSONArray("line_data");
                                 for (int i = 0; i < line_data.length(); i++) {
@@ -510,6 +519,7 @@ public class DeliveryActivity extends AppCompatActivity {
                 }else{
                     defaultloccheckbox.setChecked(false);
                 }
+                torderstate.setText(state);
                 mdeliverylibrarynumber.requestFocus();
 
                 refreshdatalist();
@@ -576,7 +586,7 @@ public class DeliveryActivity extends AppCompatActivity {
 
             try {
                 String url = "http://" + PreferencesUtils.getString(DeliveryActivity.this, ip_key, "120.27.2.177")
-                        + ":" + PreferencesUtils.getString(DeliveryActivity.this, port_key, "8062") +
+                        + ":" + PreferencesUtils.getString(DeliveryActivity.this, port_key, "8069") +
                         IndexConstants.CHECKLIBRARY + "?location_barcode=" + library_num + "&token=" + token;
 //                "login:","登录帐号","Password":"密码"
                 Print("url:::" + url);
@@ -722,7 +732,7 @@ public class DeliveryActivity extends AppCompatActivity {
 
             try {
                 String url = "http://" + PreferencesUtils.getString(DeliveryActivity.this, ip_key, "120.27.2.177")
-                        + ":" + PreferencesUtils.getString(DeliveryActivity.this, port_key, "8062") +
+                        + ":" + PreferencesUtils.getString(DeliveryActivity.this, port_key, "8069") +
                         IndexConstants.CHECKDELIVERYPRODUCT + "?product_code=" + product_code + "&name=" + batch_num + "&token=" + token;
 //                "login:","登录帐号","Password":"密码"
                 Print("lot_id:::" + lot_id + "qty:::" + qty);
@@ -900,7 +910,7 @@ public class DeliveryActivity extends AppCompatActivity {
 
             try {
                 String url = "http://" + PreferencesUtils.getString(DeliveryActivity.this, ip_key, "120.27.2.177")
-                        + ":" + PreferencesUtils.getString(DeliveryActivity.this, port_key, "8062") +
+                        + ":" + PreferencesUtils.getString(DeliveryActivity.this, port_key, "8069") +
                         IndexConstants.CHECKDELIVERYPRODUCTLABEL + "?product_code=" + product_code +
                         "&lot_no=" + lot_name + "&package_name=" + package_name + "&token=" + token;
                 Print("url:::" + url);
@@ -1077,7 +1087,7 @@ public class DeliveryActivity extends AppCompatActivity {
 
             try {
                 String url = "http://" + PreferencesUtils.getString(DeliveryActivity.this, ip_key, "120.27.2.177")
-                        + ":" + PreferencesUtils.getString(DeliveryActivity.this, port_key, "8062") +
+                        + ":" + PreferencesUtils.getString(DeliveryActivity.this, port_key, "8069") +
                         IndexConstants.CHECKDELIVERYINVENTORY + "?product_code=" + product_code+ "&warehouse_barcode=" + warehouse
                         + "&location_barcode=" + location+ "&lot_no=" + lot_no+
                         "&package_code=" + package_code+"&customer_code=" +customercode+ "&token=" + token;
@@ -1191,6 +1201,7 @@ public class DeliveryActivity extends AppCompatActivity {
     public class CheckwareinfoTask extends AsyncTask<Void, Void, Boolean> {
         String token = "";
         String batch_num = "";
+        String state="";
         String success = "";
         String msg = "";
         int responsecode = 0;
@@ -1206,7 +1217,7 @@ public class DeliveryActivity extends AppCompatActivity {
 
             try {
                 String url = "http://" + PreferencesUtils.getString(DeliveryActivity.this, ip_key, "120.27.2.177")
-                        + ":" + PreferencesUtils.getString(DeliveryActivity.this, port_key, "8062") +
+                        + ":" + PreferencesUtils.getString(DeliveryActivity.this, port_key, "8069") +
                         IndexConstants.CHECKDELIVERYWAREHOUSE + "?name=" + batch_num + "&token=" + token;
                 Print("url:::" + url);
                 URL posturl = new URL(url);
@@ -1226,12 +1237,9 @@ public class DeliveryActivity extends AppCompatActivity {
                         msg = jsonObject.getString("message");
                         success = jsonObject.getString("success");
                         if (success.equals("true")) {
-                            JSONArray data = jsonObject.getJSONArray("data");
-                            Print(" return:::" + data);
-                            for (int d = 0; d < data.length(); d++) {
-//                          String token =data.getString("line_data");
-
-                            }
+                            JSONObject data = jsonObject.getJSONObject("data");
+                            Print(" 仓库确认 return:::" + data);
+                            state =data.getString("state");
                         }
                     }
                 }
@@ -1252,7 +1260,7 @@ public class DeliveryActivity extends AppCompatActivity {
         protected void onPostExecute(final Boolean success) {
             if (success) {
                 Util.showShortToastMessage(DeliveryActivity.this, msg);
-
+                torderstate.setText(state);
             } else {
                 Util.showShortToastMessage(DeliveryActivity.this, msg);
             }
@@ -1338,11 +1346,11 @@ public class DeliveryActivity extends AppCompatActivity {
 
             try {
                 String url = "http://" + PreferencesUtils.getString(DeliveryActivity.this, ip_key, "120.27.2.177")
-                        + ":" + PreferencesUtils.getString(DeliveryActivity.this, port_key, "8062") + IndexConstants.TAKINGCHECKBARCODE;
+                        + ":" + PreferencesUtils.getString(DeliveryActivity.this, port_key, "8069") + IndexConstants.TAKINGCHECKBARCODE;
 //                "login:","登录帐号","Password":"密码"
                 Print("url:::" + url);
                 Map<String, String> mparams = new HashMap<String, String>();
-                mparams.put("login", PreferencesUtils.getString(DeliveryActivity.this, email_key, "8062"));
+                mparams.put("login", PreferencesUtils.getString(DeliveryActivity.this, email_key, "8069"));
                 mparams.put("lot_no", lot_no);
                 mparams.put("barcode", barcode);
                 mparams.put("location", location);
@@ -1492,12 +1500,12 @@ public class DeliveryActivity extends AppCompatActivity {
 
             try {
                 String url = "http://" + PreferencesUtils.getString(DeliveryActivity.this, ip_key, "120.27.2.177")
-                        + ":" + PreferencesUtils.getString(DeliveryActivity.this, port_key, "8062") +
+                        + ":" + PreferencesUtils.getString(DeliveryActivity.this, port_key, "8069") +
                         IndexConstants.OUTSTOCK + "?";//+ "token="+PreferencesUtils.getString(DeliveryActivity.this,token_key,"");
 //                "login:","登录帐号","Password":"密码"
 //				Map<String, String> mparams = new HashMap<String, String>();
-                url = url + "delivery_no=" + batch_num;
-//                mparams.put("login",PreferencesUtils.getString(DeliveryActivity.this,email_key,"8062"));
+                url = url + "delivery_no=" + batch_num+"&token="+token;
+//                mparams.put("login",PreferencesUtils.getString(DeliveryActivity.this,email_key,"8069"));
 //                Print("boxesnum.size():::"+boxesnum.size());
 //                String mparams="";
                 String jsondata = "{";

@@ -362,8 +362,8 @@ public class LoginActivity extends AppCompatActivity {
 
             try {
                 String url = "http://" + PreferencesUtils.getString(LoginActivity.this, ip_key, "120.27.2.177")
-                        + ":" + PreferencesUtils.getString(LoginActivity.this, port_key, "8062") + IndexConstants.LOGINURL +
-                        "?db="+PreferencesUtils.getString(LoginActivity.this, db_key, "demo-fasten")
+                        + ":" + PreferencesUtils.getString(LoginActivity.this, port_key, "8069") + IndexConstants.LOGINURL +
+                        "?db="+PreferencesUtils.getString(LoginActivity.this, db_key, "erp")//demo-fasten
                         + "&username=" + mEmail + "&password=" + mPassword;
 //                "login:","登录帐号","Password":"密码"
                 Print("url:::" + url);
@@ -412,7 +412,7 @@ public class LoginActivity extends AppCompatActivity {
 //                    String s = ins.toString();
 //                    System.err.println("sssssssss:::"+success);
                 }
-                Print("login return:::" + responsecode + "port:::" + PreferencesUtils.getString(LoginActivity.this, port_key, "8062"));
+                Print("login return:::" + responsecode + "port:::" + PreferencesUtils.getString(LoginActivity.this, port_key, "8069"));
 //                ins.close();
             } catch (Exception e) {
                 // TODO: handle exception

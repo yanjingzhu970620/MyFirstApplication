@@ -55,6 +55,8 @@ import static com.yzq.zxinglibrary.common.Constant.CODED_CONTENT;
 public class ReportcheckActivity extends AppCompatActivity {
 	private CheckCardidTask mCheckTask = null;
 	EditText eCardid;
+	EditText ePackagename;
+	EditText eEquipmentcode;
 	EditText eCurrentprocess;
 	EditText eReportstate;
 	EditText eContainerid;
@@ -128,6 +130,20 @@ public class ReportcheckActivity extends AppCompatActivity {
 		TextView title=(TextView) findViewById(R.id.report_activity_title);
 		title.setText(R.string.check_main_inspect);
 		eCardid = (EditText) findViewById(R.id.edittext_report_card_id);
+		LinearLayout package_name_layout= (LinearLayout) findViewById(R.id.package_name_layout);
+		package_name_layout.setVisibility(View.VISIBLE);
+		LinearLayout equipment_code_layout= (LinearLayout) findViewById(R.id.equipment_code_layout);
+		equipment_code_layout.setVisibility(View.VISIBLE);
+		ePackagename = (EditText) findViewById(R.id.edittext_package_name);
+		changePackagestatus(false);
+		eEquipmentcode = (EditText) findViewById(R.id.edittext_equipment_code);
+		changeEquipmentstatus(false);
+
+		ImageView ePackagenamebtn = (ImageView) findViewById(R.id.report_package_name_button);
+		ePackagenamebtn.setVisibility(View.GONE);
+
+		ImageView eEquipmentcodebtn = (ImageView) findViewById(R.id.report_equipment_code_button);
+		eEquipmentcodebtn.setVisibility(View.GONE);
 //        mcheckbatchnumber.addTextChangedListener(shipsWatcher);
 		eCurrentprocess = (EditText) findViewById(R.id.edittext_current_process);
 		eCurrentprocess.setFocusableInTouchMode(false);//不可编辑
@@ -663,13 +679,13 @@ public class ReportcheckActivity extends AppCompatActivity {
 			try {
 				String url = "http://" +
 						PreferencesUtils.getString(ReportcheckActivity.this, ip_key, "120.27.2.177")
-						+ ":" + PreferencesUtils.getString(ReportcheckActivity.this, port_key, "8062") +
+						+ ":" + PreferencesUtils.getString(ReportcheckActivity.this, port_key, "8069") +
 						IndexConstants.CHECKCARDID + "?token=" +
 						PreferencesUtils.getString(ReportcheckActivity.this, token_key, "") + "&runcard_no=" + cardid;
 //                "login:","登录帐号","Password":"密码"
 				Print("url:::" + url);
 //                Map<String,String> mparams=new HashMap<String,String>();
-//                mparams.put("login",PreferencesUtils.getString(ReportActivity.this,email_key,"8062"));
+//                mparams.put("login",PreferencesUtils.getString(ReportActivity.this,email_key,"8069"));
 //                mparams.put("lot_no",lot_no);
 //                mparams.put("barcode",barcode);
 //                mparams.put("location",location);
@@ -783,13 +799,13 @@ public class ReportcheckActivity extends AppCompatActivity {
 			try {
 				String url = "http://" +
 						PreferencesUtils.getString(ReportcheckActivity.this, ip_key, "120.27.2.177")
-						+ ":" + PreferencesUtils.getString(ReportcheckActivity.this, port_key, "8062") +
+						+ ":" + PreferencesUtils.getString(ReportcheckActivity.this, port_key, "8069") +
 						IndexConstants.CHECKCARDID + "?token=" +
 						PreferencesUtils.getString(ReportcheckActivity.this, token_key, "") + "&runcard_no=" + cardid;
 //                "login:","登录帐号","Password":"密码"
 				Print("url:::" + url);
 //                Map<String,String> mparams=new HashMap<String,String>();
-//                mparams.put("login",PreferencesUtils.getString(ReportActivity.this,email_key,"8062"));
+//                mparams.put("login",PreferencesUtils.getString(ReportActivity.this,email_key,"8069"));
 //                mparams.put("lot_no",lot_no);
 //                mparams.put("barcode",barcode);
 //                mparams.put("location",location);
@@ -945,7 +961,7 @@ public class ReportcheckActivity extends AppCompatActivity {
 			try {
 				String url = "http://" +
 						PreferencesUtils.getString(ReportcheckActivity.this, ip_key, "120.27.2.177")
-						+ ":" + PreferencesUtils.getString(ReportcheckActivity.this, port_key, "8062") +
+						+ ":" + PreferencesUtils.getString(ReportcheckActivity.this, port_key, "8069") +
 						IndexConstants.REPORTCARD + "?"
 						+ "token=" + token + "&runcard_no=" + runcard_no
 						+ "&weight=" + weight + "&unit_weight=" + unit_weight
@@ -955,7 +971,7 @@ public class ReportcheckActivity extends AppCompatActivity {
 //                "login:","登录帐号","Password":"密码"
 				Print("url:::" + url);
 //                Map<String,String> mparams=new HashMap<String,String>();
-////                mparams.put("login",PreferencesUtils.getString(ReportActivity.this,email_key,"8062"));
+////                mparams.put("login",PreferencesUtils.getString(ReportActivity.this,email_key,"8069"));
 //                mparams.put("token",PreferencesUtils.getString(ReportActivity.this, token_key, ""));
 //                mparams.put("runcard_no",cardid);
 //                mparams.put("qty",qty);
@@ -1086,13 +1102,13 @@ public class ReportcheckActivity extends AppCompatActivity {
 			try {
 				String url = "http://" +
 						PreferencesUtils.getString(ReportcheckActivity.this, ip_key, "120.27.2.177")
-						+ ":" + PreferencesUtils.getString(ReportcheckActivity.this, port_key, "8062") +
+						+ ":" + PreferencesUtils.getString(ReportcheckActivity.this, port_key, "8069") +
 						IndexConstants.REPORTCARD_STOP + "?"
 						+ "token=" + token + "&runcard_no=" + runcard_no;
 //                "login:","登录帐号","Password":"密码"
 				Print("url:::" + url);
 //                Map<String,String> mparams=new HashMap<String,String>();
-////                mparams.put("login",PreferencesUtils.getString(ReportActivity.this,email_key,"8062"));
+////                mparams.put("login",PreferencesUtils.getString(ReportActivity.this,email_key,"8069"));
 //                mparams.put("token",PreferencesUtils.getString(ReportActivity.this, token_key, ""));
 //                mparams.put("runcard_no",cardid);
 //                mparams.put("qty",qty);
@@ -1236,7 +1252,7 @@ public class ReportcheckActivity extends AppCompatActivity {
 			try {
 				String url = "http://" +
 						PreferencesUtils.getString(ReportcheckActivity.this, ip_key, "120.27.2.177")
-						+ ":" + PreferencesUtils.getString(ReportcheckActivity.this, port_key, "8062") +
+						+ ":" + PreferencesUtils.getString(ReportcheckActivity.this, port_key, "8069") +
 						IndexConstants.REPORTMATERIAL + "?"
 						+ "token=" + token + "&runcard_no=" + runcard_no + "&weight=" + weight
 						+ "&qty=" + qty
@@ -1244,7 +1260,7 @@ public class ReportcheckActivity extends AppCompatActivity {
 //                "login:","登录帐号","Password":"密码"
 				Print("REPORTMATERIAL url:::" + url);
 //                Map<String,String> mparams=new HashMap<String,String>();
-//                mparams.put("login",PreferencesUtils.getString(ReportActivity.this,email_key,"8062"));
+//                mparams.put("login",PreferencesUtils.getString(ReportActivity.this,email_key,"8069"));
 //                mparams.put("lot_no",lot_no);
 //                mparams.put("barcode",barcode);
 //                mparams.put("location",location);
@@ -1355,13 +1371,13 @@ public class ReportcheckActivity extends AppCompatActivity {
 			try {
 				String url = "http://" +
 						PreferencesUtils.getString(ReportcheckActivity.this, ip_key, "120.27.2.177")
-						+ ":" + PreferencesUtils.getString(ReportcheckActivity.this, port_key, "8062") +
+						+ ":" + PreferencesUtils.getString(ReportcheckActivity.this, port_key, "8069") +
 						IndexConstants.REPORTCARD_CANCLE + "?"
 						+ "token=" + token + "&runcard_no=" + runcard_no;
 //                "login:","登录帐号","Password":"密码"
 				Print("url:::" + url);
 //                Map<String,String> mparams=new HashMap<String,String>();
-//                mparams.put("login",PreferencesUtils.getString(ReportActivity.this,email_key,"8062"));
+//                mparams.put("login",PreferencesUtils.getString(ReportActivity.this,email_key,"8069"));
 //                mparams.put("lot_no",lot_no);
 //                mparams.put("barcode",barcode);
 //                mparams.put("location",location);
@@ -1472,13 +1488,13 @@ public class ReportcheckActivity extends AppCompatActivity {
 			try {
 				String url = "http://" +
 						PreferencesUtils.getString(ReportcheckActivity.this, ip_key, "120.27.2.177")
-						+ ":" + PreferencesUtils.getString(ReportcheckActivity.this, port_key, "8062") +
+						+ ":" + PreferencesUtils.getString(ReportcheckActivity.this, port_key, "8069") +
 						IndexConstants.REPORT_INSPECTPASS + "?"
 						+ "token=" + token + "&runcard_no=" + runcard_no;
 //                "login:","登录帐号","Password":"密码"
 				Print("url:::" + url);
 //                Map<String,String> mparams=new HashMap<String,String>();
-//                mparams.put("login",PreferencesUtils.getString(ReportActivity.this,email_key,"8062"));
+//                mparams.put("login",PreferencesUtils.getString(ReportActivity.this,email_key,"8069"));
 //                mparams.put("lot_no",lot_no);
 //                mparams.put("barcode",barcode);
 //                mparams.put("location",location);
@@ -1589,13 +1605,13 @@ public class ReportcheckActivity extends AppCompatActivity {
 			try {
 				String url = "http://" +
 						PreferencesUtils.getString(ReportcheckActivity.this, ip_key, "120.27.2.177")
-						+ ":" + PreferencesUtils.getString(ReportcheckActivity.this, port_key, "8062") +
+						+ ":" + PreferencesUtils.getString(ReportcheckActivity.this, port_key, "8069") +
 						IndexConstants.REPORT_INSPECTCANCLE + "?"
 						+ "token=" + token + "&runcard_no=" + runcard_no;
 //                "login:","登录帐号","Password":"密码"
 				Print("url:::" + url);
 //                Map<String,String> mparams=new HashMap<String,String>();
-//                mparams.put("login",PreferencesUtils.getString(ReportActivity.this,email_key,"8062"));
+//                mparams.put("login",PreferencesUtils.getString(ReportActivity.this,email_key,"8069"));
 //                mparams.put("lot_no",lot_no);
 //                mparams.put("barcode",barcode);
 //                mparams.put("location",location);
@@ -1708,13 +1724,13 @@ public class ReportcheckActivity extends AppCompatActivity {
 			try {
 				String url = "http://" +
 						PreferencesUtils.getString(ReportcheckActivity.this, ip_key, "120.27.2.177")
-						+ ":" + PreferencesUtils.getString(ReportcheckActivity.this, port_key, "8062") +
+						+ ":" + PreferencesUtils.getString(ReportcheckActivity.this, port_key, "8069") +
 						IndexConstants.REPORT_INSPECTNG + "?"
 						+ "token=" + token + "&runcard_no=" + runcard_no;
 //                "login:","登录帐号","Password":"密码"
 				Print("url:::" + url);
 //                Map<String,String> mparams=new HashMap<String,String>();
-//                mparams.put("login",PreferencesUtils.getString(ReportActivity.this,email_key,"8062"));
+//                mparams.put("login",PreferencesUtils.getString(ReportActivity.this,email_key,"8069"));
 //                mparams.put("lot_no",lot_no);
 //                mparams.put("barcode",barcode);
 //                mparams.put("location",location);
@@ -1827,13 +1843,13 @@ public class ReportcheckActivity extends AppCompatActivity {
 			try {
 				String url = "http://" +
 						PreferencesUtils.getString(ReportcheckActivity.this, ip_key, "120.27.2.177")
-						+ ":" + PreferencesUtils.getString(ReportcheckActivity.this, port_key, "8062") +
+						+ ":" + PreferencesUtils.getString(ReportcheckActivity.this, port_key, "8069") +
 						IndexConstants.REPORT_MATERIALCANCLE + "?"
 						+ "token=" + token + "&runcard_no=" + runcard_no;
 //                "login:","登录帐号","Password":"密码"
 				Print("url:::" + url);
 //                Map<String,String> mparams=new HashMap<String,String>();
-//                mparams.put("login",PreferencesUtils.getString(ReportActivity.this,email_key,"8062"));
+//                mparams.put("login",PreferencesUtils.getString(ReportActivity.this,email_key,"8069"));
 //                mparams.put("lot_no",lot_no);
 //                mparams.put("barcode",barcode);
 //                mparams.put("location",location);
@@ -1999,6 +2015,8 @@ public class ReportcheckActivity extends AppCompatActivity {
 			eCardid.requestFocus();
 			if(ReportFormBeans.size()>0) {
 				eCurrentprocess.setText(CheckNullString(ReportFormBeans.get(0).process_name));
+				ePackagename.setText(CheckNullString(ReportFormBeans.get(0).package_name));
+				eEquipmentcode.setText(CheckNullString(ReportFormBeans.get(0).equipment_code));
 				String process_status = ReportFormBeans.get(0).process_status;
 				eReportstate.setText(CheckNullString(process_statusmap.get(process_status)));
 				eContainerid.setText(CheckNullString(ReportFormBeans.get(0).container_no));
@@ -2063,6 +2081,8 @@ public class ReportcheckActivity extends AppCompatActivity {
 				}
 			}else{
 				eCardid.setText("");
+				ePackagename.setText("");
+				eEquipmentcode.setText("");
 				eCurrentprocess.setText("");
 				eReportstate.setText("");
 				eContainerid.setText("");
@@ -2103,7 +2123,14 @@ public class ReportcheckActivity extends AppCompatActivity {
 			return (Integer.compare(Integer.parseInt(((ReportProductBean) o1).sequence), Integer.parseInt(((ReportProductBean) o2).sequence)));
 		}
 	};
-
+	private void changePackagestatus(boolean status){
+		ePackagename.setFocusableInTouchMode(status);
+		ePackagename.setFocusable(status);
+	}
+	private void changeEquipmentstatus(boolean status){
+		eEquipmentcode.setFocusableInTouchMode(status);
+		eEquipmentcode.setFocusable(status);
+	}
 	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
 //		Util.showShortToastMessage(EntryWarehouseActivity.this,"keycode:"+keyCode);

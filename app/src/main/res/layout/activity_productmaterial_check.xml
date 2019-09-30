@@ -19,12 +19,12 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
-                android:text="@string/search_inventory_main"
+                android:text="@string/check_productmeterial_main"
                 android:textColor="#4f92ed"
                 android:textSize="20sp" />
 
             <LinearLayout
-                android:id="@+id/inventory_back"
+                android:id="@+id/materialproduct_back"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
@@ -66,7 +66,40 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
                 <LinearLayout
-                    android:id="@+id/product_plan"
+                    android:id="@+id/material_order"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:text="@string/material_orderid" />
+
+                    <EditText
+                        android:id="@+id/material_order_edittext"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="3"
+                        android:maxLines="1"
+                        android:singleLine="true"
+                        android:textColor="@color/black" />
+
+                    <ImageView
+                        android:id="@+id/material_order_button"
+                        android:layout_width="25dp"
+                        android:layout_height="25dp"
+                        android:layout_gravity="bottom"
+                        android:layout_marginBottom="@dimen/erqode_vertical_margin"
+                        android:background="@mipmap/ercode"
+                        android:clickable="true"
+                        android:onClick="onClick" />
+
+                </LinearLayout>
+
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal">
@@ -78,8 +111,78 @@
                         android:gravity="center"
                         android:text="@string/product_plan" />
 
+                    <TextView
+                        android:id="@+id/material_product_plan_text"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:gravity="center" />
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:text="@string/process_name" />
+
+                    <TextView
+                        android:id="@+id/material_process_name_text"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:gravity="center" />
+
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:text="@string/material_orderdate"/>
+
+                    <TextView
+                        android:id="@+id/material_orderdate_text"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:gravity="center" />
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:text="@string/state" />
+
+                    <TextView
+                        android:id="@+id/material_state_text"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:gravity="center" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/material_package_name"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:text="@string/material_package_name" />
+
                     <EditText
-                        android:id="@+id/product_plan_edittext"
+                        android:id="@+id/material_package_name_edittext"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="3"
@@ -88,7 +191,7 @@
                         android:textColor="@color/black" />
 
                     <ImageView
-                        android:id="@+id/product_plan_button"
+                        android:id="@+id/material_package_name_button"
                         android:layout_width="25dp"
                         android:layout_height="25dp"
                         android:layout_gravity="bottom"
@@ -100,7 +203,6 @@
                 </LinearLayout>
 
                 <LinearLayout
-                    android:id="@+id/inventory_Bar_code_form"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal">
@@ -110,212 +212,28 @@
                         android:layout_height="match_parent"
                         android:layout_weight="1"
                         android:gravity="center"
-                        android:text="@string/Bar_code" />
+                        android:text="@string/material_branname"/>
 
-                    <EditText
-                        android:id="@+id/inventory_bar_code"
+                    <TextView
+                        android:id="@+id/material_branname_text"
                         android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="3"
-                        android:maxLines="1"
-                        android:singleLine="true"
-                        android:textColor="@color/black" />
-
-                    <ImageView
-                        android:id="@+id/inventory_bar_code_button"
-                        android:layout_width="25dp"
-                        android:layout_height="25dp"
-                        android:layout_gravity="bottom"
-                        android:layout_marginBottom="@dimen/erqode_vertical_margin"
-                        android:background="@mipmap/ercode"
-                        android:clickable="true"
-                        android:onClick="onClick" />
-
-                </LinearLayout>
-
-                <LinearLayout
-                    android:id="@+id/inventory_batch_number_form"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal">
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:gravity="center" />
 
                     <TextView
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
                         android:layout_weight="1"
                         android:gravity="center"
-                        android:text="@string/inventory_orderno" />
-
-                    <EditText
-                        android:id="@+id/inventory_batch_number"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="-10dp"
-                        android:layout_weight="3"
-                        android:maxLines="1"
-                        android:singleLine="true"
-                        android:textColor="@color/black" />
-
-                    <ImageView
-                        android:id="@+id/inventory_batch_number_button"
-                        android:layout_width="25dp"
-                        android:layout_height="25dp"
-                        android:visibility="gone"
-                        android:layout_gravity="bottom"
-                        android:layout_marginBottom="@dimen/erqode_vertical_margin"
-                        android:background="@mipmap/ercode"
-                        android:clickable="true"
-                        android:onClick="onClick" />
-
-                </LinearLayout>
-
-                <LinearLayout
-                    android:id="@+id/inventory_Library_number_form"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal">
+                        android:text="@string/material_supplier_code" />
 
                     <TextView
+                        android:id="@+id/material_supplier_code_text"
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
                         android:layout_weight="1"
-                        android:gravity="center"
-                        android:text="@string/Library_number" />
-
-                    <EditText
-                        android:id="@+id/inventory_library_number"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="3"
-                        android:maxLines="1"
-                        android:singleLine="true"
-                        android:textColor="@color/black" />
-
-                    <ImageView
-                        android:id="@+id/inventory_library_number_button"
-                        android:layout_width="25dp"
-                        android:layout_height="25dp"
-                        android:layout_gravity="bottom"
-                        android:layout_marginBottom="@dimen/erqode_vertical_margin"
-                        android:background="@mipmap/ercode"
-                        android:clickable="true"
-                        android:onClick="onClick" />
-                </LinearLayout>
-
-
-
-
-
-                <LinearLayout
-                    android:id="@+id/inventory_Order_number_form"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:visibility="gone"
-                    android:orientation="horizontal">
-
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1"
-                        android:gravity="center"
-                        android:text="@string/Order_number" />
-
-                    <EditText
-                        android:id="@+id/inventory_Order_number"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="3"
-                        android:maxLines="1"
-                        android:singleLine="true"
-                        android:textColor="@color/black" />
-
-                </LinearLayout>
-
-                <LinearLayout
-                    android:id="@+id/inventory_Number_per_box_form"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:visibility="gone"
-                    android:orientation="horizontal">
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1"
-                        android:gravity="center"
-                        android:text="@string/Number_of_boxes" />
-
-                    <EditText
-                        android:id="@+id/inventory_num_boxes"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:digits="1234567890"
-                        android:inputType="phone|number"
-                        android:maxLines="1"
-                        android:singleLine="true"
-                        android:textColor="@color/black" />
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1"
-                        android:gravity="center"
-                        android:text="@string/Number_per_box" />
-
-                    <EditText
-                        android:id="@+id/inventory_Number_per_box"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:digits="1234567890."
-                        android:inputType="phone|number"
-                        android:maxLines="1"
-                        android:singleLine="true"
-                        android:textColor="@color/black" />
-
-                </LinearLayout>
-
-
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal">
-
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1"
-                        android:gravity="center"
-                        android:text="@string/front_of_boxes" />
-
-                    <EditText
-                        android:id="@+id/inventory_front_boxes"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:digits="1234567890"
-                        android:inputType="phone|number"
-                        android:maxLines="1"
-                        android:singleLine="true"
-                        android:textColor="@color/black" />
-
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1"
-                        android:gravity="center"
-                        android:text="@string/front_of_boxes_num" />
-
-                    <EditText
-                        android:id="@+id/inventory_front_boxes_num"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:digits="1234567890"
-                        android:inputType="phone|number"
-                        android:maxLines="1"
-                        android:singleLine="true"
-                        android:textColor="@color/black" />
+                        android:gravity="center" />
 
                 </LinearLayout>
 
@@ -329,79 +247,28 @@
                         android:layout_height="match_parent"
                         android:layout_weight="1"
                         android:gravity="center"
-                        android:text="@string/thisbatch_of_boxes" />
+                        android:text="@string/material_lot_nos"/>
 
-                    <EditText
-                        android:id="@+id/inventory_thisbatch_boxes"
+                    <TextView
+                        android:id="@+id/material_lotno_text"
                         android:layout_width="0dp"
-                        android:layout_height="wrap_content"
+                        android:layout_height="match_parent"
                         android:layout_weight="1"
-                        android:digits="1234567890"
-                        android:inputType="phone|number"
-                        android:maxLines="1"
-                        android:singleLine="true"
-                        android:textColor="@color/black" />
+                        android:gravity="center" />
 
                     <TextView
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
                         android:layout_weight="1"
                         android:gravity="center"
-                        android:text="@string/thisbatch_of_boxes_num" />
+                        android:text="@string/material_furnace_no" />
 
-                    <EditText
-                        android:id="@+id/inventory_thisbatch_boxes_num"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:digits="1234567890"
-                        android:inputType="phone|number"
-                        android:maxLines="1"
-                        android:singleLine="true"
-                        android:textColor="@color/black" />
-
-                </LinearLayout>
-
-
-                <LinearLayout
-                    android:id="@+id/inventory_inventory_form"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal">
                     <TextView
+                        android:id="@+id/material_furnace_no_text"
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
                         android:layout_weight="1"
-                        android:gravity="center"
-                        android:text="@string/Inventory_quantity_of_boxes" />
-
-                    <EditText
-                        android:id="@+id/inventory_inventory_boxes"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:digits="1234567890"
-                        android:inputType="phone|number"
-                        android:maxLines="1"
-                        android:singleLine="true"
-                        android:textColor="@color/black" />
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1"
-                        android:gravity="center"
-                        android:text="@string/Inventory_quantity" />
-
-                    <EditText
-                        android:id="@+id/inventory_inventory_quantity"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:digits="1234567890"
-                        android:inputType="phone|number"
-                        android:maxLines="1"
-                        android:singleLine="true"
-                        android:textColor="@color/black" />
+                        android:gravity="center" />
 
                 </LinearLayout>
 
@@ -415,45 +282,108 @@
                         android:layout_height="match_parent"
                         android:layout_weight="1"
                         android:gravity="center"
-                        android:text="@string/available_of_boxes" />
+                        android:text="@string/material_name"/>
 
-                    <EditText
-                        android:id="@+id/inventory_available_boxes"
+                    <TextView
+                        android:id="@+id/material_name_text"
                         android:layout_width="0dp"
-                        android:layout_height="wrap_content"
+                        android:layout_height="match_parent"
                         android:layout_weight="1"
-                        android:digits="1234567890"
-                        android:inputType="phone|number"
-                        android:maxLines="1"
-                        android:singleLine="true"
-                        android:textColor="@color/black" />
+                        android:gravity="center" />
 
                     <TextView
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
                         android:layout_weight="1"
                         android:gravity="center"
-                        android:text="@string/available_of_boxes_num" />
+                        android:text="@string/material_diameter" />
 
-                    <EditText
-                        android:id="@+id/inventory_available_boxes_num"
+                    <TextView
+                        android:id="@+id/material_diameter_text"
                         android:layout_width="0dp"
-                        android:layout_height="wrap_content"
+                        android:layout_height="match_parent"
                         android:layout_weight="1"
-                        android:digits="1234567890"
-                        android:inputType="phone|number"
-                        android:maxLines="1"
-                        android:singleLine="true"
-                        android:textColor="@color/black" />
+                        android:gravity="center" />
 
                 </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:text="@string/material_productcode"/>
+
+                    <TextView
+                        android:id="@+id/material_productcode_text"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:gravity="center" />
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:text="@string/material_locationbarcode" />
+
+                    <TextView
+                        android:id="@+id/material_locationbarcode_text"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:gravity="center" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:text="@string/material_packageqty"/>
+
+                    <TextView
+                        android:id="@+id/material_packageqty_text"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:gravity="center" />
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:text="@string/material_packagenum" />
+
+                    <TextView
+                        android:id="@+id/material_packagenum_text"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:gravity="center" />
+
+                </LinearLayout>
+
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:orientation="horizontal">
 
                     <Button
-                        android:id="@+id/inventory_submit_button"
+                        android:id="@+id/material_submitscan_button"
                         style="?android:textAppearanceSmall"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -461,9 +391,32 @@
                         android:layout_weight="1"
                         android:background="@color/colorbarbackground"
                         android:onClick="onClick"
-                        android:text="@string/action_search"
+                        android:text="@string/action_scan"
                         android:textStyle="bold" />
 
+                    <Button
+                        android:id="@+id/material_canclescan_button"
+                        style="?android:textAppearanceSmall"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="16dp"
+                        android:layout_weight="1"
+                        android:background="@color/colorbarbackground"
+                        android:onClick="onClick"
+                        android:text="@string/action_scan_cancle"
+                        android:textStyle="bold" />
+
+                    <Button
+                        android:id="@+id/material_ensure_warehouse"
+                        style="?android:textAppearanceSmall"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="16dp"
+                        android:layout_weight="1"
+                        android:background="@color/colorbarbackground"
+                        android:onClick="onClick"
+                        android:text="@string/action_warehouse"
+                        android:textStyle="bold" />
                 </LinearLayout>
 
                 <LinearLayout
@@ -482,20 +435,20 @@
                             android:layout_width="0dp"
                             android:layout_height="match_parent"
                             android:layout_weight="2"
-                            android:text="@string/check_warehouse_code" />
+                            android:text="@string/order_id" />
 
                         <TextView
                             android:layout_width="0dp"
                             android:layout_height="match_parent"
                             android:layout_weight="2"
-                            android:text="@string/check_warehouse_name" />
+                            android:text="@string/product_item" />
 
                         <TextView
                             android:layout_width="0dp"
                             android:layout_height="match_parent"
                             android:layout_weight="2"
                             android:gravity="center"
-                            android:text="@string/weight" />
+                            android:text="@string/number_applications" />
 
                         <TextView
                             android:layout_width="0dp"
@@ -503,7 +456,21 @@
                             android:layout_gravity="center_horizontal"
                             android:layout_weight="2"
                             android:gravity="center"
-                            android:text="@string/numbers" />
+                            android:text="@string/unit" />
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_gravity="center_horizontal"
+                            android:layout_weight="2"
+                            android:gravity="center"
+                            android:text="@string/entrychoice_num" />
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_gravity="center_horizontal"
+                            android:layout_weight="2"
+                            android:gravity="center"
+                            android:text="@string/material_packagenum" />
                     </LinearLayout>
 
                     <ListView

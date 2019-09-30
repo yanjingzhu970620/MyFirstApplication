@@ -361,6 +361,37 @@
             </TextView>
         </LinearLayout>
 
+        <LinearLayout
+            android:id="@+id/Material_Check_main_content"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_marginTop="@dimen/fab_margin"
+            android:layout_weight="1"
+            android:background="@color/colorbarbackground"
+            android:clickable="true"
+            android:gravity="center"
+            android:maxHeight="80dip"
+            android:onClick="onClick">
+
+            <!--<ImageView-->
+            <!--android:layout_width="50dp"-->
+            <!--android:layout_height="50dp"-->
+            <!--android:layout_marginLeft="@dimen/fab_margin"-->
+            <!--android:layout_marginRight="@dimen/fab_margin"-->
+            <!--android:background="@mipmap/check" />-->
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginLeft="@dimen/fab_margin"
+                android:text="@string/check_productmeterial_main"
+                android:textColor="@color/colorwhite"
+                android:textSize="@dimen/activity_bar_title">
+
+
+            </TextView>
+        </LinearLayout>
 
     </LinearLayout>
 </LinearLayout>

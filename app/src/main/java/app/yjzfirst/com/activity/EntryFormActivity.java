@@ -394,11 +394,11 @@ public class EntryFormActivity extends AppCompatActivity {
 //
 //            try {
 //                String url="http://"+PreferencesUtils.getString(EntryFormActivity.this,ip_key,"120.27.2.177")
-//                        +":"+PreferencesUtils.getString(EntryFormActivity.this,port_key,"8062")+ IndexConstants.TAKINGCHECKBARCODE;
+//                        +":"+PreferencesUtils.getString(EntryFormActivity.this,port_key,"8069")+ IndexConstants.TAKINGCHECKBARCODE;
 ////                "login:","登录帐号","Password":"密码"
 //                Print("url:::"+url);
 //                Map<String,String> mparams=new HashMap<String,String>();
-//                mparams.put("login",PreferencesUtils.getString(EntryFormActivity.this,email_key,"8062"));
+//                mparams.put("login",PreferencesUtils.getString(EntryFormActivity.this,email_key,"8069"));
 //                mparams.put("lot_no",lot_no);
 //                mparams.put("barcode",barcode);
 //                mparams.put("location",location);
@@ -540,7 +540,7 @@ public class EntryFormActivity extends AppCompatActivity {
 			try {
 				String url = "http://" +
 						PreferencesUtils.getString(EntryFormActivity.this, ip_key, "120.27.2.177")
-						+ ":" + PreferencesUtils.getString(EntryFormActivity.this, port_key, "8062") +
+						+ ":" + PreferencesUtils.getString(EntryFormActivity.this, port_key, "8069") +
 						IndexConstants.CHECKORDERID + "?token=" +
 						PreferencesUtils.getString(EntryFormActivity.this, token_key, "")
 						+ "&workorder_no=" + orderid;
@@ -677,14 +677,14 @@ public class EntryFormActivity extends AppCompatActivity {
 			try {
 				String url = "http://" +
 						PreferencesUtils.getString(EntryFormActivity.this, ip_key, "120.27.2.177")
-						+ ":" + PreferencesUtils.getString(EntryFormActivity.this, port_key, "8062") +
+						+ ":" + PreferencesUtils.getString(EntryFormActivity.this, port_key, "8069") +
 						IndexConstants.CHECKENTRYPRODUCTID + "?token=" +
 						PreferencesUtils.getString(EntryFormActivity.this, token_key, "")
 						+ "&product_code=" + product_code + "&packaging_code=" + packaging_code;
 //                "login:","登录帐号","Password":"密码"
 				Print("workorder_no url:::" + url);
 //                Map<String,String> mparams=new HashMap<String,String>();
-//                mparams.put("login",PreferencesUtils.getString(ReportActivity.this,email_key,"8062"));
+//                mparams.put("login",PreferencesUtils.getString(ReportActivity.this,email_key,"8069"));
 //                mparams.put("lot_no",lot_no);
 //                mparams.put("barcode",barcode);
 //                mparams.put("location",location);
@@ -861,13 +861,13 @@ public class EntryFormActivity extends AppCompatActivity {
 			try {
 				String url = "http://" +
 						PreferencesUtils.getString(EntryFormActivity.this, ip_key, "120.27.2.177")
-						+ ":" + PreferencesUtils.getString(EntryFormActivity.this, port_key, "8062") +
+						+ ":" + PreferencesUtils.getString(EntryFormActivity.this, port_key, "8069") +
 						IndexConstants.ADDORDERID + "?token=" +
 						PreferencesUtils.getString(EntryFormActivity.this, token_key, "")
 						+ "&workorder_no=" + orderid + "&date=" + date;
 
 //				url=url+"workorder_no="+batch_num;
-//                mparams.put("login",PreferencesUtils.getString(DeliveryActivity.this,email_key,"8062"));
+//                mparams.put("login",PreferencesUtils.getString(DeliveryActivity.this,email_key,"8069"));
 //                Print("boxesnum.size():::"+boxesnum.size());
 //                String mparams="";
 				//data={"(产品id, 包装数量, 包装方案id, 批号合并名称, 序列号名称, 包装条码id)":{"qty":7000, "box_qty":10},}
@@ -1070,7 +1070,7 @@ public class EntryFormActivity extends AppCompatActivity {
 			try {
 				String url = "http://" +
 						PreferencesUtils.getString(EntryFormActivity.this, ip_key, "120.27.2.177")
-						+ ":" + PreferencesUtils.getString(EntryFormActivity.this, port_key, "8062") +
+						+ ":" + PreferencesUtils.getString(EntryFormActivity.this, port_key, "8069") +
 						IndexConstants.ENTRYSUBMITORDER + "?token=" +
 						PreferencesUtils.getString(EntryFormActivity.this, token_key, "")
 						+ "&name=" + Ordername;
@@ -1231,14 +1231,14 @@ public class EntryFormActivity extends AppCompatActivity {
 			try {
 				String url = "http://" +
 						PreferencesUtils.getString(EntryFormActivity.this, ip_key, "120.27.2.177")
-						+ ":" + PreferencesUtils.getString(EntryFormActivity.this, port_key, "8062") +
+						+ ":" + PreferencesUtils.getString(EntryFormActivity.this, port_key, "8069") +
 						IndexConstants.CHECKWAREORDERID + "?token=" +
 						PreferencesUtils.getString(EntryFormActivity.this, token_key, "")
 						+ "&name=" + orderid;
 //                "login:","登录帐号","Password":"密码"
 				Print("getinfo url:::" + url);
 //                Map<String,String> mparams=new HashMap<String,String>();
-//                mparams.put("login",PreferencesUtils.getString(ReportActivity.this,email_key,"8062"));
+//                mparams.put("login",PreferencesUtils.getString(ReportActivity.this,email_key,"8069"));
 //                mparams.put("lot_no",lot_no);
 //                mparams.put("barcode",barcode);
 //                mparams.put("location",location);
@@ -1370,11 +1370,11 @@ public class EntryFormActivity extends AppCompatActivity {
 //
 //            try {
 //                String url="http://"+PreferencesUtils.getString(EntryFormActivity.this,ip_key,"120.27.2.177")
-//                        +":"+PreferencesUtils.getString(EntryFormActivity.this,port_key,"8062")+ IndexConstants.INSTOCK;
+//                        +":"+PreferencesUtils.getString(EntryFormActivity.this,port_key,"8069")+ IndexConstants.INSTOCK;
 ////                "login:","登录帐号","Password":"密码"
 //                Print("url:::"+url);
 //                Map<String,String> mparams=new HashMap<String,String>();
-//                mparams.put("login",PreferencesUtils.getString(EntryFormActivity.this,email_key,"8062"));
+//                mparams.put("login",PreferencesUtils.getString(EntryFormActivity.this,email_key,"8069"));
 //                mparams.put("lot_no",lot_no);
 //                mparams.put("barcode",barcode);
 //                mparams.put("location",location);

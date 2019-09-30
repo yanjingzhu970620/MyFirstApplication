@@ -12,6 +12,7 @@
     <string name="entry_production">生产入库(生产)</string>
     <string name="entry_warehouse">生产入库(仓库)</string>
     <string name="search_inventory_main">库存查询</string>
+    <string name="check_productmeterial_main">生产领料</string>
     <string name="manufacture_main">生产进度查询</string>
 
 
@@ -39,6 +40,7 @@
     <string name="container_weight">容器重量</string>
     <string name="container_id">容器编号</string>
     <string name="package_name">材料卷号</string>
+    <string name="material_package_name">卷号</string>
     <string name="equipment_code">设备编号</string>
     <string name="Final_box">是尾箱</string>
     <string name="Inventory_quantity_of_boxes">库存箱数</string>
@@ -51,11 +53,13 @@
     <string name="instock_of_boxes_num">数量</string>
     <string name="available_of_boxes">可用箱数</string>
     <string name="available_of_boxes_num">数量</string>
+    <string name="order_state">单据状态</string>
 
 
     <string name="order_id">项次</string>
     <string name="process_name">工序</string>
     <string name="product_item">产品</string>
+    <string name="unit">单位</string>
     <string name="Number_in">领料数</string>
     <string name="quantity_in">领料重</string>
     <string name="report_number">报工数</string>
@@ -66,6 +70,21 @@
     <string name="report_default_loc">使用产品默认库位</string>
     <string name="Delivery_detail">出库明细</string>
     <string name="Bar_code">产品编码</string>
+
+    <string name="material_orderid">领料单号</string>
+    <string name="material_orderdate">单据日期</string>
+    <string name="material_branname">品牌</string>
+    <string name="material_supplier_code">供应商编码</string>
+    <string name="material_lot_nos">批号</string>
+    <string name="material_furnace_no">炉号</string>
+    <string name="material_name">材质</string>
+    <string name="material_diameter">线径</string>
+    <string name="material_productcode">产品编码</string>
+    <string name="material_locationbarcode">库位号</string>
+    <string name="material_packageqty">卷重</string>
+    <string name="material_packagenum">卷数</string>
+
+    <string name="product_plan">生产计划</string>
     <string name="current_process">当前工序</string>
     <string name="number_applications">申请数</string>
     <string name="Product_Specification">产品规格</string>
@@ -94,6 +113,8 @@
     <string name="action_material">领  料</string>
     <string name="action_inspect_pass">检验PASS</string>
     <string name="action_report">报  工</string>
+    <string name="action_start">开  始</string>
+    <string name="action_pause">暂  停</string>
     <string name="action_stopruncard">停用流程卡</string>
     <string name="Thousand_weight">千件重量</string>
     <string name="report_thousand_weight">报工千支重</string>
@@ -104,6 +125,7 @@
     <string name="Order_number">生产批号</string>
     <string name="entry_bill_number">入库单号</string>
     <string name="entry_isfinalbox">是尾箱</string>
+    <string name="state">状态</string>
     <string name="entry">入  库</string>
     <string name="entry_warehouse_code">库位号</string>
     <string name="check_warehouse_code">库位代码</string>

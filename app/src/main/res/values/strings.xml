@@ -111,4 +111,24 @@
     <string name="package_name">package_name</string>
     <string name="equipment_code">equipment_code</string>
     <string name="split_grossweight">split_grossweight</string>
+    <string name="product_plan">product_plan</string>
+    <string name="order_state">order_state</string>
+    <string name="state">state</string>
+    <string name="action_pause">pause</string>
+    <string name="action_start">start</string>
+    <string name="check_productmeterial_main">check_productmeterial</string>
+    <string name="material_orderid">material_orderid</string>
+    <string name="material_orderdate">orderdate</string>
+    <string name="material_package_name">package_name</string>
+    <string name="material_diameter">diameter</string>
+    <string name="material_furnace_no">furnace_no</string>
+    <string name="material_locationbarcode">locationbarcode</string>
+    <string name="material_lot_nos">lot_nos</string>
+    <string name="material_name">material_name</string>
+    <string name="material_packagenum">packagenum</string>
+    <string name="material_packageqty">packageqty</string>
+    <string name="material_productcode">productcode</string>
+    <string name="material_supplier_code">supplier_code</string>
+    <string name="material_branname">branname</string>
+    <string name="unit">unit</string>
 </resources>

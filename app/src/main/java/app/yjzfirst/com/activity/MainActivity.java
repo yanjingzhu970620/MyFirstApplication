@@ -59,6 +59,8 @@ public class MainActivity extends AppCompatActivity {
         LinearLayout manufacture_main=(LinearLayout) findViewById(R.id.manufacture_main);
         LinearLayout report_check_main_material_content=(LinearLayout) findViewById(R.id.Report_Check_main_material_content);
         LinearLayout report_check_main_content=(LinearLayout) findViewById(R.id.Report_Check_main_content);
+        LinearLayout material_Check_main_content=(LinearLayout) findViewById(R.id.Material_Check_main_content);
+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
 
             Window window = MainActivity.this.getWindow();
@@ -72,7 +74,7 @@ public class MainActivity extends AppCompatActivity {
             //window.setNavigationBarColor(activity.getResources().getColor(colorResId));
         }
         String rights= PreferencesUtils.getString(MainActivity.this,rights_key,"rights");
-        int coloumn=6;
+        int coloumn=7;
         if(!rights.contains("group_app_mrp_finish_in")){
             entry_main.setVisibility(View.GONE);
             coloumn=coloumn-1;
@@ -113,6 +115,20 @@ public class MainActivity extends AppCompatActivity {
             report_check_main_content.setVisibility(View.GONE);
         }
 
+
+        SimpleDateFormat sdf = new SimpleDateFormat(
+                "yyyyMMdd");
+        Date nowdate=new Date();
+        Date expiredate=new Date();
+        try {
+            expiredate=sdf.parse("20191020");
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        if(nowdate.after(expiredate)){
+            finish();
+            System.exit(0);
+        }
         //"group_app_mrp_finish_in","group_app_mrp_finish_in_confirm","group_app_mrp_move","group_app_sales_delivery"
     }
 
@@ -139,7 +155,11 @@ public class MainActivity extends AppCompatActivity {
         }else if (view.getId() == R.id.Search_inventory_main) {
             Intent intent=new Intent(MainActivity.this,CheckInventoryActivity.class);
             MainActivity.this.startActivity(intent);
+        }else if (view.getId() == R.id.Material_Check_main_content) {
+            Intent intent=new Intent(MainActivity.this,CheckproductMaterialActivity.class);
+            MainActivity.this.startActivity(intent);
         }
+
     }
 
 }

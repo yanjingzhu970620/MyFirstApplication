@@ -254,7 +254,36 @@
                         android:onClick="onClick"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_weight="3" />
+                        android:layout_weight="1" />
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:text="@string/state" />
+                    <TextView
+                        android:id="@+id/entryware_state"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:gravity="center" />
+
+
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginTop="5dp"
+                    android:orientation="horizontal">
+
+                        <CheckBox
+                            android:id="@+id/check_entry_defaultloc"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:gravity="center_vertical"
+                            android:text="@string/report_default_loc" />
 
                 </LinearLayout>
 

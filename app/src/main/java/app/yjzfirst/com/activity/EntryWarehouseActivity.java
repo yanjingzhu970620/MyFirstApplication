@@ -15,6 +15,7 @@ import android.view.WindowManager;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.google.gson.Gson;
 import com.google.gson.annotations.Until;
@@ -63,7 +64,11 @@ public class EntryWarehouseActivity extends AppCompatActivity {
 	EditText mentryNumberperbox;
 	EditText mentrynumboxes;
 	EditText mentrywarenumber;
+	TextView stateview;
 	CheckBox finalbox;
+	CheckBox defaultloccheckbox;
+	String use_default_location="";
+	String state="";
 	EntryProductBean productBean;
 	enum qrcodemode  {
 		WORKORDER_ID, PRODUCT_CODE,WAREHOUSE_CODE
@@ -101,6 +106,7 @@ public class EntryWarehouseActivity extends AppCompatActivity {
 
 		}
 		mentryorderid = (EditText) findViewById(R.id.entryform_orderid);
+
 //        mentrybatchnumber.addTextChangedListener(shipsWatcher);
 		mentrywarenumber = (EditText) findViewById(R.id.entryform_warehouse_code);
 		mentrybarcode = (EditText) findViewById(R.id.entryform_bar_code);
@@ -113,11 +119,15 @@ public class EntryWarehouseActivity extends AppCompatActivity {
 //        mentryNumberperbox.addTextChangedListener(shipsWatcher);
 		mentrynumboxes = (EditText) findViewById(R.id.entryform_num_boxes);
 //        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-
+		stateview= (TextView) findViewById(R.id.entryware_state);
 		addTextWatcher();
 
 		finalbox= (CheckBox) findViewById(R.id.entryform_finalbox);
 		finalbox.setClickable(false);
+
+		defaultloccheckbox= (CheckBox) findViewById(R.id.check_entry_defaultloc);
+		defaultloccheckbox.setChecked(false);
+
 		mSimpleDetailList = (ListView) findViewById(R.id.entry_infolist);
 		refreshdatalist();
 	}
@@ -216,6 +226,7 @@ public class EntryWarehouseActivity extends AppCompatActivity {
 			}
 		}else if(view.getId() == R.id.entryform_canclescan){
 			cancleALLdata();
+			defaultloccheckbox.setChecked(false);
 		}else if(view.getId() == R.id.entryform_submit_button){
 			if(!mentryorderid.getText().toString().equals("")) {
 				SubmitOrderTask submitorderTask = new SubmitOrderTask();
@@ -294,7 +305,7 @@ public class EntryWarehouseActivity extends AppCompatActivity {
 		mentrynumboxes.setText("");
 		mentrywarenumber.setText("");
 		finalbox.setChecked(false);
-
+//        defaultloccheckbox.setChecked(false);
 		mentrybarcode.setError(null,null);
 		mentrywarenumber.setError(null, null);//焦点聚焦时去除错误图标
 		mentryorderid.setError(null,null);
@@ -405,11 +416,11 @@ public class EntryWarehouseActivity extends AppCompatActivity {
 //
 //            try {
 //                String url="http://"+PreferencesUtils.getString(EntryWarehouseActivity.this,ip_key,"120.27.2.177")
-//                        +":"+PreferencesUtils.getString(EntryWarehouseActivity.this,port_key,"8062")+ IndexConstants.TAKINGCHECKBARCODE;
+//                        +":"+PreferencesUtils.getString(EntryWarehouseActivity.this,port_key,"8069")+ IndexConstants.TAKINGCHECKBARCODE;
 ////                "login:","登录帐号","Password":"密码"
 //                Print("url:::"+url);
 //                Map<String,String> mparams=new HashMap<String,String>();
-//                mparams.put("login",PreferencesUtils.getString(EntryWarehouseActivity.this,email_key,"8062"));
+//                mparams.put("login",PreferencesUtils.getString(EntryWarehouseActivity.this,email_key,"8069"));
 //                mparams.put("lot_no",lot_no);
 //                mparams.put("barcode",barcode);
 //                mparams.put("location",location);
@@ -550,14 +561,14 @@ public class EntryWarehouseActivity extends AppCompatActivity {
 			try {
 				String url = "http://" +
 						PreferencesUtils.getString(EntryWarehouseActivity.this, ip_key, "120.27.2.177")
-						+ ":" + PreferencesUtils.getString(EntryWarehouseActivity.this, port_key, "8062") +
+						+ ":" + PreferencesUtils.getString(EntryWarehouseActivity.this, port_key, "8069") +
 						IndexConstants.CHECKWAREORDERID + "?token=" +
 						PreferencesUtils.getString(EntryWarehouseActivity.this, token_key, "")
 						+ "&name=" + orderid;
 //                "login:","登录帐号","Password":"密码"
 				Print("workorder_no url:::" + url);
 //                Map<String,String> mparams=new HashMap<String,String>();
-//                mparams.put("login",PreferencesUtils.getString(ReportActivity.this,email_key,"8062"));
+//                mparams.put("login",PreferencesUtils.getString(ReportActivity.this,email_key,"8069"));
 //                mparams.put("lot_no",lot_no);
 //                mparams.put("barcode",barcode);
 //                mparams.put("location",location);
@@ -624,6 +635,12 @@ public class EntryWarehouseActivity extends AppCompatActivity {
 			if(success) {
 				mentrywarenumber.requestFocus();
 				mentryorderid.setError(null,null);
+				if(use_default_location.equals("true")){
+					defaultloccheckbox.setChecked(true);
+				}else{
+					defaultloccheckbox.setChecked(false);
+				}
+				stateview.setText(state);
 //				if(setidtext) {
 //					mentryorderid.setText(orderid);
 ////					mentryorderid.setFocusable(false);
@@ -685,7 +702,7 @@ public class EntryWarehouseActivity extends AppCompatActivity {
 
 			try {
 				String url = "http://" + PreferencesUtils.getString(EntryWarehouseActivity.this, ip_key, "120.27.2.177")
-						+ ":" + PreferencesUtils.getString(EntryWarehouseActivity.this, port_key, "8062") +
+						+ ":" + PreferencesUtils.getString(EntryWarehouseActivity.this, port_key, "8069") +
 						IndexConstants.CHECKLIBRARY + "?location_barcode=" + library_num + "&token=" + token;
 //                "login:","登录帐号","Password":"密码"
 				Print("url:::" + url);
@@ -780,12 +797,14 @@ public class EntryWarehouseActivity extends AppCompatActivity {
 		String success = "";
 		String msg = "";
 		String content="";
+		boolean checkbox;
 		boolean isfinalbox=false;
 		int responsecode = 0;
 		TextWatcher textWatcher;
 		CheckProductidTask(String content,TextWatcher textWatcher) {
 			this.content=content;
 			this.textWatcher=textWatcher;
+			checkbox=defaultloccheckbox.isChecked();
 			String[] workorderinfo=content.split(",");
 			if(workorderinfo.length>7) {
 				product_code = workorderinfo[0];
@@ -806,14 +825,14 @@ public class EntryWarehouseActivity extends AppCompatActivity {
 			try {
 				String url = "http://" +
 						PreferencesUtils.getString(EntryWarehouseActivity.this, ip_key, "120.27.2.177")
-						+ ":" + PreferencesUtils.getString(EntryWarehouseActivity.this, port_key, "8062") +
+						+ ":" + PreferencesUtils.getString(EntryWarehouseActivity.this, port_key, "8069") +
 						IndexConstants.CHECKENTRYPRODUCTID + "?token=" +
 						PreferencesUtils.getString(EntryWarehouseActivity.this, token_key, "")
 						+ "&product_code=" + product_code+ "&packaging_code=" + packaging_code;
 //                "login:","登录帐号","Password":"密码"
 				Print("workorder_no url:::" + url);
 //                Map<String,String> mparams=new HashMap<String,String>();
-//                mparams.put("login",PreferencesUtils.getString(ReportActivity.this,email_key,"8062"));
+//                mparams.put("login",PreferencesUtils.getString(ReportActivity.this,email_key,"8069"));
 //                mparams.put("lot_no",lot_no);
 //                mparams.put("barcode",barcode);
 //                mparams.put("location",location);
@@ -901,7 +920,9 @@ public class EntryWarehouseActivity extends AppCompatActivity {
 //							"boxnum==0||Productcontent.equals(content)"+boxnum);
 				}
 				mentrynumboxes.setText(boxnum+"");
-
+				if(checkbox) {
+					mentrywarenumber.setText(productBean.location_barcode);
+				}
 				mentryOrdernumber.setText(batch_number);
 				mentryOrdernumber.setFocusable(false);
 				mentryOrdernumber.setFocusableInTouchMode(false);
@@ -1000,15 +1021,15 @@ public class EntryWarehouseActivity extends AppCompatActivity {
 			try {
 				String url = "http://" +
 						PreferencesUtils.getString(EntryWarehouseActivity.this, ip_key, "120.27.2.177")
-						+ ":" + PreferencesUtils.getString(EntryWarehouseActivity.this, port_key, "8062") +
+						+ ":" + PreferencesUtils.getString(EntryWarehouseActivity.this, port_key, "8069") +
 						IndexConstants.ENTRYWAREADDORDERID + "?token=" +
 						PreferencesUtils.getString(EntryWarehouseActivity.this, token_key, "")
-						+ "&name=" + orderid+ "&location_barcode=" + location_barcode;
+						+ "&name=" + orderid+ "&location_barcode=" + location_barcode+"&use_default_location="+use_default_location;
 //                "login:","登录帐号","Password":"密码"
 
 				Map<String,String> mparams=new HashMap<String,String>();
 //				url=url+"workorder_no="+batch_num;
-//                mparams.put("login",PreferencesUtils.getString(DeliveryActivity.this,email_key,"8062"));
+//                mparams.put("login",PreferencesUtils.getString(DeliveryActivity.this,email_key,"8069"));
 //                Print("boxesnum.size():::"+boxesnum.size());
 //                String mparams="";
 				//data={"(产品id, 包装数量, 包装方案id, 批号合并名称, 序列号名称, 包装条码id)":{"qty":7000, "box_qty":10},}
@@ -1091,7 +1112,7 @@ public class EntryWarehouseActivity extends AppCompatActivity {
 //						Print(" return:::" + jsonObject);
 						msg = jsonObject.getString("message");
 						success = jsonObject.getString("success");
-						Print(" return: ReportProductBeans success::" + success);
+						Print(" return: AddOrderidTask jsonObject::" + jsonObject);
 						if (success.equals("true")) {
 //							Ordername = parseEntryordername(jsonObject);
 							EntryProductinfoBeans = new ArrayList<EntryProductinfoBean>();
@@ -1210,7 +1231,7 @@ public class EntryWarehouseActivity extends AppCompatActivity {
 			try {
 				String url = "http://" +
 						PreferencesUtils.getString(EntryWarehouseActivity.this, ip_key, "120.27.2.177")
-						+ ":" + PreferencesUtils.getString(EntryWarehouseActivity.this, port_key, "8062") +
+						+ ":" + PreferencesUtils.getString(EntryWarehouseActivity.this, port_key, "8069") +
 						IndexConstants.ENTRYWARESUBMITORDER + "?token=" +
 						PreferencesUtils.getString(EntryWarehouseActivity.this, token_key, "")
 						+ "&name=" + orderid;
@@ -1244,7 +1265,7 @@ public class EntryWarehouseActivity extends AppCompatActivity {
 //						Print(" return:::" + jsonObject);
 						msg = jsonObject.getString("message");
 						success = jsonObject.getString("success");
-						Print(" return: ReportProductBeans success::" + success);
+						Print(" return: SubmitOrderTask jsonObject::" + jsonObject);
 						if (success.equals("true")) {
 							EntryProductinfoBeans = new ArrayList<EntryProductinfoBean>();
 							parseSuccessproduct(jsonObject);
@@ -1271,6 +1292,7 @@ public class EntryWarehouseActivity extends AppCompatActivity {
 			if(success) {
 //				CheckOrderidTask getinfoTask = new CheckOrderidTask(mentryorderid.getText().toString(),false);
 //				getinfoTask.execute();
+				stateview.setText(state);
 				cancleALLdata();
 //				mentryorderid.setText(product_code);
 //				mentryOrdernumber.setText(batch_number);
@@ -1377,11 +1399,11 @@ public class EntryWarehouseActivity extends AppCompatActivity {
 //
 //            try {
 //                String url="http://"+PreferencesUtils.getString(EntryWarehouseActivity.this,ip_key,"120.27.2.177")
-//                        +":"+PreferencesUtils.getString(EntryWarehouseActivity.this,port_key,"8062")+ IndexConstants.INSTOCK;
+//                        +":"+PreferencesUtils.getString(EntryWarehouseActivity.this,port_key,"8069")+ IndexConstants.INSTOCK;
 ////                "login:","登录帐号","Password":"密码"
 //                Print("url:::"+url);
 //                Map<String,String> mparams=new HashMap<String,String>();
-//                mparams.put("login",PreferencesUtils.getString(EntryWarehouseActivity.this,email_key,"8062"));
+//                mparams.put("login",PreferencesUtils.getString(EntryWarehouseActivity.this,email_key,"8069"));
 //                mparams.put("lot_no",lot_no);
 //                mparams.put("barcode",barcode);
 //                mparams.put("location",location);
@@ -1515,6 +1537,7 @@ public class EntryWarehouseActivity extends AppCompatActivity {
 		try {
 			dataarr = jsonObject.getJSONArray("data");
 			for (int i = 0; i < dataarr.length(); i++) {
+				use_default_location=dataarr.getJSONObject(i).getString("use_default_location");
 				JSONObject entryformdataObject = dataarr.getJSONObject(i);
 				ReportProductBean = beanParseUtility.parse(entryformdataObject, WorkOrderBean.class);
 
@@ -1544,6 +1567,7 @@ public class EntryWarehouseActivity extends AppCompatActivity {
 			dataarr = jsonObject.getJSONArray("data");
 			for (int i = 0; i < dataarr.length(); i++) {
 				JSONObject reprotformdataObject = dataarr.getJSONObject(i);
+				state=reprotformdataObject.getString("state");
 //				ReportFormBean ReportFormBean = beanParseUtility.parse(reprotformdataObject, ReportFormBean.class);
 //				ReportFormBeans.add(ReportFormBean);
 //				ReportProductBean ReportProductdataBean =
@@ -1571,6 +1595,7 @@ public class EntryWarehouseActivity extends AppCompatActivity {
 //			dataarr = jsonObject.getJSONArray("data");
 //			for (int i = 0; i < dataarr.length(); i++) {
 				JSONObject reprotformdataObject = jsonObject.getJSONObject("data");
+				state=reprotformdataObject.getString("state");
 //				ReportFormBean ReportFormBean = beanParseUtility.parse(reprotformdataObject, ReportFormBean.class);
 //				ReportFormBeans.add(ReportFormBean);
 //				ReportProductBean ReportProductdataBean =

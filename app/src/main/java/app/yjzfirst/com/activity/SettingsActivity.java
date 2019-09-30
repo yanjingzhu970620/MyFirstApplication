@@ -38,9 +38,9 @@ public class SettingsActivity extends AppCompatActivity {
         eip = (EditText) findViewById(R.id.ip_edit);
         eip.setText(PreferencesUtils.getString(SettingsActivity.this, ip_key, "120.27.2.177"));
         eport = (EditText) findViewById(R.id.port_edit);
-        eport.setText(PreferencesUtils.getString(SettingsActivity.this, port_key, "8062"));
+        eport.setText(PreferencesUtils.getString(SettingsActivity.this, port_key, "8069"));
         edatabase = (EditText) findViewById(R.id.database_edit);
-        edatabase.setText(PreferencesUtils.getString(SettingsActivity.this, db_key, "demo-efasten"));
+        edatabase.setText(PreferencesUtils.getString(SettingsActivity.this, db_key, "erp"));
 }
 
     public void onClick(View view) {

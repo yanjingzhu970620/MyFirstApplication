@@ -18,6 +18,9 @@ public class ReportFormBean {
 	public String process_name ;// null, #工序名称
 	public String workorder_id ;// null,#作业计划id
 	public String state ;// "draft",
+	public String process_produce_status;//生产状态
+	public String package_name;//卷号
+	public String equipment_code;//设备号
 	public String unit_weight ;// null,#千支重
 	public String process_status ;// "to_report",#状态
 	public String qty ;// null,#数量
@@ -25,6 +28,7 @@ public class ReportFormBean {
 	public String gross_weight ;// 毛重
 	public String factor ;// 1000,#转换率
 	public String line_data ;// [#明细数据
+
 //	{
 //		"master_id ;// 1068, #流程卡id
 //		"sequence ;// 1, #项次
