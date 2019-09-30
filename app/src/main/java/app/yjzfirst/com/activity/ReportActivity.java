@@ -265,7 +265,7 @@ public class ReportActivity extends AppCompatActivity {
 						eSplit_weight.setFocusableInTouchMode(true);
 					}
 				}
-//				Toast.makeText(ReportActivity.this, "你点击的是:"+split_merge_item, Toast.LENGTH_SHORT).show();
+				Toast.makeText(ReportActivity.this, "你点击的是:"+split_merge_item, Toast.LENGTH_SHORT).show();
 			}
 			@Override
 			public void onNothingSelected(AdapterView<?> parent) {
@@ -914,13 +914,16 @@ public class ReportActivity extends AppCompatActivity {
 		//        String lot_no="";
 		ArrayList<ReportFormBean> ReportFormBeans = new ArrayList<ReportFormBean>();
 		String cardid = "";
+		String mergecardid = "";
+		String mergetype="";
 		String success = "";
 		String msg = "";
 		int responsecode = 0;
 
 		CheckMergecardidTask() {
-			cardid = eSplit_merge_cardid.getText().toString();
-
+			cardid=eCardid.getText().toString();
+			mergecardid = eSplit_merge_cardid.getText().toString();
+			mergetype=split_merge_item;
 		}
 
 		@Override
@@ -932,7 +935,8 @@ public class ReportActivity extends AppCompatActivity {
 						PreferencesUtils.getString(ReportActivity.this, ip_key, "120.27.2.177")
 						+ ":" + PreferencesUtils.getString(ReportActivity.this, port_key, "8069") +
 						IndexConstants.CHECKCARDID + "?token=" +
-						PreferencesUtils.getString(ReportActivity.this, token_key, "") + "&runcard_no=" + cardid;
+						PreferencesUtils.getString(ReportActivity.this, token_key, "")
+						+ "&runcard_no=" + cardid+"&runcard_no_2="+mergecardid+"&split_merge_type="+mergetype;
 //                "login:","登录帐号","Password":"密码"
 				Print("url:::" + url);
 //                Map<String,String> mparams=new HashMap<String,String>();
