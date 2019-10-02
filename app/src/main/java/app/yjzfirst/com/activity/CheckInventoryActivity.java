@@ -518,7 +518,11 @@ public class CheckInventoryActivity extends AppCompatActivity {
     public static Comparator idComparator = new Comparator() {
         @Override
         public int compare(Object o1, Object o2) {
-            return (Integer.compare(Integer.parseInt(((InventoryBean) o1).location_code), Integer.parseInt(((InventoryBean) o2).location_code)));
+            if(!((InventoryBean) o1).location_code.equals("null")&&!((InventoryBean) o1).location_code.equals("null")) {
+                return (Integer.compare(Integer.parseInt(((InventoryBean) o1).location_code), Integer.parseInt(((InventoryBean) o2).location_code)));
+            }else{
+                return 1;
+            }
         }
     };
 

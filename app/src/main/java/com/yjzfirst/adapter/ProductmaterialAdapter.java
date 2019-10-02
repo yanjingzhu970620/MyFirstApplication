@@ -101,8 +101,8 @@ public class ProductmaterialAdapter extends BaseAdapter {
 		product_pecification.setText(Util.CheckNullString(product.product_code));
 		number_applications.setText( Util.CheckNullString(product.qty));
 		number_of_boxes.setText(Util.CheckNullString(product.uom_name));
-		numbers.setText(Util.CheckNullString(product.product_qty));
-		text_box_ware.setText(Util.CheckNullString(product.product_roll));
+		text_box_ware.setText(Util.CheckNullString(product.product_qty));
+		numbers.setText(Util.CheckNullString(product.product_roll));
 
 		return convertView;
 	}

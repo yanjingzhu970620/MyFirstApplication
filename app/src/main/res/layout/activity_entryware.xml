@@ -98,37 +98,6 @@
                         android:background="@mipmap/ercode" />
                 </LinearLayout>
                 <LinearLayout
-                    android:id="@+id/entryform_warehouse_code_form"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal">
-
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1"
-                        android:gravity="center"
-                        android:text="@string/entry_warehouse_code" />
-
-                    <EditText
-                        android:id="@+id/entryform_warehouse_code"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="3"
-                        android:maxLines="1"
-                        android:singleLine="true"
-                        android:textColor="@color/black" />
-                    <ImageView
-                        android:id="@+id/entryform_warehouse_code_button"
-                        android:layout_width="25dp"
-                        android:layout_height="25dp"
-                        android:layout_gravity="bottom"
-                        android:layout_marginBottom="@dimen/erqode_vertical_margin"
-                        android:clickable="true"
-                        android:onClick="onClick"
-                        android:background="@mipmap/ercode" />
-                </LinearLayout>
-                <LinearLayout
                     android:id="@+id/entryform_Bar_code_form"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -151,6 +120,38 @@
                         android:textColor="@color/black" />
                     <ImageView
                         android:id="@+id/entryform_bar_code_button"
+                        android:layout_width="25dp"
+                        android:layout_height="25dp"
+                        android:layout_gravity="bottom"
+                        android:layout_marginBottom="@dimen/erqode_vertical_margin"
+                        android:clickable="true"
+                        android:onClick="onClick"
+                        android:background="@mipmap/ercode" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/entryform_warehouse_code_form"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:text="@string/entry_warehouse_code" />
+
+                    <EditText
+                        android:id="@+id/entryform_warehouse_code"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="3"
+                        android:maxLines="1"
+                        android:singleLine="true"
+                        android:textColor="@color/black" />
+                    <ImageView
+                        android:id="@+id/entryform_warehouse_code_button"
                         android:layout_width="25dp"
                         android:layout_height="25dp"
                         android:layout_gravity="bottom"

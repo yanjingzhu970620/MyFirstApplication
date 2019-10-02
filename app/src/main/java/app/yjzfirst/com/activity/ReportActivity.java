@@ -934,7 +934,7 @@ public class ReportActivity extends AppCompatActivity {
 				String url = "http://" +
 						PreferencesUtils.getString(ReportActivity.this, ip_key, "120.27.2.177")
 						+ ":" + PreferencesUtils.getString(ReportActivity.this, port_key, "8069") +
-						IndexConstants.CHECKCARDID + "?token=" +
+						IndexConstants.CHECKMERGECARDID + "?token=" +
 						PreferencesUtils.getString(ReportActivity.this, token_key, "")
 						+ "&runcard_no=" + cardid+"&runcard_no_2="+mergecardid+"&split_merge_type="+mergetype;
 //                "login:","登录帐号","Password":"密码"
@@ -1632,16 +1632,16 @@ public class ReportActivity extends AppCompatActivity {
 //            showProgress(false);
 		}
 		protected void parseState(JSONObject jsonObject) {
-			JSONArray dataarr = null;
+			JSONObject dataobj = null;
 			try {
-				dataarr = jsonObject.getJSONArray("data");
-				for (int i = 0; i < dataarr.length(); i++) {
-					JSONObject reprotformdataObject = dataarr.getJSONObject(i);
-					process_status=reprotformdataObject.getString("process_status");
-					process_produce_status=reprotformdataObject.getString("process_produce_status");
+				dataobj = jsonObject.getJSONObject("data");
+//				for (int i = 0; i < dataarr.length(); i++) {
+//					JSONObject reprotformdataObject = dataarr.getJSONObject(i);
+					process_status=dataobj.getString("process_status");
+					process_produce_status=dataobj.getString("process_produce_status");
 
 
-				}
+//				}
 			} catch (JSONException e) {
 				e.printStackTrace();
 			}
@@ -1793,16 +1793,16 @@ public class ReportActivity extends AppCompatActivity {
 //            showProgress(false);
 		}
 		protected void parseState(JSONObject jsonObject) {
-			JSONArray dataarr = null;
+			JSONObject dataobj = null;
 			try {
-				dataarr = jsonObject.getJSONArray("data");
-				for (int i = 0; i < dataarr.length(); i++) {
-					JSONObject reprotformdataObject = dataarr.getJSONObject(i);
-					process_status=reprotformdataObject.getString("process_status");
-					process_produce_status=reprotformdataObject.getString("process_produce_status");
+				dataobj = jsonObject.getJSONObject("data");
+//				for (int i = 0; i < dataarr.length(); i++) {
+//					JSONObject reprotformdataObject = dataarr.getJSONObject(i);
+				process_status=dataobj.getString("process_status");
+				process_produce_status=dataobj.getString("process_produce_status");
 
 
-				}
+//				}
 			} catch (JSONException e) {
 				e.printStackTrace();
 			}
@@ -2945,6 +2945,12 @@ public class ReportActivity extends AppCompatActivity {
 			}
 			if (eSplit_merge_cardid.isFocused()) {
 				eSplit_merge_cardid.setText("");
+			}
+			if (eEquipmentcode.isFocused()) {
+				eEquipmentcode.setText("");
+			}
+			if (ePackagename.isFocused()) {
+				ePackagename.setText("");
 			}
 		}
 		return super.onKeyDown(keyCode, event);

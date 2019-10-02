@@ -8,7 +8,7 @@ public class ProductMaterialBean {
     public String furnace_no;
     public String material_name;
     public String diameter;
-    public String product_default;
+    public String product_code;
     public String location_barcode;
     public String qty;
     public String quant_id;

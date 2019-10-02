@@ -33,6 +33,7 @@ public class IndexConstants {
     public static final String CHECKMATERIALWAREHOUSE="/app/mrp_material_picking/done";
 
     public static final String CHECKCARDID="/app/mrp_runcard/get";
+    public static final String CHECKMERGECARDID="/app/mrp_runcard/split_merge";
     public static final String CHECKPACKAGENAME="/app/material_check/get";
     public static final String CHECKEQUIPMENTCODE="/app/equipment/get";
     public static final String REPORTSTART="/app/mrp_runcard/start";

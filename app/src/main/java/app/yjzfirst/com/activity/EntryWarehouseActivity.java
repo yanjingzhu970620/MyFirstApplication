@@ -226,6 +226,7 @@ public class EntryWarehouseActivity extends AppCompatActivity {
 			}
 		}else if(view.getId() == R.id.entryform_canclescan){
 			cancleALLdata();
+			EntryProductinfoBeans = new ArrayList<EntryProductinfoBean>();
 			defaultloccheckbox.setChecked(false);
 		}else if(view.getId() == R.id.entryform_submit_button){
 			if(!mentryorderid.getText().toString().equals("")) {
@@ -318,7 +319,6 @@ public class EntryWarehouseActivity extends AppCompatActivity {
 		productinfomap
 				=new HashMap<String, HashMap<String,EntryProductBean>>();
 		boxesnum=new ArrayList<Map<String,String>>();
-		EntryProductinfoBeans = new ArrayList<EntryProductinfoBean>();
 	}
 
 	private void saveBoxNum(String code,String num){
@@ -633,7 +633,7 @@ public class EntryWarehouseActivity extends AppCompatActivity {
 //			reloadviewText(success,msg);
 			Util.showShortToastMessage(EntryWarehouseActivity.this,msg);
 			if(success) {
-				mentrywarenumber.requestFocus();
+				mentrybarcode.requestFocus();
 				mentryorderid.setError(null,null);
 				if(use_default_location.equals("true")){
 					defaultloccheckbox.setChecked(true);
@@ -1595,7 +1595,9 @@ public class EntryWarehouseActivity extends AppCompatActivity {
 //			dataarr = jsonObject.getJSONArray("data");
 //			for (int i = 0; i < dataarr.length(); i++) {
 				JSONObject reprotformdataObject = jsonObject.getJSONObject("data");
-				state=reprotformdataObject.getString("state");
+				if(reprotformdataObject.has("state")) {
+					state = reprotformdataObject.getString("state");
+				}
 //				ReportFormBean ReportFormBean = beanParseUtility.parse(reprotformdataObject, ReportFormBean.class);
 //				ReportFormBeans.add(ReportFormBean);
 //				ReportProductBean ReportProductdataBean =

@@ -121,7 +121,7 @@ public class MainActivity extends AppCompatActivity {
         Date nowdate=new Date();
         Date expiredate=new Date();
         try {
-            expiredate=sdf.parse("20191020");
+            expiredate=sdf.parse("20191101");
         } catch (ParseException e) {
             e.printStackTrace();
         }

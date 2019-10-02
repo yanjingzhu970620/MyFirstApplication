@@ -520,7 +520,7 @@ public class DeliveryActivity extends AppCompatActivity {
                     defaultloccheckbox.setChecked(false);
                 }
                 torderstate.setText(state);
-                mdeliverylibrarynumber.requestFocus();
+                mdeliverybarcode.requestFocus();
 
                 refreshdatalist();
                 mdeliverybatchnumber.setError(null, null);//焦点聚焦时去除错误图标

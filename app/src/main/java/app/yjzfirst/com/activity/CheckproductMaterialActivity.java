@@ -66,7 +66,7 @@ public class CheckproductMaterialActivity extends AppCompatActivity {
     TextView tfurnace_no;
     TextView tmaterial_name;
     TextView tdiameter;
-    TextView tproduct_default;
+    TextView tproduct_code;
     TextView tlocation_barcode;
     TextView tqty;
     TextView tpackagenum;
@@ -77,7 +77,6 @@ public class CheckproductMaterialActivity extends AppCompatActivity {
     List<String> packagecode = new ArrayList<String>();
     List<ProductMaterialproductBean> productBeans = new ArrayList<ProductMaterialproductBean>();
     ProductMaterialorderBean orderbean=new ProductMaterialorderBean();
-    private EnsureWarehouseTask minventoryTask = null;
 
     enum qrcodemode {
         ORDERID, PACKAGECODE
@@ -124,7 +123,7 @@ public class CheckproductMaterialActivity extends AppCompatActivity {
          tfurnace_no= (TextView) findViewById(R.id.material_furnace_no_text);
          tmaterial_name= (TextView) findViewById(R.id.material_name_text);
          tdiameter= (TextView) findViewById(R.id.material_diameter_text);
-         tproduct_default= (TextView) findViewById(R.id.material_productcode_text);
+         tproduct_code= (TextView) findViewById(R.id.material_productcode_text);
          tlocation_barcode= (TextView) findViewById(R.id.material_locationbarcode_text);
          tqty= (TextView) findViewById(R.id.material_packageqty_text);
          tpackagenum= (TextView) findViewById(R.id.material_packagenum_text);
@@ -143,26 +142,27 @@ public class CheckproductMaterialActivity extends AppCompatActivity {
     }
 
     public void reloadOrderdata() {
-         tproduction_name.setText(orderbean.production_name);
-         tprocess_name.setText(orderbean.process_name);
-         tdate.setText(orderbean.date);
-         tstate.setText(orderbean.state);
+         tproduction_name.setText(" "+orderbean.production_name);
+         tprocess_name.setText(" "+orderbean.process_name);
+         tdate.setText(" "+orderbean.date);
+         tstate.setText(" "+orderbean.state);
     }
 
     public void reloadPackagedata() {
         Print("reloadPackagedata::"+productMaterialBeans.size());
         if(productMaterialBeans!=null&&productMaterialBeans.size()>=1) {
             ProductMaterialBean packagebean = productMaterialBeans.get(productMaterialBeans.size() - 1);
-            tbrand_name.setText(Util.CheckNullString(packagebean.brand_name));
-            tsupplier_lot_no.setText(packagebean.supplier_lot_no);
-            tlot_no.setText(packagebean.lot_no);
-            tfurnace_no.setText(packagebean.furnace_no);
-            tmaterial_name.setText(packagebean.material_name);
-            tdiameter.setText(packagebean.diameter);
-            tproduct_default.setText(packagebean.product_default);
-            tlocation_barcode.setText(packagebean.location_barcode);
-            tqty.setText(packagebean.qty);
-            tpackagenum.setText(packagecode.size()+"");
+            Print("reloadPackagedata::"+productMaterialBeans.size());
+            tbrand_name.setText(" "+Util.CheckNullString(packagebean.brand_name));
+            tsupplier_lot_no.setText(" "+packagebean.supplier_lot_no);
+            tlot_no.setText(" "+packagebean.lot_no);
+            tfurnace_no.setText(" "+packagebean.furnace_no);
+            tmaterial_name.setText(" "+packagebean.material_name);
+            tdiameter.setText(" "+packagebean.diameter);
+            tproduct_code.setText(" "+packagebean.product_code);
+            tlocation_barcode.setText(" "+packagebean.location_barcode);
+            tqty.setText(" "+packagebean.qty);
+            tpackagenum.setText(" "+packagecode.size()+"");
         }
     }
     public void addTextWatcher() {
@@ -231,6 +231,8 @@ public class CheckproductMaterialActivity extends AppCompatActivity {
         else if (view.getId() == R.id.material_canclescan_button) {
             Print("inventory_submit_button:::");
             cancleALLdata();
+            resetdata();
+            productBeans = new ArrayList<ProductMaterialproductBean>();
         } else if (view.getId() == R.id.material_ensure_warehouse) {
             Print("inventory_submit_button:::");
             EnsureWarehouseTask mCheckwareinfoTask = new EnsureWarehouseTask();
@@ -280,23 +282,48 @@ public class CheckproductMaterialActivity extends AppCompatActivity {
 
          epackagename.setText("");
 
-         tproduction_name.setText("");
-         tprocess_name.setText("");
+//         tproduction_name.setText("");
+//         tprocess_name.setText("");
          tdate.setText("");
-         tstate.setText("");
+//         tstate.setText("");
 
-         tbrand_name.setText("");
+//         tbrand_name.setText("");
          tsupplier_lot_no.setText("");
          tlot_no.setText("");
          tfurnace_no.setText("");
          tmaterial_name.setText("");
          tdiameter.setText("");
-         tproduct_default.setText("");
+         tproduct_code.setText("");
          tlocation_barcode.setText("");
          tqty.setText("");
          tpackagenum.setText("");
     }
 
+    private void canclePackagedata() {
+
+//        epackagename.setText("");
+
+//         tproduction_name.setText("");
+//         tprocess_name.setText("");
+//        tdate.setText("");
+//         tstate.setText("");
+
+        tbrand_name.setText("");
+        tsupplier_lot_no.setText("");
+        tlot_no.setText("");
+        tfurnace_no.setText("");
+        tmaterial_name.setText("");
+        tdiameter.setText("");
+        tproduct_code.setText("");
+        tlocation_barcode.setText("");
+        tqty.setText("");
+        tpackagenum.setText("");
+    }
+    private void resetdata(){
+        productMaterialBeans = new ArrayList<ProductMaterialBean>();
+        packagecode = new ArrayList<String>();
+        orderbean=new ProductMaterialorderBean();
+    }
     private String email_key = "email";
 
 
@@ -348,7 +375,9 @@ public class CheckproductMaterialActivity extends AppCompatActivity {
                     if (jsonObject != null) {
                         msg = jsonObject.getString("message");
                         success = jsonObject.getString("success");
-                        parsePackageinfo(jsonObject);
+                        if(success.equals("true")) {
+                            parsePackageinfo(jsonObject);
+                        }
                     }
 //                    ins.close();
                 }
@@ -480,6 +509,7 @@ public class CheckproductMaterialActivity extends AppCompatActivity {
                 reloadOrderdata();
                 refreshdatalist();
                 eorderid.setError(null,null);
+                epackagename.requestFocus();
             } else {
                 Util.showShortToastMessage(CheckproductMaterialActivity.this, msg);
 //                minventorybarcode.setError("产品编号有错");
@@ -594,11 +624,14 @@ public class CheckproductMaterialActivity extends AppCompatActivity {
 
         @Override
         protected void onPostExecute(final Boolean success) {
+
+            Util.showShortToastMessage(CheckproductMaterialActivity.this, msg);
             if (success) {
+                canclePackagedata();
+                resetdata();
                 refreshdatalist();
 
             } else {
-                Util.showShortToastMessage(CheckproductMaterialActivity.this, msg);
 //                minventorybarcode.setError("产品编号有错");
                 textsetError(CheckproductMaterialActivity.this, eorderid, "提交错误：："+msg);
             }
@@ -813,7 +846,6 @@ public class CheckproductMaterialActivity extends AppCompatActivity {
             } else {
 
             }
-            minventoryTask = null;
         }
 
         @Override
@@ -848,13 +880,11 @@ public class CheckproductMaterialActivity extends AppCompatActivity {
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode == 301) {
-//            if (minventorybatchnumber.isFocused()) {
-//                minventorybatchnumber.setText("");
-//            } else if (minventorybarcode.isFocused()) {
-//                minventorybarcode.setText("");
-//            } else if (minventorylibrarynumber.isFocused()) {
-//                minventorylibrarynumber.setText("");
-//            }
+            if (eorderid.isFocused()) {
+                eorderid.setText("");
+            } else if (epackagename.isFocused()) {
+                epackagename.setText("");
+            }
         }
         return super.onKeyDown(keyCode, event);
     }
