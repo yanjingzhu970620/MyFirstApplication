@@ -13,6 +13,7 @@ public class IndexConstants {
     public static String password_key = "password";
     public static String rights_key="rights";
     public static final String LOGINURL="/app/login";
+    public static final String LOGOUTURL="/app/app_logout";
     public static final String TAKINGCHECKBARCODE="/api/taking/checkbarcode";
 
     public static final String CHECKDELIVERYFORM="/app/sale_delivery/get";
@@ -34,6 +35,7 @@ public class IndexConstants {
 
     public static final String CHECKCARDID="/app/mrp_runcard/get";
     public static final String CHECKMERGECARDID="/app/mrp_runcard/split_merge";
+    public static final String CHECKWORKTERMNO="/app/work_team/get";
     public static final String CHECKPACKAGENAME="/app/material_check/get";
     public static final String CHECKEQUIPMENTCODE="/app/equipment/get";
     public static final String REPORTSTART="/app/mrp_runcard/start";

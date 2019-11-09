@@ -84,7 +84,7 @@
                         android:id="@+id/material_order_edittext"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_weight="3"
+                        android:layout_weight="4"
                         android:maxLines="1"
                         android:singleLine="true"
                         android:textColor="@color/black" />
@@ -109,30 +109,40 @@
                     <TextView
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
-                        android:layout_weight="1"
-                        android:gravity="right"
+                        android:layout_weight="2"
+                        android:layout_marginBottom="10dp"
+                        android:gravity="right|bottom"
                         android:text="@string/product_plan" />
 
-                    <TextView
+                    <EditText
                         android:id="@+id/material_product_plan_text"
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
-                        android:layout_weight="1"
-                        android:gravity="left" />
+                        android:layout_weight="3"
+                        android:gravity="left"
+                        android:maxLines="1"
+                        android:singleLine="true"
+                        android:textSize="14sp"
+                        android:inputType="none"/>
 
                     <TextView
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
-                        android:layout_weight="1"
-                        android:gravity="right"
+                        android:layout_weight="2"
+                        android:layout_marginBottom="10dp"
+                        android:gravity="right|bottom"
                         android:text="@string/process_name" />
 
-                    <TextView
+                    <EditText
                         android:id="@+id/material_process_name_text"
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
-                        android:layout_weight="1"
-                        android:gravity="left" />
+                        android:layout_weight="3"
+                        android:gravity="left"
+                        android:maxLines="1"
+                        android:singleLine="true"
+                        android:textSize="14sp"
+                        android:inputType="none"/>
 
                 </LinearLayout>
                 <LinearLayout
@@ -143,30 +153,40 @@
                     <TextView
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
-                        android:layout_weight="1"
-                        android:gravity="right"
+                        android:layout_weight="2"
+                        android:layout_marginBottom="10dp"
+                        android:gravity="right|bottom"
                         android:text="@string/material_orderdate"/>
 
-                    <TextView
+                    <EditText
                         android:id="@+id/material_orderdate_text"
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
-                        android:layout_weight="1"
-                        android:gravity="left" />
+                        android:layout_weight="3"
+                        android:gravity="left"
+                        android:maxLines="1"
+                        android:singleLine="true"
+                        android:textSize="14sp"
+                        android:inputType="none"/>
 
                     <TextView
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
-                        android:layout_weight="1"
-                        android:gravity="right"
+                        android:layout_weight="2"
+                        android:layout_marginBottom="10dp"
+                        android:gravity="right|bottom"
                         android:text="@string/state" />
 
-                    <TextView
+                    <EditText
                         android:id="@+id/material_state_text"
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
-                        android:layout_weight="1"
-                        android:gravity="left" />
+                        android:layout_weight="3"
+                        android:gravity="left"
+                        android:maxLines="1"
+                        android:singleLine="true"
+                        android:textSize="14sp"
+                        android:inputType="none"/>
 
                 </LinearLayout>
 
@@ -189,7 +209,7 @@
                         android:id="@+id/material_package_name_edittext"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_weight="3"
+                        android:layout_weight="4"
                         android:maxLines="1"
                         android:singleLine="true"
                         android:textColor="@color/black" />
@@ -214,30 +234,39 @@
                     <TextView
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
-                        android:layout_weight="1"
-                        android:gravity="right"
+                        android:layout_weight="2"
+                        android:layout_marginBottom="10dp"
+                        android:gravity="right|bottom"
                         android:text="@string/material_branname"/>
 
-                    <TextView
+                    <EditText
                         android:id="@+id/material_branname_text"
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
-                        android:layout_weight="1"
-                        android:gravity="left" />
+                        android:layout_weight="3"
+                        android:maxLines="1"
+                        android:singleLine="true"
+                        android:textSize="14sp"
+                        android:inputType="none"/>
 
                     <TextView
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
-                        android:layout_weight="1"
-                        android:gravity="right"
+                        android:layout_weight="2"
+                        android:layout_marginBottom="10dp"
+                        android:gravity="right|bottom"
                         android:text="@string/material_supplier_code" />
 
-                    <TextView
+                    <EditText
                         android:id="@+id/material_supplier_code_text"
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
-                        android:layout_weight="1"
-                        android:gravity="left" />
+                        android:layout_weight="3"
+                        android:gravity="left"
+                        android:maxLines="1"
+                        android:singleLine="true"
+                        android:textSize="14sp"
+                        android:inputType="none"/>
 
                 </LinearLayout>
 
@@ -250,15 +279,20 @@
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
                         android:layout_weight="1"
-                        android:gravity="right"
+                        android:layout_marginBottom="10dp"
+                        android:gravity="right|bottom"
                         android:text="@string/material_lot_nos"/>
 
-                    <TextView
+                    <EditText
                         android:id="@+id/material_lotno_text"
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
-                        android:layout_weight="3"
-                        android:gravity="left" />
+                        android:layout_weight="4"
+                        android:gravity="left"
+                        android:maxLines="1"
+                        android:singleLine="true"
+                        android:textSize="14sp"
+                        android:inputType="none"/>
 
 
                 </LinearLayout>
@@ -273,27 +307,21 @@
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
                         android:layout_weight="1"
-                        android:gravity="right"
+                        android:layout_marginBottom="10dp"
+                        android:gravity="right|bottom"
                         android:text="@string/material_furnace_no" />
 
-                    <TextView
+                    <EditText
                         android:id="@+id/material_furnace_no_text"
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
-                        android:layout_weight="1"
-                        android:gravity="left" />
+                        android:layout_weight="4"
+                        android:gravity="left"
+                        android:maxLines="1"
+                        android:singleLine="true"
+                        android:textSize="14sp"
+                        android:inputType="none"/>
 
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1"
-                        android:gravity="right"/>
-
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1"
-                        android:gravity="right" />
                 </LinearLayout>
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -303,30 +331,40 @@
                     <TextView
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
-                        android:layout_weight="1"
-                        android:gravity="right"
+                        android:layout_weight="2"
+                        android:layout_marginBottom="10dp"
+                        android:gravity="right|bottom"
                         android:text="@string/material_name"/>
 
-                    <TextView
+                    <EditText
                         android:id="@+id/material_name_text"
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
-                        android:layout_weight="1"
-                        android:gravity="left" />
+                        android:layout_weight="3"
+                        android:gravity="left"
+                        android:maxLines="1"
+                        android:singleLine="true"
+                        android:textSize="14sp"
+                        android:inputType="textNoSuggestions"/>
 
                     <TextView
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
-                        android:layout_weight="1"
-                        android:gravity="right"
+                        android:layout_weight="2"
+                        android:layout_marginBottom="10dp"
+                        android:gravity="right|bottom"
                         android:text="@string/material_diameter" />
 
-                    <TextView
+                    <EditText
                         android:id="@+id/material_diameter_text"
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
-                        android:layout_weight="1"
-                        android:gravity="left" />
+                        android:layout_weight="3"
+                        android:gravity="left"
+                        android:maxLines="1"
+                        android:singleLine="true"
+                        android:textSize="14sp"
+                        android:inputType="none"/>
 
                 </LinearLayout>
 
@@ -338,30 +376,40 @@
                     <TextView
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
-                        android:layout_weight="1"
-                        android:gravity="right"
+                        android:layout_weight="2"
+                        android:layout_marginBottom="10dp"
+                        android:gravity="right|bottom"
                         android:text="@string/material_productcode"/>
 
-                    <TextView
+                    <EditText
                         android:id="@+id/material_productcode_text"
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
-                        android:layout_weight="1"
-                        android:gravity="left" />
+                        android:layout_weight="3"
+                        android:gravity="left"
+                        android:maxLines="1"
+                        android:singleLine="true"
+                        android:textSize="14sp"
+                        android:inputType="none"/>
 
                     <TextView
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
-                        android:layout_weight="1"
-                        android:gravity="right"
+                        android:layout_weight="2"
+                        android:layout_marginBottom="10dp"
+                        android:gravity="right|bottom"
                         android:text="@string/material_locationbarcode" />
 
-                    <TextView
+                    <EditText
                         android:id="@+id/material_locationbarcode_text"
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
-                        android:layout_weight="1"
-                        android:gravity="left" />
+                        android:layout_weight="3"
+                        android:gravity="left"
+                        android:maxLines="1"
+                        android:singleLine="true"
+                        android:textSize="14sp"
+                        android:inputType="none"/>
 
                 </LinearLayout>
 
@@ -373,30 +421,40 @@
                     <TextView
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
-                        android:layout_weight="1"
-                        android:gravity="right"
+                        android:layout_weight="2"
+                        android:layout_marginBottom="10dp"
+                        android:gravity="right|bottom"
                         android:text="@string/material_packageqty"/>
 
-                    <TextView
+                    <EditText
                         android:id="@+id/material_packageqty_text"
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
-                        android:layout_weight="1"
-                        android:gravity="left" />
+                        android:layout_weight="3"
+                        android:gravity="left"
+                        android:maxLines="1"
+                        android:singleLine="true"
+                        android:textSize="14sp"
+                        android:inputType="none"/>
 
                     <TextView
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
-                        android:layout_weight="1"
-                        android:gravity="right"
+                        android:layout_weight="2"
+                        android:layout_marginBottom="10dp"
+                        android:gravity="right|bottom"
                         android:text="@string/material_packagenum" />
 
-                    <TextView
+                    <EditText
                         android:id="@+id/material_packagenum_text"
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
-                        android:layout_weight="1"
-                        android:gravity="left" />
+                        android:layout_weight="3"
+                        android:gravity="left"
+                        android:maxLines="1"
+                        android:singleLine="true"
+                        android:textSize="14sp"
+                        android:inputType="none"/>
 
                 </LinearLayout>
 
@@ -455,44 +513,42 @@
                         android:orientation="horizontal">
 
                         <TextView
-                            android:layout_width="0dp"
+                            android:layout_width="40dp"
                             android:layout_height="match_parent"
-                            android:layout_weight="2"
+                            android:gravity="center"
                             android:text="@string/order_id" />
 
                         <TextView
                             android:layout_width="0dp"
                             android:layout_height="match_parent"
                             android:layout_weight="2"
+                            android:gravity="center"
                             android:text="@string/product_item" />
 
                         <TextView
                             android:layout_width="0dp"
                             android:layout_height="match_parent"
                             android:layout_weight="2"
-                            android:gravity="right"
+                            android:gravity="center"
                             android:text="@string/number_applications" />
 
                         <TextView
                             android:layout_width="0dp"
                             android:layout_height="match_parent"
-                            android:layout_gravity="center_horizontal"
                             android:layout_weight="2"
-                            android:gravity="right"
+                            android:gravity="center"
                             android:text="@string/unit" />
                         <TextView
                             android:layout_width="0dp"
                             android:layout_height="match_parent"
-                            android:layout_gravity="center_horizontal"
                             android:layout_weight="2"
-                            android:gravity="right"
+                            android:gravity="center"
                             android:text="@string/entrychoice_num" />
                         <TextView
                             android:layout_width="0dp"
                             android:layout_height="match_parent"
-                            android:layout_gravity="center_horizontal"
+                            android:gravity="center"
                             android:layout_weight="2"
-                            android:gravity="right"
                             android:text="@string/material_packagenum" />
                     </LinearLayout>
 

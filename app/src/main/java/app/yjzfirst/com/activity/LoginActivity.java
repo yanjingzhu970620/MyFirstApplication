@@ -98,7 +98,7 @@ public class LoginActivity extends AppCompatActivity {
         populateAutoComplete();
 
         mPasswordView = (EditText) findViewById(R.id.password);
-        mPasswordView.setText(PreferencesUtils.getString(LoginActivity.this,password_key,""));
+//        mPasswordView.setText(PreferencesUtils.getString(LoginActivity.this,password_key,""));
         mPasswordView.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView textView, int id, KeyEvent keyEvent) {
@@ -363,7 +363,7 @@ public class LoginActivity extends AppCompatActivity {
             try {
                 String url = "http://" + PreferencesUtils.getString(LoginActivity.this, ip_key, "120.27.2.177")
                         + ":" + PreferencesUtils.getString(LoginActivity.this, port_key, "8069") + IndexConstants.LOGINURL +
-                        "?db="+PreferencesUtils.getString(LoginActivity.this, db_key, "erp")//demo-fasten
+                        "?db="+PreferencesUtils.getString(LoginActivity.this, db_key, "erp")//cu-bsn  8055
                         + "&username=" + mEmail + "&password=" + mPassword;
 //                "login:","登录帐号","Password":"密码"
                 Print("url:::" + url);
@@ -439,7 +439,7 @@ public class LoginActivity extends AppCompatActivity {
             Util.showShortToastMessage(LoginActivity.this, msg);
             if (success) {
                 PreferencesUtils.putString(LoginActivity.this, email_key, mEmail);
-                PreferencesUtils.putString(LoginActivity.this, password_key, mPassword);
+//                PreferencesUtils.putString(LoginActivity.this, password_key, mPassword);
                 Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                 LoginActivity.this.startActivity(intent);
                 finish();

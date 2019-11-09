@@ -76,6 +76,7 @@ public class ReportActivity extends AppCompatActivity {
 	EditText eSplit_merge_cardid;
 	EditText eSplit_merge_container_no;
 	EditText eSplit_weight;
+	EditText ework_team_no;
 	EditText eSplit_merge_container_weight;
 	TextView tContainerid;
 	TextView tContainerweight;
@@ -88,7 +89,7 @@ public class ReportActivity extends AppCompatActivity {
 	TextView Errortext;
 //    EditText mcheckbatchnumber;
    enum qrcodemode {
-	CARDID, MERGE_CARDID,PACKAGENAME,EQUIPMENTCODE
+	CARDID, MERGE_CARDID,PACKAGENAME,EQUIPMENTCODE,WORKTERM
    }
 	Button report_startbutton;
 	Button report_pausebutton;
@@ -101,26 +102,28 @@ public class ReportActivity extends AppCompatActivity {
 	Button reportmaterial_submitbutton;
 	Button reportmaterialcancel_submitbutton;
 	ImageView report_mergecard_id_button;
+	ImageView work_teambtn;
 	LinearLayout split_merge_layout;
+	LinearLayout work_team_layout;
 	Spinner spinner_split_merge_type;
 	ListView mSimpleDetailList;
 	ReportdetailAdapter mAdapter;
 
-	String  split_merge_item;
+	String  split_merge_item="";
 	String  process_produce_status;
 	private  qrcodemode qrcodetextmode =  qrcodemode.CARDID;
-	boolean weightupdate=false;
-	boolean qtyupdate=false;
-	boolean netweightupdate=false;
-	boolean containerupdate=false;
-	boolean grossupdate=false;
+	boolean weightupdate=true;
+	boolean qtyupdate=true;
+	boolean netweightupdate=true;
+	boolean containerupdate=true;
+	boolean grossupdate=true;
+
+	String runcardno2Arr="";
 	//
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_report);
-
-
 
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
 
@@ -180,7 +183,9 @@ public class ReportActivity extends AppCompatActivity {
 		eSplit_merge_container_no= (EditText) findViewById(R.id.edit_split_merge_container_no);
 		eSplit_weight= (EditText) findViewById(R.id.edit_split_weight);
 		eSplit_merge_container_weight= (EditText) findViewById(R.id.edit_split_merge_container_weight);
-
+		ework_team_no= (EditText) findViewById(R.id.edit_work_team_no);
+		work_teambtn = (ImageView) findViewById(R.id.work_team_no_button);
+		changeEdittextandimgstatus(ework_team_no,work_teambtn,true);
 		tContainerid = (TextView) findViewById(R.id.text_container_id);
 		tContainerweight = (TextView) findViewById(R.id.text_container_weight);
 		tGrossweight = (TextView) findViewById(R.id.text_gross_weight);
@@ -206,6 +211,8 @@ public class ReportActivity extends AppCompatActivity {
 		report_mergecard_id_button  = (ImageView) findViewById(R.id.report_mergecard_id_button);
 
 		split_merge_layout= (LinearLayout) findViewById(R.id.split_merge_layout);
+		work_team_layout= (LinearLayout) findViewById(R.id.work_team_layout);
+		work_team_layout.setVisibility(View.VISIBLE);
 		split_merge_layout.setVisibility(View.VISIBLE);
 		LinearLayout split_merge_cardid_layout= (LinearLayout) findViewById(R.id.split_merge_cardid_layout);
 		split_merge_cardid_layout.setVisibility(View.VISIBLE);
@@ -229,6 +236,9 @@ public class ReportActivity extends AppCompatActivity {
 			public void onItemSelected(AdapterView<?> parent, View view,
 									   int position, long id) {
 //				String str=parent.getItemAtPosition(position).toString();
+				if(!split_merge_item.equals(getData().get(position))){
+					runcardno2Arr="";
+				}
 				split_merge_item=getData().get(position);
 				eSplit_merge_cardid.setText("");
 				eSplit_merge_container_no.setText("");
@@ -265,7 +275,7 @@ public class ReportActivity extends AppCompatActivity {
 						eSplit_weight.setFocusableInTouchMode(true);
 					}
 				}
-				Toast.makeText(ReportActivity.this, "你点击的是:"+split_merge_item, Toast.LENGTH_SHORT).show();
+//				Toast.makeText(ReportActivity.this, "你点击的是:"+split_merge_item, Toast.LENGTH_SHORT).show();
 			}
 			@Override
 			public void onNothingSelected(AdapterView<?> parent) {
@@ -319,6 +329,9 @@ public class ReportActivity extends AppCompatActivity {
 		}else if (view.getId() == R.id.report_equipment_code_button) {
 			Util.startQrCode(ReportActivity.this);
 			qrcodetextmode=qrcodemode.EQUIPMENTCODE;
+		}else if (view.getId() == R.id.work_team_no_button) {
+			Util.startQrCode(ReportActivity.this);
+			qrcodetextmode=qrcodemode.WORKTERM;
 		}else if (view.getId() == R.id.report_start_button) {
 			Print("report_start_button");
 				ReportStartTask checkreportstarttask = new ReportStartTask();
@@ -385,6 +398,8 @@ public class ReportActivity extends AppCompatActivity {
 					ePackagename.setText(content);
 				} else if(qrcodetextmode==qrcodemode.EQUIPMENTCODE){
 					eEquipmentcode.setText(content);
+				}else if(qrcodetextmode==qrcodemode.WORKTERM){
+					ework_team_no.setText(content);
 				}
 				Util.showToastMessage(ReportActivity.this, "扫描结果为：" + content);
 //				attemptCheck();
@@ -414,32 +429,30 @@ public class ReportActivity extends AppCompatActivity {
 //					eGrossweight.setText(Double.valueOf(eContainerweight.getText().toString())
 //							+ Double.valueOf(eNetweight.getText().toString()) + "");
 //				}
-				if(!qtyupdate) {
+				if(eNetweight.hasFocus()||eContainerweight.hasFocus()
+						||eGrossweight.hasFocus()||!qtyupdate) {
 					qtyupdate=true;
-					if (!eNetweight.getText().toString().equals("")
-							&& !eThousandweight.getText().toString().equals("")
-							&& !eNetweight.getText().toString().equals("null")
+					if ( !eNetweight.getText().toString().equals("null")
 							&& !eThousandweight.getText().toString().equals("null")
-							&& Double.valueOf(eThousandweight.getText().toString())>0
+							&& getedittextdouble(eThousandweight)>0
 							&& ReportFormBeans != null && ReportFormBeans.size() > 0
 							&& !ReportFormBeans.get(0).factor.equals("")) {
 						double tempnum =0;
 						try {
-							tempnum=Double.valueOf(eNetweight.getText().toString()) /
-									Double.valueOf(eThousandweight.getText().toString()) *
+							tempnum=getedittextdouble(eNetweight) /
+									getedittextdouble(eThousandweight) *
 									Double.valueOf(ReportFormBeans.get(0).factor);
 						}catch (Exception e){
 
 						}
 						BigDecimal bg = new BigDecimal(tempnum);
 						double num = bg.setScale(3, BigDecimal.ROUND_HALF_UP).doubleValue();
+						weightupdate=true;
 						eReportnum.setText(num + "");
 //						Util.showShortToastMessage(ReportActivity.this,"eReportnum"+num);
-						weightupdate=true;
 					}
-
+					qtyupdate=false;
 				}
-				qtyupdate=false;
 
 //				if(!netweightupdate) {
 //					netweightupdate = true;
@@ -478,27 +491,25 @@ public class ReportActivity extends AppCompatActivity {
 
 			@Override
 			public void afterTextChanged(Editable s) {
-				if(!weightupdate) {
+				if(eReportnum.hasFocus()||!weightupdate) {
 					weightupdate=true;
-					if (!eReportnum.getText().toString().equals("")
-							&& !eThousandweight.getText().toString().equals("")
-							&&!eReportnum.getText().toString().equals("null")
+					if (!eReportnum.getText().toString().equals("null")
 							&& !eThousandweight.getText().toString().equals("null")
 							&& ReportFormBeans != null && ReportFormBeans.size() > 0
 							&& !ReportFormBeans.get(0).factor.equals("")) {
 						double tempnum =0;
 						try {
-							tempnum=Double.valueOf(eReportnum.getText().toString()) *
-									Double.valueOf(eThousandweight.getText().toString()) /
+							tempnum=getedittextdouble(eReportnum) *
+									getedittextdouble(eThousandweight) /
 									Double.valueOf(ReportFormBeans.get(0).factor);
 						}catch (Exception e){
 
 						}
 						BigDecimal bg = new BigDecimal(tempnum);
 						double num = bg.setScale(3, BigDecimal.ROUND_HALF_UP).doubleValue();
-						eNetweight.setText(num + "");
-//						Util.showShortToastMessage(ReportActivity.this,"eNetweight"+num);
 						qtyupdate=true;
+						eNetweight.setText(num + "");
+//						Util.showShortToastMessage(ReportActivity.this,"eNetweight"+num)
 					}
 				}
 				weightupdate=false;
@@ -517,54 +528,51 @@ public class ReportActivity extends AppCompatActivity {
 
 			@Override
 			public void afterTextChanged(Editable s) {
-				if(!weightupdate) {
+				if(eThousandweight.hasFocus()||!weightupdate) {
 					weightupdate=true;
-					if (!eReportnum.getText().toString().equals("")
-							&& !eThousandweight.getText().toString().equals("")
-							&&!eReportnum.getText().toString().equals("null")
+					if (!eReportnum.getText().toString().equals("null")
 							&& !eThousandweight.getText().toString().equals("null")
 							&& ReportFormBeans != null && ReportFormBeans.size() > 0
 							&& !ReportFormBeans.get(0).factor.equals("")) {
 						double tempnum =0;
 						try {
-							tempnum=Double.valueOf(eReportnum.getText().toString()) *
-									Double.valueOf(eThousandweight.getText().toString()) /
+							tempnum=getedittextdouble(eReportnum) *
+									getedittextdouble(eThousandweight) /
 									Double.valueOf(ReportFormBeans.get(0).factor);
 						}catch (Exception e){
 
 						}
 						BigDecimal bg = new BigDecimal(tempnum);
 						double num = bg.setScale(3, BigDecimal.ROUND_HALF_UP).doubleValue();
+						qtyupdate=true;
 						eNetweight.setText(num + "");
 //						Util.showShortToastMessage(ReportActivity.this,"eNetweight"+num);
-						qtyupdate=true;
 					}
+					weightupdate=false;
 				}
-				weightupdate=false;
 
-				if(!qtyupdate) {
+				if(eThousandweight.hasFocus()||!qtyupdate) {
 					qtyupdate=true;
-					if (!eNetweight.getText().toString().equals("")
-							&& !eThousandweight.getText().toString().equals("")
-							&& !eNetweight.getText().toString().equals("null")
+					if (!eNetweight.getText().toString().equals("null")
 							&& !eThousandweight.getText().toString().equals("null")
-							&& Double.valueOf(eThousandweight.getText().toString())>0
+							&& getedittextdouble(eThousandweight)>0
 							&& ReportFormBeans != null && ReportFormBeans.size() > 0
 							&& !ReportFormBeans.get(0).factor.equals("")) {
 						double tempnum =0;
 						try {
-							tempnum=Double.valueOf(eNetweight.getText().toString()) /
-									Double.valueOf(eThousandweight.getText().toString()) *
+							tempnum=getedittextdouble(eNetweight) /
+									getedittextdouble(eThousandweight) *
 									Double.valueOf(ReportFormBeans.get(0).factor);
 						}catch (Exception e){
 
 						}
 						BigDecimal bg = new BigDecimal(tempnum);
 						double num = bg.setScale(3, BigDecimal.ROUND_HALF_UP).doubleValue();
+						weightupdate=true;
 						eReportnum.setText(num + "");
 //						Util.showShortToastMessage(ReportActivity.this,"eReportnum"+num);
-						weightupdate=true;
 					}
+					weightupdate=false;
 				}
 			}
 		});
@@ -581,25 +589,23 @@ public class ReportActivity extends AppCompatActivity {
 
 			@Override
 			public void afterTextChanged(Editable s) {
-				if(!grossupdate) {
+				if(eGrossweight.hasFocus()||!grossupdate) {
 					grossupdate=true;
-					if (!eGrossweight.getText().toString().equals("")
-							&& !eContainerweight.getText().toString().equals("")
-							&&!eGrossweight.getText().toString().equals("null")
+					if (!eGrossweight.getText().toString().equals("null")
 							&& !eContainerweight.getText().toString().equals("null")) {
 						double tempnum =0;
 						try {
-							tempnum=Double.valueOf(eGrossweight.getText().toString()) -
-									Double.valueOf(eContainerweight.getText().toString()) ;
+							tempnum=getedittextdouble(eGrossweight) -
+									getedittextdouble(eContainerweight) ;
 						}catch (Exception e){
 
 						}
 //						BigDecimal bg = new BigDecimal(tempnum);
 //						double num = bg.setScale(3, BigDecimal.ROUND_HALF_UP).doubleValue();
-						eNetweight.setText(tempnum + "");
-//						Util.showShortToastMessage(ReportActivity.this,"grossupdate"+tempnum);
 						containerupdate=true;
 						netweightupdate=true;
+						eNetweight.setText(tempnum + "");
+//						Util.showShortToastMessage(ReportActivity.this,"grossupdate"+tempnum);
 					}
 				}
 				grossupdate=false;
@@ -619,24 +625,22 @@ public class ReportActivity extends AppCompatActivity {
 
 			@Override
 			public void afterTextChanged(Editable s) {
-				if(!containerupdate) {
+				if(eContainerweight.hasFocus()||!containerupdate) {
 					containerupdate=true;
-					if (!eGrossweight.getText().toString().equals("")
-							&& !eContainerweight.getText().toString().equals("")
-							&&!eGrossweight.getText().toString().equals("null")
+					if (!eGrossweight.getText().toString().equals("null")
 							&& !eContainerweight.getText().toString().equals("null")) {
 						double tempnum =0;
 						try {
-							tempnum=Double.valueOf(eGrossweight.getText().toString()) -
-									Double.valueOf(eContainerweight.getText().toString()) ;
+							tempnum=getedittextdouble(eGrossweight) -
+									getedittextdouble(eContainerweight) ;
 						}catch (Exception e){
 
 						}
 //						BigDecimal bg = new BigDecimal(tempnum);
 //						double num = bg.setScale(3, BigDecimal.ROUND_HALF_UP).doubleValue();
+						grossupdate=true;
 						eNetweight.setText(tempnum + "");
 //						Util.showShortToastMessage(ReportActivity.this,"contaierupdate"+tempnum);
-						grossupdate=true;
 					}
 				}
 				containerupdate=false;
@@ -726,23 +730,55 @@ public class ReportActivity extends AppCompatActivity {
 
 			@Override
 			public void afterTextChanged(Editable s) {
+
 				String content = eEquipmentcode.getText().toString();
-//				if(content.contains(",")) {
-//					String productinfo[] = content.split(",");
-//					if (productinfo.length > 1) {
-//						String productplan = productinfo[1];
-//						eEquipmentcode.setText(productplan);
-//					}
-//				}else {
+				if(content.contains(",")) {
+					String productinfo[] = content.split(",");
+					if (productinfo.length >= 1) {
+						String productplan = productinfo[0];
+						eEquipmentcode.setText(productplan);
+					}
+				}else {
 					if(!content.equals("")) {
 						CheckCEquipmentTask mCheckEquipmentTask = new CheckCEquipmentTask();
 						mCheckEquipmentTask.execute();
 					}
-//				}
+				}
+
+			}
+		});
+
+		ework_team_no.addTextChangedListener(new TextWatcher() {
+			@Override
+			public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+			}
+
+			@Override
+			public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+			}
+
+			@Override
+			public void afterTextChanged(Editable s) {
+				String content = ework_team_no.getText().toString();
+				if(content.contains(",")) {
+					String productinfo[] = content.split(",");
+					if (productinfo.length >= 1) {
+						String productplan = productinfo[0];
+						ework_team_no.setText(productplan);
+					}
+				}else {
+				if(!content.equals("")) {
+					CheckworktermNOTask mCheckworktermTask = new CheckworktermNOTask();
+					mCheckworktermTask.execute();
+				}
+				}
 
 			}
 		});
 	}
+
 	private void attemptCheck() {
 		if (mCheckTask != null) {
 			return;
@@ -767,7 +803,7 @@ public class ReportActivity extends AppCompatActivity {
 //            // There was an error; don't attempt login and focus the first
 //            // form field with an error.
 //            focusView.requestFocus();
-			Util.showToastMessage(ReportActivity.this, "请先扫描所有条目");
+//			Util.showToastMessage(ReportActivity.this, "请先扫描所有条目");
 		} else {
 //            // Show a progress spinner, and kick off a background task to
 //            // perform the user login attempt.
@@ -809,7 +845,7 @@ public class ReportActivity extends AppCompatActivity {
 						IndexConstants.CHECKCARDID + "?token=" +
 						PreferencesUtils.getString(ReportActivity.this, token_key, "") + "&runcard_no=" + cardid;
 //                "login:","登录帐号","Password":"密码"
-				Print("url:::" + url);
+				Print("CHECKCARDID url:::" + url);
 //                Map<String,String> mparams=new HashMap<String,String>();
 //                mparams.put("login",PreferencesUtils.getString(ReportActivity.this,email_key,"8069"));
 //                mparams.put("lot_no",lot_no);
@@ -877,6 +913,7 @@ public class ReportActivity extends AppCompatActivity {
 			reloadviewText(success,msg);
 			if(success){
 				eCardid.setError(null,null);
+				ework_team_no.requestFocus();
 			}else{
 				textsetError(ReportActivity.this,eCardid,msg);
 			}
@@ -1010,6 +1047,16 @@ public class ReportActivity extends AppCompatActivity {
 				if(split_merge_item.equals("merge")) {
 					eSplit_merge_container_no.setText(CheckNullString(ReportFormBeans.get(0).container_no));
 					eSplit_merge_container_weight.setText(CheckNullString(ReportFormBeans.get(0).container_weight));
+
+					if(!runcardno2Arr.contains(mergecardid)) {
+						if (runcardno2Arr.contains("[")) {
+							runcardno2Arr = runcardno2Arr + "," + "'" + mergecardid + "'";
+						} else {
+							runcardno2Arr = "[" + "'" + mergecardid + "'";
+						}
+					}
+				}else{
+					runcardno2Arr="["+"'" + mergecardid+"'";
 				}
 			}else{
 				textsetError(ReportActivity.this,eSplit_merge_cardid,msg);
@@ -1065,9 +1112,153 @@ public class ReportActivity extends AppCompatActivity {
 
 
 	}
+	public class CheckworktermNOTask extends AsyncTask<Void, Void, Boolean> {
+		String cardid="";
+		String work_team_no = "";
+		String success = "";
+		String msg = "";
+		int responsecode = 0;
+
+		CheckworktermNOTask() {
+			cardid=eCardid.getText().toString();
+			work_team_no=ework_team_no.getText().toString();
+		}
+
+		@Override
+		protected Boolean doInBackground(Void... params) {
+			// TODO: attempt authentication against a network service.
+
+			try {
+				String url = "http://" +
+						PreferencesUtils.getString(ReportActivity.this, ip_key, "120.27.2.177")
+						+ ":" + PreferencesUtils.getString(ReportActivity.this, port_key, "8069") +
+						IndexConstants.CHECKWORKTERMNO + "?token=" +
+						PreferencesUtils.getString(ReportActivity.this, token_key, "")
+						+ "&runcard_no=" + cardid+ "&work_team_no=" + work_team_no;
+//                "login:","登录帐号","Password":"密码"
+				Print("url:::" + url);
+//                Map<String,String> mparams=new HashMap<String,String>();
+//                mparams.put("login",PreferencesUtils.getString(ReportActivity.this,email_key,"8069"));
+//                mparams.put("lot_no",lot_no);
+//                mparams.put("barcode",barcode);
+//                mparams.put("location",location);
+
+
+//                String postparams = new Gson().toJson(mparams);
+//                postparams=URLEncoder.encode(postparams,"utf-8");
+
+//                String postparams ="{"+"login:",mEmail,"Password:",mPassword}//"login:"+mEmail+"&password:"+mPassword;
+//                byte[] data = postparams.getBytes();
+//                System.err.println("postparams postparams:::"+postparams+data.length);
+				URL posturl = new URL(url);
+				HttpURLConnection conn = (HttpURLConnection) posturl.openConnection();
+				conn.setConnectTimeout(10000);
+//                conn.setDoInput(true);                  //打开输入流，以便从服务器获取数据
+//                conn.setDoOutput(true);                 //打开输出流，以便向服务器提交数据
+//                conn.setRequestMethod("POST");     //设置以Post方式提交数据
+//                conn.setUseCaches(false);               //使用Post方式不能使用缓存
+//                //设置请求体的类型是文本类型
+//                conn.setRequestProperty("Content-Type", "application/json");
+//                conn.setRequestProperty("Content-Length", String.valueOf(data.length)); // 注意是字节长度, 不是字符长度
+//
+////                conn.setDoOutput(true); // 准备写出
+//                conn.getOutputStream().write(data);
+
+				responsecode = conn.getResponseCode();
+				if (responsecode == 200) {
+					InputStream ins = conn.getInputStream();
+					JSONObject rootjsonObject = parseJson(ins);
+					JSONObject jsonObject = null;
+					if (rootjsonObject != null) {
+						jsonObject = rootjsonObject.getJSONArray("results").getJSONObject(0);
+					}
+					if (jsonObject != null) {
+//						Print(" return:::" + jsonObject);
+						msg = jsonObject.getString("message");
+						success = jsonObject.getString("success");
+						Print(" merge return: ReportProductBeans success::" + success);
+						if (success.equals("true")) {
+
+						}
+					}
+//                    String s = ins.toString();
+//                    System.err.println("sssssssss:::"+s);
+				}
+
+			} catch (Exception e) {
+				// TODO: handle exception
+				System.err.println("未能获取网络数据");
+				e.printStackTrace();
+			}
+
+			// TODO: register the new account here.
+			return success.equals("true");
+		}
+
+		@Override
+		protected void onPostExecute(final Boolean success) {
+			Util.showShortToastMessage(ReportActivity.this,msg);
+			if(success){
+				ePackagename.requestFocus();
+
+			}else{
+				textsetError(ReportActivity.this,ework_team_no,msg);
+			}
+		}
+
+		@Override
+		protected void onCancelled() {
+//            showProgress(false);
+		}
+		protected void parseReportid(JSONObject jsonObject) {
+			JSONArray dataarr = null;
+			try {
+				dataarr = jsonObject.getJSONArray("data");
+				for (int i = 0; i < dataarr.length(); i++) {
+					JSONObject reprotformdataObject = dataarr.getJSONObject(i);
+					ReportFormBean ReportFormBean = beanParseUtility.parse(reprotformdataObject, ReportFormBean.class);
+					ReportFormBeans.add(ReportFormBean);
+//					if(reprotformdataObject.has("line_data")) {
+//						JSONArray linedataarr = reprotformdataObject.getJSONArray("line_data");
+//						for (int j = 0; j < linedataarr.length(); j++) {
+//							JSONObject reprotformlinedataObject = linedataarr.getJSONObject(j);
+//							ReportProductBean ReportProductlineBean =
+//									beanParseUtility.parse(reprotformlinedataObject, ReportProductBean.class);
+//							ReportProductBeans.add(ReportProductlineBean);
+//						}
+//					}
+
+				}
+			} catch (JSONException e) {
+				e.printStackTrace();
+			}
+		}
+		private JSONObject parseJson(InputStream ins) {
+			byte[] data = new byte[0];   // 把输入流转换成字符数组
+			try {
+				data = readStream(ins);
+
+				String json = new String(data);        // 把字符数组转换成字符串
+//            JSONArray array = new JSONArray(json);
+//            for(int i = 0 ; i < array.length() ; i++){
+				JSONObject jsonObject = new JSONObject(json);//array.getJSONObject(i);
+//                String msg=jsonObject.getString("message");
+//                String success=jsonObject.getString("success");
+				return jsonObject;
+//                Print("login msgmsg:::"+msg);
+//            }
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			return null;
+		}
+
+
+	}
 	public class CheckCReportTask extends AsyncTask<Void, Void, Boolean> {
 		//        String lot_no="";
 //		String cardid = "";
+		String work_team_no="";
 		String qty = "";
 		String weight = "";
 		String gross_weight = "";
@@ -1082,21 +1273,24 @@ public class ReportActivity extends AppCompatActivity {
         String runcard_no_2="";
 		String container_no_2="";
 		String container_weight_2="";
+		String weight_2 = "";
 
 		int responsecode = 0;
 
 		CheckCReportTask() {
 			runcard_no = eCardid.getText().toString();
-			runcard_no_2=eSplit_merge_cardid.getText().toString();
+			runcard_no_2=runcardno2Arr+"]";//eSplit_merge_cardid.getText().toString();
 			weight = eNetweight.getText().toString();
 			unit_weight = eThousandweight.getText().toString();
 			qty = eReportnum.getText().toString();
 			gross_weight = eGrossweight.getText().toString();
+			weight_2=eSplit_weight.getText().toString();
 			loss_weight = eWaste.getText().toString();
 			container_no = eContainerid.getText().toString();
 			container_no_2=eSplit_merge_container_no.getText().toString();
 			container_weight_2=eSplit_merge_container_weight.getText().toString();
 			contrain_weight = eContainerweight.getText().toString();
+			work_team_no=ework_team_no.getText().toString();
 			token = PreferencesUtils.getString(ReportActivity.this, token_key, "");
 		}
 
@@ -1113,7 +1307,8 @@ public class ReportActivity extends AppCompatActivity {
 						+ "&weight=" + weight + "&unit_weight=" + unit_weight
 						+ "&loss_weight=" + loss_weight + "&qty=" + qty + "&gross_weight=" + gross_weight
 						+ "&container_no=" + container_no + "&container_weight=" + contrain_weight+"&split_merge_type="+split_merge_item
-						+"&runcard_no_2="+runcard_no_2+"&container_no_2="+container_no_2+"&container_weight_2="+container_weight_2;
+						+"&runcard_no_2="+runcard_no_2+"&container_no_2="+container_no_2+"&container_weight_2="
+						+container_weight_2+"&weight_2="+weight_2+"&work_team_no=" + work_team_no;
 //                "login:","登录帐号","Password":"密码"
 				Print("url:::" + url);
 //                Map<String,String> mparams=new HashMap<String,String>();
@@ -1182,11 +1377,14 @@ public class ReportActivity extends AppCompatActivity {
 		@Override
 		protected void onPostExecute(final Boolean success) {
 //            showProgress(false);
-			spinner_split_merge_type.setSelection(0);
-			eSplit_merge_cardid.setText("");
-			eSplit_merge_container_no.setText("");
-			eSplit_weight.setText("");
-			eSplit_merge_container_weight.setText("");
+			if(success) {
+				spinner_split_merge_type.setSelection(0);
+				eSplit_merge_cardid.setText("");
+				eSplit_merge_container_no.setText("");
+				eSplit_weight.setText("");
+				eSplit_merge_container_weight.setText("");
+				runcardno2Arr = "";
+			}
 			reloadviewText(success,msg);
 		}
 
@@ -1326,8 +1524,9 @@ public class ReportActivity extends AppCompatActivity {
 //            showProgress(false);
 			if(success){
 				ePackagename.setError(null,null);
+				eEquipmentcode.requestFocus();
 			}else{
-				ePackagename.setError(msg);
+				textsetError(ReportActivity.this,ePackagename,msg);
 			}
 		}
 
@@ -1472,7 +1671,7 @@ public class ReportActivity extends AppCompatActivity {
               if(success){
               	eEquipmentcode.setError(null,null);
               }else{
-	              eEquipmentcode.setError(msg);
+	              textsetError(ReportActivity.this,eEquipmentcode,msg);
               }
 		}
 
@@ -1527,13 +1726,15 @@ public class ReportActivity extends AppCompatActivity {
 		String equipment_code = "";
 		String packagename="";
 		String process_status="";
-
+		String work_team_no = "";
 		int responsecode = 0;
 
 		ReportStartTask() {
 			runcard_no = eCardid.getText().toString();
 			packagename=ePackagename.getText().toString();
 			equipment_code=eEquipmentcode.getText().toString();
+
+			work_team_no=ework_team_no.getText().toString();
 			token = PreferencesUtils.getString(ReportActivity.this, token_key, "");
 		}
 
@@ -1547,7 +1748,7 @@ public class ReportActivity extends AppCompatActivity {
 						+ ":" + PreferencesUtils.getString(ReportActivity.this, port_key, "8069") +
 						IndexConstants.REPORTSTART + "?"
 						+ "token=" + token + "&runcard_no=" + runcard_no
-						+ "&equipment_code=" + equipment_code+"&packagename="+packagename;
+						+ "&equipment_code=" + equipment_code+"&packagename="+packagename+ "&work_team_no=" + work_team_no;
 //                "login:","登录帐号","Password":"密码"
 				Print("url:::" + url);
 //                Map<String,String> mparams=new HashMap<String,String>();
@@ -1621,10 +1822,18 @@ public class ReportActivity extends AppCompatActivity {
 				}else{
 					eReportstate.setText(CheckNullString(process_statusmap.get(process_status)));
 				}
-				eEquipmentcode.setError(null,null);
+
+				spinner_split_merge_type.setSelection(0);
+				eSplit_merge_cardid.setText("");
+				eSplit_merge_container_no.setText("");
+				eSplit_weight.setText("");
+				eSplit_merge_container_weight.setText("");
+				cleanAlldata();
+				eCardid.requestFocus();
 			}else{
-				eEquipmentcode.setError(msg);
+				seterrtext(msg);
 			}
+
 		}
 
 		@Override
@@ -1774,6 +1983,7 @@ public class ReportActivity extends AppCompatActivity {
 
 		@Override
 		protected void onPostExecute(final Boolean success) {
+
 			if(success){
 				changebtnstatus(process_produce_status,process_status);
 				if(process_status.equals("to_report")) {
@@ -1782,9 +1992,15 @@ public class ReportActivity extends AppCompatActivity {
 				}else{
 					eReportstate.setText(CheckNullString(process_statusmap.get(process_status)));
 				}
-				eEquipmentcode.setError(null,null);
+				spinner_split_merge_type.setSelection(0);
+				eSplit_merge_cardid.setText("");
+				eSplit_merge_container_no.setText("");
+				eSplit_weight.setText("");
+				eSplit_merge_container_weight.setText("");
+				cleanAlldata();
+				eCardid.requestFocus();
 			}else{
-				eEquipmentcode.setError(msg);
+				seterrtext(msg);
 			}
 		}
 
@@ -2776,6 +2992,11 @@ public class ReportActivity extends AppCompatActivity {
 		if (success&&ReportFormBeans!=null) {
 			Print("ReportProductBeans size::"+ReportProductBeans.size());
 			eCardid.requestFocus();
+			weightupdate=true;
+			qtyupdate=true;
+			netweightupdate=true;
+			containerupdate=true;
+			grossupdate=true;
 			if(ReportFormBeans.size()>0) {
 				eCurrentprocess.setText(CheckNullString(ReportFormBeans.get(0).process_name));
 				String process_status = ReportFormBeans.get(0).process_status;
@@ -2787,12 +3008,24 @@ public class ReportActivity extends AppCompatActivity {
 				}
 				ePackagename.setText(CheckNullString(ReportFormBeans.get(0).package_name));
 				eEquipmentcode.setText(CheckNullString(ReportFormBeans.get(0).equipment_code));
-				eContainerid.setText(CheckNullString(ReportFormBeans.get(0).container_no));
-				eContainerweight.setText(CheckNullString(ReportFormBeans.get(0).container_weight));
+				ework_team_no.setText(CheckNullString(ReportFormBeans.get(0).work_team_no));
+				if(ReportFormBeans.get(0).process_report_show_container_data.equals("true")) {
+					eContainerid.setText(CheckNullString(ReportFormBeans.get(0).container_no));
+					eContainerweight.setText(CheckNullString(ReportFormBeans.get(0).container_weight));
+				}else{
+					eContainerid.setText("");
+					eContainerweight.setText("");
+				}
 				eThousandweight.setText(CheckNullString(ReportFormBeans.get(0).unit_weight));
-				eNetweight.setText(CheckNullString(ReportFormBeans.get(0).weight));
-				eGrossweight.setText(CheckNullString(ReportFormBeans.get(0).gross_weight));
-				eReportnum.setText(CheckNullString( ReportFormBeans.get(0).qty));
+				if(ReportFormBeans.get(0).process_report_show_data.equals("true")) {
+					eNetweight.setText(CheckNullString(ReportFormBeans.get(0).weight));
+					eGrossweight.setText(CheckNullString(ReportFormBeans.get(0).gross_weight));
+					eReportnum.setText(CheckNullString(ReportFormBeans.get(0).qty));
+				}else{
+					eNetweight.setText("");
+					eGrossweight.setText("");
+					eReportnum.setText("");
+				}
 //				eSplit_merge_cardid.setText(CheckNullString( ReportFormBeans.get(0).qty));
 //				eSplit_merge_container_no.setText(CheckNullString( ReportFormBeans.get(0).qty));
 //				eSplit_merge_container_weight.setText(CheckNullString( ReportFormBeans.get(0).qty));
@@ -2832,36 +3065,60 @@ public class ReportActivity extends AppCompatActivity {
 				changebtnstatus(process_produce_status,process_status);
 
 			}else{
-				eCardid.setText("");
-				eCurrentprocess.setText("");
-				ePackagename.setText("");
-				eEquipmentcode.setText("");
-				eReportstate.setText("");
-				eContainerid.setText("");
-				eContainerweight.setText("");
-				eThousandweight.setText("");
-				eNetweight.setText("");
-				eGrossweight.setText("");
-				eReportnum.setText("");
-				eWaste.setText("");
-
-				tContainerid.setText("");
-				tContainerweight.setText("");
-				tThousandweight.setText("");
-				tNetweight.setText("");
-				tGrossweight.setText("");
-				tReportnum.setText("");
+				cleanAlldata();
 
 			}
 			refreshdatalist();
 //				}
+			weightupdate=false;
+			qtyupdate=false;
+			netweightupdate=false;
+			containerupdate=false;
+			grossupdate=false;
 		} else {
-			Errortext.setVisibility(View.VISIBLE);
-			Errortext.setText("数据错误"+msg);
+			seterrtext(msg);
 //			eReportnum.setError(msg);
 //                mPasswordView.setError(getString(R.string.error_incorrect_password));
 //                mPasswordView.requestFocus();
 		}
+	}
+	public void cleanAlldata(){
+		weightupdate=true;
+		qtyupdate=true;
+		netweightupdate=true;
+		containerupdate=true;
+		grossupdate=true;
+
+		eCardid.setText("");
+		eCurrentprocess.setText("");
+		ePackagename.setText("");
+		eEquipmentcode.setText("");
+		ework_team_no.setText("");
+		eReportstate.setText("");
+		eContainerid.setText("");
+		eContainerweight.setText("");
+		eThousandweight.setText("");
+		eNetweight.setText("");
+		eGrossweight.setText("");
+		eReportnum.setText("");
+		eWaste.setText("");
+
+		tContainerid.setText("");
+		tContainerweight.setText("");
+		tThousandweight.setText("");
+		tNetweight.setText("");
+		tGrossweight.setText("");
+		tReportnum.setText("");
+
+		weightupdate=false;
+		qtyupdate=false;
+		netweightupdate=false;
+		containerupdate=false;
+		grossupdate=false;
+	}
+	private void seterrtext(String msg){
+		Errortext.setVisibility(View.VISIBLE);
+		Errortext.setText("数据错误"+msg);
 	}
 	public void refreshdatalist(){
 		Collections.sort(ReportProductBeans,idComparator);
@@ -2884,7 +3141,23 @@ public class ReportActivity extends AppCompatActivity {
 		eEquipmentcode.setFocusableInTouchMode(status);
 		eEquipmentcode.setFocusable(status);
 	}
+	private void changeEdittextandimgstatus(EditText editText,ImageView btn,boolean status){
+		editText.setFocusableInTouchMode(status);
+		editText.setFocusable(status);
+		if(status) {
+			btn.setVisibility(View.VISIBLE);
+		}else{
+			btn.setVisibility(View.GONE);
+		}
+	}
+	private double getedittextdouble(EditText etext){
 
+		double doublevalue=0;
+		if(!etext.getText().toString().equals("")){
+			doublevalue=Double.valueOf(etext.getText().toString());
+		}
+		return doublevalue;
+	}
 	private void changebtnstatus(String process_produce_status,String process_status){
 		if(process_produce_status.equals("draft")) {
 			changePackagestatus(true);
@@ -2894,9 +3167,10 @@ public class ReportActivity extends AppCompatActivity {
 			changeEquipmentstatus(false);
 		}
 		if (process_status.equals("to_report")) {
-			if(process_produce_status.equals("start")) {
+			if(process_produce_status.equals("start")||process_produce_status.equals("suspend")) {
 				System.err.println("process_produce_status start "+process_produce_status);
 				report_submitbutton.setVisibility(View.VISIBLE);
+
 			}
 //					reportmaterialcancel_submitbutton.setVisibility(View.VISIBLE);
 			report_stopruncard_button.setVisibility(View.VISIBLE);
@@ -2914,25 +3188,40 @@ public class ReportActivity extends AppCompatActivity {
 //					reportinspectcancel_submitbutton.setVisibility(View.VISIBLE);
 		}
 
-		if(process_produce_status.equals("draft")) {
-			System.err.println("process_produce_status draft "+process_produce_status);
-			report_startbutton.setVisibility(View.VISIBLE);
-			report_pausebutton.setVisibility(View.GONE);
-		}else if(process_produce_status.equals("start")) {
-			System.err.println("process_produce_status start "+process_produce_status);
-			report_startbutton.setVisibility(View.GONE);
-			report_pausebutton.setVisibility(View.VISIBLE);
-		}else if(process_produce_status.equals("suspend")) {
-			System.err.println("process_produce_status suspend "+process_produce_status);
-			report_startbutton.setVisibility(View.VISIBLE);
-			report_pausebutton.setVisibility(View.GONE);
-		}else if(process_produce_status.equals("done")) {
-			System.err.println("process_produce_status done "+process_produce_status);
-			report_startbutton.setVisibility(View.GONE);
-			report_pausebutton.setVisibility(View.GONE);
-		}else{
-			System.err.println("process_produce_status ??? "+process_produce_status);
+		changestartbtnstatus(process_status,process_produce_status);
 
+	}
+
+	private void changestartbtnstatus(String process_status,String process_produce_status){
+		if(process_status.equals("to_report")) {
+			if (process_produce_status.equals("draft")) {
+				System.err.println("process_produce_status draft " + process_produce_status);
+				report_startbutton.setVisibility(View.VISIBLE);
+				changeEdittextandimgstatus(ework_team_no, work_teambtn, true);
+				report_pausebutton.setVisibility(View.GONE);
+			} else if (process_produce_status.equals("start")) {
+				System.err.println("process_produce_status start " + process_produce_status);
+				report_startbutton.setVisibility(View.GONE);
+				changeEdittextandimgstatus(ework_team_no, work_teambtn, true);
+				report_pausebutton.setVisibility(View.VISIBLE);
+			} else if (process_produce_status.equals("suspend")) {
+				System.err.println("process_produce_status suspend " + process_produce_status);
+				report_startbutton.setVisibility(View.GONE);
+				changeEdittextandimgstatus(ework_team_no, work_teambtn, false);
+				report_pausebutton.setVisibility(View.GONE);
+			} else if (process_produce_status.equals("done")) {
+				System.err.println("process_produce_status done " + process_produce_status);
+				report_startbutton.setVisibility(View.GONE);
+				changeEdittextandimgstatus(ework_team_no, work_teambtn, false);
+				report_pausebutton.setVisibility(View.GONE);
+			} else {
+				System.err.println("process_produce_status ??? " + process_produce_status);
+
+			}
+		}else{
+			report_startbutton.setVisibility(View.GONE);
+			changeEdittextandimgstatus(ework_team_no, work_teambtn, false);
+			report_pausebutton.setVisibility(View.GONE);
 		}
 	}
 	@Override
@@ -2951,6 +3240,9 @@ public class ReportActivity extends AppCompatActivity {
 			}
 			if (ePackagename.isFocused()) {
 				ePackagename.setText("");
+			}
+			if (ework_team_no.isFocused()) {
+				ework_team_no.setText("");
 			}
 		}
 		return super.onKeyDown(keyCode, event);

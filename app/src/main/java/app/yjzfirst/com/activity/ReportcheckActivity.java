@@ -56,6 +56,7 @@ public class ReportcheckActivity extends AppCompatActivity {
 	private CheckCardidTask mCheckTask = null;
 	EditText eCardid;
 	EditText ePackagename;
+	EditText ework_team_no;
 	EditText eEquipmentcode;
 	EditText eCurrentprocess;
 	EditText eReportstate;
@@ -106,7 +107,7 @@ public class ReportcheckActivity extends AppCompatActivity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_report);
+		setContentView(R.layout.activity_report_check);
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
 
 			Window window = ReportcheckActivity.this.getWindow();
@@ -134,10 +135,17 @@ public class ReportcheckActivity extends AppCompatActivity {
 		package_name_layout.setVisibility(View.VISIBLE);
 		LinearLayout equipment_code_layout= (LinearLayout) findViewById(R.id.equipment_code_layout);
 		equipment_code_layout.setVisibility(View.VISIBLE);
+		LinearLayout work_team_layout= (LinearLayout) findViewById(R.id.work_team_layout);
+		work_team_layout.setVisibility(View.VISIBLE);
+		ework_team_no= (EditText) findViewById(R.id.edit_work_team_no);
+		changeEditTextstatus(ework_team_no,false);
 		ePackagename = (EditText) findViewById(R.id.edittext_package_name);
-		changePackagestatus(false);
+		changeEditTextstatus(ePackagename,false);
 		eEquipmentcode = (EditText) findViewById(R.id.edittext_equipment_code);
-		changeEquipmentstatus(false);
+		changeEditTextstatus(eEquipmentcode,false);
+
+		ImageView work_teambtn = (ImageView) findViewById(R.id.work_team_no_button);
+		work_teambtn.setVisibility(View.GONE);
 
 		ImageView ePackagenamebtn = (ImageView) findViewById(R.id.report_package_name_button);
 		ePackagenamebtn.setVisibility(View.GONE);
@@ -154,23 +162,23 @@ public class ReportcheckActivity extends AppCompatActivity {
 		eReportstate.setFocusableInTouchMode(false);//不可编辑
 		eReportstate.setFocusable(false);//不可编辑
 //        mchecklibrarynumber.addTextChangedListener(shipsWatcher);
-		eContainerid = (EditText) findViewById(R.id.edittext_container_id);
-		eContainerid.setVisibility(View.INVISIBLE);
-		eContainerweight = (EditText) findViewById(R.id.edittext_container_weight);
-		eContainerweight.setVisibility(View.INVISIBLE);
+//		eContainerid = (EditText) findViewById(R.id.edittext_container_id);
+//		eContainerid.setVisibility(View.INVISIBLE);
+//		eContainerweight = (EditText) findViewById(R.id.edittext_container_weight);
+//		eContainerweight.setVisibility(View.INVISIBLE);
 //        mcheckNumberperbox.addTextChangedListener(shipsWatcher);
-		eThousandweight = (EditText) findViewById(R.id.edit_thousand_weight);
-		eThousandweight.setVisibility(View.INVISIBLE);
+//		eThousandweight = (EditText) findViewById(R.id.edit_thousand_weight);
+//		eThousandweight.setVisibility(View.INVISIBLE);
 //        mchecknumboxes.addTextChangedListener(shipsWatcher);
-		eNetweight = (EditText) findViewById(R.id.edit_net_weight);
-		eNetweight.setVisibility(View.INVISIBLE);
-		eWaste = (EditText) findViewById(R.id.edit_waste);
-		LinearLayout wastelayout=(LinearLayout) findViewById(R.id.report_waste_layout);
-		wastelayout.setVisibility(View.GONE);
-		eGrossweight = (EditText) findViewById(R.id.edit_gross_weight);
-		eGrossweight.setVisibility(View.INVISIBLE);
-		eReportnum = (EditText) findViewById(R.id.edit_report_num);
-		eReportnum.setVisibility(View.INVISIBLE);
+//		eNetweight = (EditText) findViewById(R.id.edit_net_weight);
+//		eNetweight.setVisibility(View.INVISIBLE);
+//		eWaste = (EditText) findViewById(R.id.edit_waste);
+//		LinearLayout wastelayout=(LinearLayout) findViewById(R.id.report_waste_layout);
+//		wastelayout.setVisibility(View.GONE);
+//		eGrossweight = (EditText) findViewById(R.id.edit_gross_weight);
+//		eGrossweight.setVisibility(View.INVISIBLE);
+//		eReportnum = (EditText) findViewById(R.id.edit_report_num);
+//		eReportnum.setVisibility(View.INVISIBLE);
 		eSplit_merge_cardid= (EditText) findViewById(R.id.edit_split_merge_cardid);
 		eSplit_merge_container_no= (EditText) findViewById(R.id.edit_split_merge_container_no);
 		eSplit_merge_container_weight= (EditText) findViewById(R.id.edit_split_merge_container_weight);
@@ -337,250 +345,6 @@ public class ReportcheckActivity extends AppCompatActivity {
 
 	public void addTextWatcher(){
 
-		eNetweight.addTextChangedListener(new TextWatcher() {
-			@Override
-			public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-			}
-
-			@Override
-			public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-			}
-
-			@Override
-			public void afterTextChanged(Editable s) {
-//				if (!eContainerweight.getText().toString().equals("")
-//						&& !eNetweight.getText().toString().equals("")) {
-//					eGrossweight.setText(Double.valueOf(eContainerweight.getText().toString())
-//							+ Double.valueOf(eNetweight.getText().toString()) + "");
-//				}
-				if(!qtyupdate) {
-					qtyupdate=true;
-					if (!eNetweight.getText().toString().equals("")
-							&& !eThousandweight.getText().toString().equals("")
-							&& !eNetweight.getText().toString().equals("null")
-							&& !eThousandweight.getText().toString().equals("null")
-							&& Double.valueOf(eThousandweight.getText().toString())>0
-							&& ReportFormBeans != null && ReportFormBeans.size() > 0
-							&& !ReportFormBeans.get(0).factor.equals("")) {
-						double tempnum =0;
-						try {
-							tempnum=Double.valueOf(eNetweight.getText().toString()) /
-									Double.valueOf(eThousandweight.getText().toString()) *
-									Double.valueOf(ReportFormBeans.get(0).factor);
-						}catch (Exception e){
-
-						}
-						BigDecimal bg = new BigDecimal(tempnum);
-						double num = bg.setScale(3, BigDecimal.ROUND_HALF_UP).doubleValue();
-						eReportnum.setText(num + "");
-//						Util.showShortToastMessage(ReportActivity.this,"eReportnum"+num);
-						weightupdate=true;
-					}
-
-
-//					if (!eNetweight.getText().toString().equals("")
-//							&& !eContainerweight.getText().toString().equals("")
-//							&& !eNetweight.getText().toString().equals("null")
-//							&& !eContainerweight.getText().toString().equals("null")
-//							&& Double.valueOf(eContainerweight.getText().toString())>0) {
-//						double tempnum =0;
-//						try {
-//							tempnum=Double.valueOf(eNetweight.getText().toString()) +
-//									Double.valueOf(eContainerweight.getText().toString());
-//						}catch (Exception e){
-//                             e.printStackTrace();
-//						}
-//						BigDecimal bg = new BigDecimal(tempnum);
-//						double num = bg.setScale(3, BigDecimal.ROUND_HALF_UP).doubleValue();
-//						eGrossweight.setText(num + "");
-////						Util.showShortToastMessage(ReportActivity.this,"eReportnum"+num);
-//					}
-				}
-				qtyupdate=false;
-
-			}
-		});
-		eReportnum.addTextChangedListener(new TextWatcher() {
-			@Override
-			public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-			}
-
-			@Override
-			public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-			}
-
-			@Override
-			public void afterTextChanged(Editable s) {
-				if(!weightupdate) {
-					weightupdate=true;
-					if (!eReportnum.getText().toString().equals("")
-							&& !eThousandweight.getText().toString().equals("")
-							&&!eReportnum.getText().toString().equals("null")
-							&& !eThousandweight.getText().toString().equals("null")
-							&& ReportFormBeans != null && ReportFormBeans.size() > 0
-							&& !ReportFormBeans.get(0).factor.equals("")) {
-						double tempnum =0;
-						try {
-							tempnum=Double.valueOf(eReportnum.getText().toString()) *
-									Double.valueOf(eThousandweight.getText().toString()) /
-									Double.valueOf(ReportFormBeans.get(0).factor);
-						}catch (Exception e){
-
-						}
-						BigDecimal bg = new BigDecimal(tempnum);
-						double num = bg.setScale(3, BigDecimal.ROUND_HALF_UP).doubleValue();
-						eNetweight.setText(num + "");
-//						Util.showShortToastMessage(ReportActivity.this,"eNetweight"+num);
-						qtyupdate=true;
-					}
-				}
-				weightupdate=false;
-			}
-		});
-		eThousandweight.addTextChangedListener(new TextWatcher() {
-			@Override
-			public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-			}
-
-			@Override
-			public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-			}
-
-			@Override
-			public void afterTextChanged(Editable s) {
-				if(!weightupdate) {
-					weightupdate=true;
-					if (!eReportnum.getText().toString().equals("")
-							&& !eThousandweight.getText().toString().equals("")
-							&&!eReportnum.getText().toString().equals("null")
-							&& !eThousandweight.getText().toString().equals("null")
-							&& ReportFormBeans != null && ReportFormBeans.size() > 0
-							&& !ReportFormBeans.get(0).factor.equals("")) {
-						double tempnum =0;
-						try {
-							tempnum=Double.valueOf(eReportnum.getText().toString()) *
-									Double.valueOf(eThousandweight.getText().toString()) /
-									Double.valueOf(ReportFormBeans.get(0).factor);
-						}catch (Exception e){
-
-						}
-						BigDecimal bg = new BigDecimal(tempnum);
-						double num = bg.setScale(3, BigDecimal.ROUND_HALF_UP).doubleValue();
-						eNetweight.setText(num + "");
-//						Util.showShortToastMessage(ReportActivity.this,"eNetweight"+num);
-						qtyupdate=true;
-					}
-				}
-				weightupdate=false;
-
-				if(!qtyupdate) {
-					qtyupdate=true;
-					if (!eNetweight.getText().toString().equals("")
-							&& !eThousandweight.getText().toString().equals("")
-							&& !eNetweight.getText().toString().equals("null")
-							&& !eThousandweight.getText().toString().equals("null")
-							&& Double.valueOf(eThousandweight.getText().toString())>0
-							&& ReportFormBeans != null && ReportFormBeans.size() > 0
-							&& !ReportFormBeans.get(0).factor.equals("")) {
-						double tempnum =0;
-						try {
-							tempnum=Double.valueOf(eNetweight.getText().toString()) /
-									Double.valueOf(eThousandweight.getText().toString()) *
-									Double.valueOf(ReportFormBeans.get(0).factor);
-						}catch (Exception e){
-
-						}
-						BigDecimal bg = new BigDecimal(tempnum);
-						double num = bg.setScale(3, BigDecimal.ROUND_HALF_UP).doubleValue();
-						eReportnum.setText(num + "");
-//						Util.showShortToastMessage(ReportActivity.this,"eReportnum"+num);
-						weightupdate=true;
-					}
-				}
-			}
-		});
-		eGrossweight.addTextChangedListener(new TextWatcher() {
-			@Override
-			public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-			}
-
-			@Override
-			public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-			}
-
-			@Override
-			public void afterTextChanged(Editable s) {
-				if(!grossupdate) {
-					grossupdate=true;
-					if (!eGrossweight.getText().toString().equals("")
-							&& !eContainerweight.getText().toString().equals("")
-							&&!eGrossweight.getText().toString().equals("null")
-							&& !eContainerweight.getText().toString().equals("null")) {
-						double tempnum =0;
-						try {
-							tempnum=Double.valueOf(eGrossweight.getText().toString()) -
-									Double.valueOf(eContainerweight.getText().toString()) ;
-						}catch (Exception e){
-
-						}
-//						BigDecimal bg = new BigDecimal(tempnum);
-//						double num = bg.setScale(3, BigDecimal.ROUND_HALF_UP).doubleValue();
-						eNetweight.setText(tempnum + "");
-//						Util.showShortToastMessage(ReportActivity.this,"grossupdate"+tempnum);
-						containerupdate=true;
-					}
-				}
-				grossupdate=false;
-
-			}
-		});
-		eContainerweight.addTextChangedListener(new TextWatcher() {
-			@Override
-			public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-			}
-
-			@Override
-			public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-			}
-
-			@Override
-			public void afterTextChanged(Editable s) {
-				if(!containerupdate) {
-					containerupdate=true;
-					if (!eGrossweight.getText().toString().equals("")
-							&& !eContainerweight.getText().toString().equals("")
-							&&!eGrossweight.getText().toString().equals("null")
-							&& !eContainerweight.getText().toString().equals("null")) {
-						double tempnum =0;
-						try {
-							tempnum=Double.valueOf(eGrossweight.getText().toString()) -
-									Double.valueOf(eContainerweight.getText().toString()) ;
-						}catch (Exception e){
-
-						}
-//						BigDecimal bg = new BigDecimal(tempnum);
-//						double num = bg.setScale(3, BigDecimal.ROUND_HALF_UP).doubleValue();
-						eNetweight.setText(tempnum + "");
-//						Util.showShortToastMessage(ReportActivity.this,"contaierupdate"+tempnum);
-						grossupdate=true;
-					}
-				}
-				containerupdate=false;
-
-
-
-			}
-		});
 		eCardid.addTextChangedListener(new TextWatcher() {
 			@Override
 			public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -641,7 +405,7 @@ public class ReportcheckActivity extends AppCompatActivity {
 //            // There was an error; don't attempt login and focus the first
 //            // form field with an error.
 //            focusView.requestFocus();
-			Util.showToastMessage(ReportcheckActivity.this, "请先扫描所有条目");
+//			Util.showToastMessage(ReportcheckActivity.this, "请先扫描所有条目");
 		} else {
 //            // Show a progress spinner, and kick off a background task to
 //            // perform the user login attempt.
@@ -1757,9 +1521,11 @@ public class ReportcheckActivity extends AppCompatActivity {
 //                conn.getOutputStream().write(data);
 
 				responsecode = conn.getResponseCode();
+				Print(" ng return respondcode:::" + responsecode);
 				if (responsecode == 200) {
 					InputStream ins = conn.getInputStream();
 					JSONObject rootjsonObject = parseJson(ins);
+					Print(" ng return rootjsonObject:::" + rootjsonObject);
 					JSONObject jsonObject = null;
 					if (rootjsonObject != null) {
 						jsonObject = rootjsonObject.getJSONArray("results").getJSONObject(0);
@@ -2015,16 +1781,17 @@ public class ReportcheckActivity extends AppCompatActivity {
 			eCardid.requestFocus();
 			if(ReportFormBeans.size()>0) {
 				eCurrentprocess.setText(CheckNullString(ReportFormBeans.get(0).process_name));
+				ework_team_no.setText(CheckNullString(ReportFormBeans.get(0).work_team_no));
 				ePackagename.setText(CheckNullString(ReportFormBeans.get(0).package_name));
 				eEquipmentcode.setText(CheckNullString(ReportFormBeans.get(0).equipment_code));
 				String process_status = ReportFormBeans.get(0).process_status;
 				eReportstate.setText(CheckNullString(process_statusmap.get(process_status)));
-				eContainerid.setText(CheckNullString(ReportFormBeans.get(0).container_no));
-				eContainerweight.setText(CheckNullString(ReportFormBeans.get(0).container_weight));
-				eThousandweight.setText(CheckNullString(ReportFormBeans.get(0).unit_weight));
-				eNetweight.setText(CheckNullString(ReportFormBeans.get(0).weight));
-				eGrossweight.setText(CheckNullString(ReportFormBeans.get(0).gross_weight));
-				eReportnum.setText(CheckNullString( ReportFormBeans.get(0).qty));
+//				eContainerid.setText(CheckNullString(ReportFormBeans.get(0).container_no));
+//				eContainerweight.setText(CheckNullString(ReportFormBeans.get(0).container_weight));
+//				eThousandweight.setText(CheckNullString(ReportFormBeans.get(0).unit_weight));
+//				eNetweight.setText(CheckNullString(ReportFormBeans.get(0).weight));
+//				eGrossweight.setText(CheckNullString(ReportFormBeans.get(0).gross_weight));
+//				eReportnum.setText(CheckNullString( ReportFormBeans.get(0).qty));
 //				eSplit_merge_cardid.setText(CheckNullString( ReportFormBeans.get(0).qty));
 //				eSplit_merge_container_no.setText(CheckNullString( ReportFormBeans.get(0).qty));
 //				eSplit_merge_container_weight.setText(CheckNullString( ReportFormBeans.get(0).qty));
@@ -2081,17 +1848,18 @@ public class ReportcheckActivity extends AppCompatActivity {
 				}
 			}else{
 				eCardid.setText("");
+				ework_team_no.setText("");
 				ePackagename.setText("");
 				eEquipmentcode.setText("");
 				eCurrentprocess.setText("");
 				eReportstate.setText("");
-				eContainerid.setText("");
-				eContainerweight.setText("");
-				eThousandweight.setText("");
-				eNetweight.setText("");
-				eGrossweight.setText("");
-				eReportnum.setText("");
-				eWaste.setText("");
+//				eContainerid.setText("");
+//				eContainerweight.setText("");
+//				eThousandweight.setText("");
+//				eNetweight.setText("");
+//				eGrossweight.setText("");
+//				eReportnum.setText("");
+//				eWaste.setText("");
 
 				tContainerid.setText("");
 				tContainerweight.setText("");
@@ -2123,13 +1891,17 @@ public class ReportcheckActivity extends AppCompatActivity {
 			return (Integer.compare(Integer.parseInt(((ReportProductBean) o1).sequence), Integer.parseInt(((ReportProductBean) o2).sequence)));
 		}
 	};
-	private void changePackagestatus(boolean status){
-		ePackagename.setFocusableInTouchMode(status);
-		ePackagename.setFocusable(status);
-	}
-	private void changeEquipmentstatus(boolean status){
-		eEquipmentcode.setFocusableInTouchMode(status);
-		eEquipmentcode.setFocusable(status);
+//	private void changePackagestatus(boolean status){
+//		ePackagename.setFocusableInTouchMode(status);
+//		ePackagename.setFocusable(status);
+//	}
+//	private void changeEquipmentstatus(boolean status){
+//		eEquipmentcode.setFocusableInTouchMode(status);
+//		eEquipmentcode.setFocusable(status);
+//	}
+	private void changeEditTextstatus(EditText etext,boolean status){
+		etext.setFocusableInTouchMode(status);
+		etext.setFocusable(status);
 	}
 	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event) {

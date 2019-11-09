@@ -14,7 +14,7 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.ListView;
-import android.widget.TextView;
+import android.widget.EditText;
 
 import com.google.gson.Gson;
 import com.yjzfirst.adapter.ProductmaterialAdapter;
@@ -55,21 +55,21 @@ public class CheckproductMaterialActivity extends AppCompatActivity {
     EditText eorderid;
     EditText epackagename;
 
-    TextView tproduction_name;
-    TextView tprocess_name;
-    TextView tdate;
-    TextView tstate;
+    EditText tproduction_name;
+    EditText tprocess_name;
+    EditText tdate;
+    EditText tstate;
 
-    TextView tbrand_name;
-    TextView tsupplier_lot_no;
-    TextView tlot_no;
-    TextView tfurnace_no;
-    TextView tmaterial_name;
-    TextView tdiameter;
-    TextView tproduct_code;
-    TextView tlocation_barcode;
-    TextView tqty;
-    TextView tpackagenum;
+    EditText tbrand_name;
+    EditText tsupplier_lot_no;
+    EditText tlot_no;
+    EditText tfurnace_no;
+    EditText tmaterial_name;
+    EditText tdiameter;
+    EditText tproduct_code;
+    EditText tlocation_barcode;
+    EditText tqty;
+    EditText tpackagenum;
     ListView mSimpleDetailList;
     ProductmaterialAdapter mAdapter;
     String lastproduct_content = "";
@@ -112,21 +112,36 @@ public class CheckproductMaterialActivity extends AppCompatActivity {
 
         epackagename = (EditText) findViewById(R.id.material_package_name_edittext);
 
-         tproduction_name = (TextView) findViewById(R.id.material_product_plan_text);;
-         tprocess_name = (TextView) findViewById(R.id.material_process_name_text);
-         tdate= (TextView) findViewById(R.id.material_orderdate_text);
-         tstate= (TextView) findViewById(R.id.material_state_text);
+         tproduction_name = (EditText) findViewById(R.id.material_product_plan_text);;
+         tprocess_name = (EditText) findViewById(R.id.material_process_name_text);
+         tdate= (EditText) findViewById(R.id.material_orderdate_text);
+         tstate= (EditText) findViewById(R.id.material_state_text);
 
-         tbrand_name= (TextView) findViewById(R.id.material_branname_text);
-         tsupplier_lot_no= (TextView) findViewById(R.id.material_supplier_code_text);
-         tlot_no= (TextView) findViewById(R.id.material_lotno_text);
-         tfurnace_no= (TextView) findViewById(R.id.material_furnace_no_text);
-         tmaterial_name= (TextView) findViewById(R.id.material_name_text);
-         tdiameter= (TextView) findViewById(R.id.material_diameter_text);
-         tproduct_code= (TextView) findViewById(R.id.material_productcode_text);
-         tlocation_barcode= (TextView) findViewById(R.id.material_locationbarcode_text);
-         tqty= (TextView) findViewById(R.id.material_packageqty_text);
-         tpackagenum= (TextView) findViewById(R.id.material_packagenum_text);
+         tbrand_name= (EditText) findViewById(R.id.material_branname_text);
+         tsupplier_lot_no= (EditText) findViewById(R.id.material_supplier_code_text);
+         tlot_no= (EditText) findViewById(R.id.material_lotno_text);
+         tfurnace_no= (EditText) findViewById(R.id.material_furnace_no_text);
+         tmaterial_name= (EditText) findViewById(R.id.material_name_text);
+         tdiameter= (EditText) findViewById(R.id.material_diameter_text);
+         tproduct_code= (EditText) findViewById(R.id.material_productcode_text);
+         tlocation_barcode= (EditText) findViewById(R.id.material_locationbarcode_text);
+         tqty= (EditText) findViewById(R.id.material_packageqty_text);
+         tpackagenum= (EditText) findViewById(R.id.material_packagenum_text);
+        seteditstate(tproduction_name,false);
+        seteditstate(tprocess_name,false);
+        seteditstate(tdate,false);
+        seteditstate(tstate,false);
+        seteditstate(tbrand_name,false);
+        seteditstate(tsupplier_lot_no,false);
+        seteditstate(tlot_no,false);
+        seteditstate(tfurnace_no,false);
+        seteditstate(tmaterial_name,false);
+        seteditstate(tdiameter,false);
+        seteditstate(tproduct_code,false);
+        seteditstate(tlocation_barcode,false);
+        seteditstate(tqty,false);
+        seteditstate(tpackagenum,false);
+
          addTextWatcher();
 
         mSimpleDetailList = (ListView) findViewById(R.id.inventory_infolist);
@@ -134,6 +149,10 @@ public class CheckproductMaterialActivity extends AppCompatActivity {
 
     }
 
+    public void seteditstate(EditText edittext,boolean editable){
+        edittext.setFocusable(editable);
+        edittext.setFocusableInTouchMode(editable);
+    }
     public void refreshdatalist() {
         Collections.sort(productBeans, idComparator);
         mAdapter = new ProductmaterialAdapter(CheckproductMaterialActivity.this, productBeans);
@@ -284,10 +303,10 @@ public class CheckproductMaterialActivity extends AppCompatActivity {
 
 //         tproduction_name.setText("");
 //         tprocess_name.setText("");
-         tdate.setText("");
+//         tdate.setText("");
 //         tstate.setText("");
 
-//         tbrand_name.setText("");
+         tbrand_name.setText("");
          tsupplier_lot_no.setText("");
          tlot_no.setText("");
          tfurnace_no.setText("");
@@ -301,12 +320,7 @@ public class CheckproductMaterialActivity extends AppCompatActivity {
 
     private void canclePackagedata() {
 
-//        epackagename.setText("");
-
-//         tproduction_name.setText("");
-//         tprocess_name.setText("");
-//        tdate.setText("");
-//         tstate.setText("");
+        epackagename.setText("");
 
         tbrand_name.setText("");
         tsupplier_lot_no.setText("");

@@ -106,13 +106,12 @@ public class EntryWarehouseActivity extends AppCompatActivity {
 
 		}
 		mentryorderid = (EditText) findViewById(R.id.entryform_orderid);
-
-//        mentrybatchnumber.addTextChangedListener(shipsWatcher);
+//      mentrybatchnumber.addTextChangedListener(shipsWatcher);
 		mentrywarenumber = (EditText) findViewById(R.id.entryform_warehouse_code);
 		mentrybarcode = (EditText) findViewById(R.id.entryform_bar_code);
-//        mentrybarcode.addTextChangedListener(shipsWatcher);
+//      mentrybarcode.addTextChangedListener(shipsWatcher);
 		mentryOrdernumber = (EditText) findViewById(R.id.entryform_order_number);
-//        mentrylibrarynumber.addTextChangedListener(shipsWatcher);
+//      mentrylibrarynumber.addTextChangedListener(shipsWatcher);
 		mentryNumberperbox = (EditText) findViewById(R.id.entryform_Number_per_box);
 		mentryNumberperbox.setFocusable(false);
 		mentryNumberperbox.setFocusableInTouchMode(false);
@@ -227,7 +226,6 @@ public class EntryWarehouseActivity extends AppCompatActivity {
 		}else if(view.getId() == R.id.entryform_canclescan){
 			cancleALLdata();
 			EntryProductinfoBeans = new ArrayList<EntryProductinfoBean>();
-			defaultloccheckbox.setChecked(false);
 		}else if(view.getId() == R.id.entryform_submit_button){
 			if(!mentryorderid.getText().toString().equals("")) {
 				SubmitOrderTask submitorderTask = new SubmitOrderTask();
@@ -318,6 +316,16 @@ public class EntryWarehouseActivity extends AppCompatActivity {
 		Productcontent="";
 		productinfomap
 				=new HashMap<String, HashMap<String,EntryProductBean>>();
+		boxesnum=new ArrayList<Map<String,String>>();
+	}
+
+	private void resetdata(){
+		locationmap = new HashMap<String, String>();
+		productinfomap
+				=new HashMap<String, HashMap<String,EntryProductBean>>();
+		EntryProductinfoBeans = new ArrayList<EntryProductinfoBean>();
+		//    private CheckCodeTask mentryTask = null;
+		boxnum=0;
 		boxesnum=new ArrayList<Map<String,String>>();
 	}
 
@@ -633,6 +641,7 @@ public class EntryWarehouseActivity extends AppCompatActivity {
 //			reloadviewText(success,msg);
 			Util.showShortToastMessage(EntryWarehouseActivity.this,msg);
 			if(success) {
+				cancleALLdata();
 				mentrybarcode.requestFocus();
 				mentryorderid.setError(null,null);
 				if(use_default_location.equals("true")){
@@ -981,12 +990,19 @@ public class EntryWarehouseActivity extends AppCompatActivity {
 		String isfinal = "false";
 		String msg = "";
 		String content="";
+		boolean checkbox=false;
 		int responsecode = 0;
 		SimpleDateFormat sdf = new SimpleDateFormat(
 				"yyyy-MM-dd");
 		AddOrderidTask(String content) {
 			orderid=mentryorderid.getText().toString();
 			date=sdf.format(System.currentTimeMillis());
+			checkbox=defaultloccheckbox.isChecked();
+			if(checkbox){
+				use_default_location="true";
+			}else{
+				use_default_location="false";
+			}
 			location_barcode=mentrywarenumber.getText().toString();
 			////data={"(产品id, 包装数量, 包装方案id, 批号合并名称, 序列号名称, 包装条码id)":{"qty":7000, "box_qty":10},}
 			String[] workorderinfo=content.split(",");

@@ -7,16 +7,23 @@ import android.os.Bundle;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
 import com.yjzfirst.util.PreferencesUtils;
+import com.yjzfirst.util.UserLogout;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
+import java.util.concurrent.Executors;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -73,40 +80,49 @@ public class MainActivity extends AppCompatActivity {
 
             //window.setNavigationBarColor(activity.getResources().getColor(colorResId));
         }
-        String rights= PreferencesUtils.getString(MainActivity.this,rights_key,"rights");
-        int coloumn=7;
-        if(!rights.contains("group_app_mrp_finish_in")){
+        String rightstring= PreferencesUtils.getString(MainActivity.this,rights_key,"rights");
+        int coloumn=9;
+        String[] rights=rightstring.replace("[","")
+                .replace("]","").replace("\"","").split(",");
+        ArrayList<String> right = new ArrayList<String>(Arrays.asList(rights));
+        System.out.println(right.contains("group_app_mrp_material_picking")+" "+right.size()+right.get(0));
+        if (!right.contains("group_app_mrp_finish_in")) {
             entry_main.setVisibility(View.GONE);
-            coloumn=coloumn-1;
+            coloumn = coloumn - 1;
         }
-        if(!rights.contains("group_app_mrp_finish_in_confirm")){
+        if (!right.contains("group_app_mrp_finish_in_confirm")) {
             entry_main_warehouse.setVisibility(View.GONE);
-            coloumn=coloumn-1;
+            coloumn = coloumn - 1;
         }
-        if(!rights.contains("group_app_sales_delivery")){
+        if (!right.contains("group_app_sales_delivery")) {
             delivery_main.setVisibility(View.GONE);
-            coloumn=coloumn-1;
+            coloumn = coloumn - 1;
         }
-        if(!rights.contains("group_app_mrp_move")){
+        if (!right.contains("group_app_mrp_move")) {
             report_check_main.setVisibility(View.GONE);
-            coloumn=coloumn-1;
+            coloumn = coloumn - 1;
         }
-        if(!rights.contains("group_app_mrp_material")){
+        if (!right.contains("group_app_mrp_material")) {
             report_check_main_material.setVisibility(View.GONE);
-            coloumn=coloumn-1;
+            coloumn = coloumn - 1;
         }
-        if(!rights.contains("group_app_mrp_inspect")){
+        if (!right.contains("group_app_mrp_inspect")) {
             report_check_main_inspect.setVisibility(View.GONE);
-            coloumn=coloumn-1;
+            coloumn = coloumn - 1;
         }
-        if(!rights.contains("group_app_inventory_query")){
+        if (!right.contains("group_app_inventory_query")) {
             Search_inventory_main.setVisibility(View.GONE);
-            coloumn=coloumn-1;
+            coloumn = coloumn - 1;
         }
-        if(!rights.contains("group_app_manufacture_query")){
+        if (!right.contains("group_app_manufacture_query")) {
             manufacture_main.setVisibility(View.GONE);
-            coloumn=coloumn-1;
+            coloumn = coloumn - 1;
         }
+        if (!right.contains("group_app_mrp_material_picking")) {
+            material_Check_main_content.setVisibility(View.GONE);
+            coloumn = coloumn - 1;
+        }
+
         if(coloumn<=2) {
             report_check_main_material_content.setVisibility(View.INVISIBLE);
             report_check_main_content.setVisibility(View.INVISIBLE);
@@ -116,19 +132,6 @@ public class MainActivity extends AppCompatActivity {
         }
 
 
-        SimpleDateFormat sdf = new SimpleDateFormat(
-                "yyyyMMdd");
-        Date nowdate=new Date();
-        Date expiredate=new Date();
-        try {
-            expiredate=sdf.parse("20191101");
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-        if(nowdate.after(expiredate)){
-            finish();
-            System.exit(0);
-        }
         //"group_app_mrp_finish_in","group_app_mrp_finish_in_confirm","group_app_mrp_move","group_app_sales_delivery"
     }
 
@@ -162,4 +165,35 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    long exitTime=0;
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        System.out.println("LoginActivity 按两次退出。");
+        if (keyCode == KeyEvent.KEYCODE_BACK
+                && event.getAction() == KeyEvent.ACTION_DOWN) {
+
+            if ((System.currentTimeMillis() - exitTime) > 2000) {
+                Toast.makeText(getApplicationContext(), /* "再按退出程序" */
+                        getResources().getString(R.string.tap_twice_to_exit),
+                        Toast.LENGTH_SHORT).show();
+                exitTime = System.currentTimeMillis();
+            } else {
+                UserLogout thread = null;
+                thread = new UserLogout(MainActivity.this);
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+                    // print("MoreActivity 》 Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB");
+                    thread.executeOnExecutor(
+                            Executors.newCachedThreadPool(),
+                            new String[0]);
+                } else {
+                    thread.execute();
+                }
+                finish();
+                System.exit(0);
+            }
+
+            return true;
+        }
+        return super.onKeyDown(keyCode, event);
+    }
 }

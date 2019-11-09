@@ -21,12 +21,15 @@ public class ReportFormBean {
 	public String process_produce_status;//生产状态
 	public String package_name;//卷号
 	public String equipment_code;//设备号
+	public String work_team_no;//报工班组
 	public String unit_weight ;// null,#千支重
 	public String process_status ;// "to_report",#状态
 	public String qty ;// null,#数量
 	public String weight ;// null, #重量
 	public String gross_weight ;// 毛重
 	public String factor ;// 1000,#转换率
+	public String process_report_show_data ;
+	public String process_report_show_container_data ;
 	public String line_data ;// [#明细数据
 
 //	{

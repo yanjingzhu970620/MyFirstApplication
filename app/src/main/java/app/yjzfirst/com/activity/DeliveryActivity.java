@@ -960,6 +960,7 @@ public class DeliveryActivity extends AppCompatActivity {
                                 maploc.put("location_code", location_code);
                                 System.err.println("checkbox checkdefault loc true");
                                 locationmap.put(library_num, map);
+                                librarymap.put(lastproduct_content, library_num);
                             }
 
                             productinfomap.put(content, map);

@@ -16,11 +16,9 @@
 
         <TextView
             android:id="@+id/text_barcode"
-            android:layout_width="0dp"
-            android:layout_weight="1"
+            android:layout_width="40dp"
             android:layout_height="wrap_content"
-            android:gravity="right"
-            android:layout_marginEnd="5dp"
+            android:gravity="center"
             android:textColor="#000000"
             android:textSize="16sp" />
 
@@ -29,7 +27,7 @@
             android:layout_width="0dp"
             android:layout_weight="1"
             android:layout_height="wrap_content"
-            android:gravity="left"
+            android:gravity="center"
             android:textColor="#000000"
             android:textSize="16sp" />
 
@@ -38,7 +36,7 @@
             android:layout_width="0dp"
             android:layout_weight="1"
             android:layout_height="wrap_content"
-            android:gravity="right"
+            android:gravity="center"
             android:textColor="#000000"
             android:textSize="16sp" />
 
@@ -47,14 +45,13 @@
             android:layout_width="0dp"
             android:layout_weight="1"
             android:layout_height="wrap_content"
-            android:gravity="right"
+            android:gravity="center"
             android:textColor="#000000"
             android:textSize="16sp" />
         <TextView
             android:id="@+id/listtext_weight"
             android:layout_width="0dp"
             android:layout_weight="1"
-            android:visibility="gone"
             android:layout_height="wrap_content"
             android:gravity="center"
             android:textColor="#000000"
@@ -63,7 +60,6 @@
             android:id="@+id/text_box_ware"
             android:layout_width="0dp"
             android:layout_weight="1"
-            android:visibility="gone"
             android:layout_height="wrap_content"
             android:gravity="center"
             android:textColor="#000000"
@@ -72,7 +68,6 @@
             android:id="@+id/text_numbers"
             android:layout_width="0dp"
             android:layout_weight="1"
-            android:visibility="gone"
             android:layout_height="wrap_content"
             android:gravity="center"
             android:textColor="#000000"

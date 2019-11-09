@@ -78,7 +78,7 @@ public class EntrydetailAdapter extends BaseAdapter {
 	public View getView(int position, View convertView, ViewGroup parent) {
 		// TODO Auto-generated method stub
 		convertView = LayoutInflater.from(context).inflate(
-				R.layout.item_simple_detail, null);
+				R.layout.entry_detail, null);
 		TextView barcode = (TextView) convertView
 				.findViewById(R.id.text_barcode);
 		TextView product_pecification = (TextView) convertView

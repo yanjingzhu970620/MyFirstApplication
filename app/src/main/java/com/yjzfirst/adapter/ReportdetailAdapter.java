@@ -76,7 +76,7 @@ public class ReportdetailAdapter extends BaseAdapter {
 	public View getView(int position, View convertView, ViewGroup parent) {
 		// TODO Auto-generated method stub
 		convertView = LayoutInflater.from(context).inflate(
-				R.layout.item_simple_detail, null);
+				R.layout.report_detail, null);
 		TextView barcode = (TextView) convertView
 				.findViewById(R.id.text_barcode);
 		TextView product_pecification = (TextView) convertView
@@ -85,9 +85,9 @@ public class ReportdetailAdapter extends BaseAdapter {
 				.findViewById(R.id.text_number_applications);
 		TextView number_of_boxes = (TextView) convertView
 				.findViewById(R.id.text_number_of_boxes);
-		TextView numbers = (TextView) convertView
-				.findViewById(R.id.text_numbers);
 		TextView listtext_weight = (TextView) convertView
+				.findViewById(R.id.text_numbers);
+		TextView numbers = (TextView) convertView
 				.findViewById(R.id.listtext_weight);
 		listtext_weight.setVisibility(View.VISIBLE);
 		TextView text_box_ware = (TextView) convertView

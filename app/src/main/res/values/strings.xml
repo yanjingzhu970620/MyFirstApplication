@@ -1,6 +1,8 @@
 <resources>
     <string name="app_name">Manager</string>
 
+    <string name="tap_twice_to_exit">tap_twice_to_exit</string>
+
     <!-- Strings related to login -->
     <string name="prompt_email">Email</string>
     <string name="prompt_password">Password</string>
@@ -131,4 +133,5 @@
     <string name="material_supplier_code">supplier_code</string>
     <string name="material_branname">branname</string>
     <string name="unit">unit</string>
+    <string name="work_team">work_team</string>
 </resources>

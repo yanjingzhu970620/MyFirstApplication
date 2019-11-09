@@ -32,7 +32,7 @@
     <string name="prompt_port">端口</string>
     <string name="prompt_db">数据库</string>
     <string name="product_batch_number">出货单号</string>
-    <string name="product_orderid">作业计划号</string>
+    <string name="product_orderid">作业计划</string>
     <string name="inventory_orderno">批号</string>
     <string name="entryin_orderid">入库单号</string>
     <string name="report_cardid">流程卡号</string>
@@ -74,13 +74,13 @@
     <string name="material_orderid">领料单号</string>
     <string name="material_orderdate">单据日期</string>
     <string name="material_branname">品牌</string>
-    <string name="material_supplier_code">供应商编码</string>
+    <string name="material_supplier_code">供应商</string>
     <string name="material_lot_nos">批号</string>
     <string name="material_furnace_no">炉号</string>
     <string name="material_name">材质</string>
     <string name="material_diameter">线径</string>
     <string name="material_productcode">产品编码</string>
-    <string name="material_locationbarcode">库位号</string>
+    <string name="material_locationbarcode">库位编码</string>
     <string name="material_packageqty">卷重</string>
     <string name="material_packagenum">卷数</string>
 
@@ -91,6 +91,7 @@
     <string name="numbers">数量</string>
     <string name="report_num">数量</string>
     <string name="merge_cardid">分并桶卡号</string>
+    <string name="work_team">报工班组</string>
     <string name="split_grossweight">分桶毛重</string>
     <string name="split_container_no">桶号</string>
     <string name="split_container_weight">空桶重</string>
@@ -127,10 +128,11 @@
     <string name="entry_isfinalbox">是尾箱</string>
     <string name="state">状态</string>
     <string name="entry">入  库</string>
-    <string name="entry_warehouse_code">库位号</string>
+    <string name="entry_warehouse_code">库位编码</string>
     <string name="check_warehouse_code">库位代码</string>
     <string name="check_warehouse_name">库位名称</string>
     <string name="Num_of_boxes">箱数</string>
     <string name="Number_of_boxes">已选箱数</string>
     <string name="entry_time">入库时间</string>
+    <string name="tap_twice_to_exit">再按一次退出程序</string>
 </resources>

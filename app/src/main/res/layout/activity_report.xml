@@ -74,13 +74,12 @@
                     android:orientation="horizontal">
 
                     <TextView
-                        android:layout_width="0dp"
+                        android:layout_width="wrap_content"
                         android:layout_height="match_parent"
-                        android:layout_weight="1"
-                        android:gravity="right"
+                        android:gravity="center"
+                        android:layout_marginStart="25dp"
                         android:layout_gravity="center_vertical"
                         android:layout_marginEnd="3dp"
-                        android:layout_marginTop="10dp"
                         android:text="@string/report_cardid" />
 
                     <EditText
@@ -157,6 +156,40 @@
                 </LinearLayout>
 
                 <LinearLayout
+                    android:id="@+id/work_team_layout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:visibility="gone"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:gravity="center"
+                        android:layout_marginStart="25dp"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginEnd="3dp"
+                        android:text="@string/work_team" />
+                    <EditText
+                        android:id="@+id/edit_work_team_no"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="3"
+                        android:maxLines="1"
+                        android:singleLine="true"
+                        android:textColor="@color/black" />
+                    <ImageView
+                        android:id="@+id/work_team_no_button"
+                        android:layout_width="25dp"
+                        android:layout_height="25dp"
+                        android:layout_gravity="bottom"
+                        android:layout_marginBottom="@dimen/erqode_vertical_margin"
+                        android:background="@mipmap/ercode"
+                        android:clickable="true"
+                        android:onClick="onClick" />
+                </LinearLayout>
+
+                <LinearLayout
                     android:id="@+id/package_name_layout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -164,13 +197,12 @@
                     android:orientation="horizontal">
 
                     <TextView
-                        android:layout_width="0dp"
+                        android:layout_width="wrap_content"
                         android:layout_height="match_parent"
-                        android:layout_weight="1"
-                        android:gravity="right"
+                        android:gravity="center"
+                        android:layout_marginStart="25dp"
                         android:layout_gravity="center_vertical"
                         android:layout_marginEnd="3dp"
-                        android:layout_marginTop="10dp"
                         android:text="@string/package_name" />
                     <EditText
                         android:id="@+id/edittext_package_name"
@@ -200,13 +232,12 @@
                     android:orientation="horizontal">
 
                     <TextView
-                        android:layout_width="0dp"
+                        android:layout_width="wrap_content"
                         android:layout_height="match_parent"
-                        android:layout_weight="1"
-                        android:gravity="right"
+                        android:gravity="center"
+                        android:layout_marginStart="25dp"
                         android:layout_gravity="center_vertical"
                         android:layout_marginEnd="3dp"
-                        android:layout_marginTop="10dp"
                         android:text="@string/equipment_code" />
                     <EditText
                         android:id="@+id/edittext_equipment_code"
@@ -618,6 +649,7 @@
                         android:text="@string/action_inspect_ng"
                         android:textStyle="bold" />
                 </LinearLayout>
+
                 <LinearLayout
                     android:id="@+id/split_merge_layout"
                     android:layout_width="match_parent"
@@ -693,6 +725,7 @@
                         android:clickable="true"
                         android:onClick="onClick" />
                 </LinearLayout>
+
                 <LinearLayout
                     android:id="@+id/split_weight_layout"
                     android:layout_width="match_parent"

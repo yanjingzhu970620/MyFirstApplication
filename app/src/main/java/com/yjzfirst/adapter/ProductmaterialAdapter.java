@@ -76,7 +76,7 @@ public class ProductmaterialAdapter extends BaseAdapter {
 	public View getView(int position, View convertView, ViewGroup parent) {
 		// TODO Auto-generated method stub
 		convertView = LayoutInflater.from(context).inflate(
-				R.layout.inventory_simple_detail, null);
+				R.layout.material_detail, null);
 		TextView barcode = (TextView) convertView
 				.findViewById(R.id.text_barcode);
 		TextView product_pecification = (TextView) convertView
@@ -91,9 +91,6 @@ public class ProductmaterialAdapter extends BaseAdapter {
 		TextView text_box_ware = (TextView) convertView
 				.findViewById(R.id.text_box_ware);
 		text_box_ware.setVisibility(View.VISIBLE);
-		TextView listtext_weight = (TextView) convertView
-				.findViewById(R.id.listtext_weight);
-		listtext_weight.setVisibility(View.GONE);
 //		RelativeLayout shipcell = (RelativeLayout) convertView
 //				.findViewById(R.id.effectRelativeLayout_details);
 		final ProductMaterialproductBean product = mproductBean.get(position);
